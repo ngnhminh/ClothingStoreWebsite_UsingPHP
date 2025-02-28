@@ -1,0 +1,58 @@
+body{
+    font-family: 'Baloo 2', cursive;
+}
+/* THANH LỌC */
+.filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 50px;
+    margin-top: 40px;
+}
+
+.filter-btn {
+    background: #d1d1d1;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.filter-btn span {
+    font-size: 14px;
+}
+
+/* GRID SẢN PHẨM */
+.product-grid_page{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+    margin-bottom: 70px;
+}
+
+/* CARD SẢN PHẨM */
+.product-card {
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+}
+
+.product-name {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.product-price {
+    font-size: 16px;
+    font-weight: bold;
+}

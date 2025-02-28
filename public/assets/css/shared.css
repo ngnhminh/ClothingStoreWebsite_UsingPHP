@@ -1,0 +1,14 @@
+.pagetitle{
+    position: relative;
+    font-family: 'Baloo 2', cursive;
+    font-size:xx-large;
+    margin-top: 2%;
+    margin-left:15%;
+    font-weight:800;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index: 1000;
+}

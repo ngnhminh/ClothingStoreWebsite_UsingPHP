@@ -1,0 +1,40 @@
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.logo {
+    float: left;;
+    text-align: left;   
+    width: 30%;
+    padding-bottom:2%
+}
+
+.info {
+    float: right;
+    width: 70%;
+    text-align: left;
+    font-family: 'Baloo 2', cursive;
+}
+
+.info p{
+    margin-left: 0;
+}
+
+.footer {
+    clear: both;
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    font-size: 12px;
+    font-family: 'Baloo 2', cursive;
+}
+
+#logo_footer_img{
+    height: 150px;
+    width: 200px;
+    margin-left: 30%;
+}

@@ -1,0 +1,130 @@
+body{
+    font-family: 'Baloo 2', cursive;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.logout-btn {
+    background: black;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.infoproduct_container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.wishlist {
+    width: 67%;
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    margin-right:15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #d1d1d1;
+    padding: 10px;
+    text-align: left;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+td img {
+    width: 50px;
+    vertical-align: middle;
+}
+
+.buy-btn {
+    background: black;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Baloo 2', cursive;
+    border: 1px solid #000
+
+}
+
+.buy-btn:hover{
+    color: black;
+    background-color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.delete-icon {
+    width: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Thông tin người dùng */
+.user-info-box {
+    width: 28%;
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.user-info-box h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.user-info-box button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.change-password {
+    background: #007bff;
+    color: white;
+}
+
+.order-history {
+    background: #28a745;
+    color: white;
+}
+
+
+.fa-trash{
+    padding-left:15px;
+}
+
+.flex-container strong,
+.flex-container button,
+.flex-container i {
+    margin-right: 10px;
+}
+
+.flex-container button{
+    margin-left: 40px;
+}
+
