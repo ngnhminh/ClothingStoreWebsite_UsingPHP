@@ -52,12 +52,16 @@ td {
     border-bottom: 1px solid #ddd;
 }
 
+#number_of_product{
+    text-align: center;
+}
+
 td img {
     width: 50px;
     vertical-align: middle;
 }
 
-.buy-btn {
+.userpage-btn {
     background: black;
     color: white;
     padding: 5px 10px;
@@ -128,3 +132,10 @@ td img {
     margin-left: 40px;
 }
 
+.purchased-order{
+    display: none;
+}
+
+#history-product-navbar{
+    display: none;
+}
