@@ -53,7 +53,7 @@
 <div class="re-prod">
 <h2 class="related-title-shoes">Các sản phẩm tương tự</h2>
 <div class="related-products-container-shoes">
-    <button class="related-button left">&#10094;</button>
+    <button class="related-button-shoes left">&#10094;</button>
     <div class="related-products-shoes">
         <div class="product-item-shoes">
             <img src="/View/images/jeans.jpg" alt="Quần 1">
