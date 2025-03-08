@@ -39,6 +39,7 @@ body {
 
 .product-name {
     font-weight: bold;
+    font-family: 'Baloo 2', cursive;
 }
 
 .product-details {
@@ -92,5 +93,6 @@ hr {
 }
 
 .total span {
-    color: blue;
+    color: #2a9dcc;
+    font-family: 'Baloo 2', cursive;
 }

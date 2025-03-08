@@ -110,11 +110,13 @@ td img {
 .change-password {
     background: #007bff;
     color: white;
+    font-family: 'Baloo 2', cursive;
 }
 
 .order-history {
     background: #28a745;
     color: white;
+    font-family: 'Baloo 2', cursive;
 }
 
 
