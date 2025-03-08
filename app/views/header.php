@@ -13,8 +13,8 @@
  
         <!--Ô chứa menu-->
         <nav class="menu">
-            <a href="/pages/index.php">Trang chủ</a>
-            <a href="/pages/about.php">Sản phẩm</a>
+            <a href="index.php">Trang chủ</a>
+            <a href="productpage.php">Sản phẩm</a>
             <a href="/pages/services.php">Về chúng tôi</a>
             <a href="/pages/contact.php">Liên hệ</a>
         </nav>

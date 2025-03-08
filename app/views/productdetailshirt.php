@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet"  href="/public/assets/css/styles.css">
-
- 
+    <link rel="stylesheet"  href="/public/assets/css/productdetailshirt.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Product Detail</title>
 </head>
 <body>
@@ -21,7 +19,10 @@
         </div>
         <div class="product-details">
             <h2>Distressed Double Knee Denim Pants Brown</h2>
-            <p class="sold-out">SẮP HẾT HÀNG</p>
+            <div id="sizenlike">
+                <span id="numberofsize">Size:</span><p class="sold-out">SẮP HẾT HÀNG</p>
+                <button id="likebtn"><img src="/public/assets/images/love.svg">Yêu thích</button>
+            </div>
             <div class="size-options">
                 <button>26</button>
                 <button>28</button>
@@ -30,7 +31,7 @@
                 <button>34</button>
             </div>
             <h3>Product Details:</h3>
-            <ul>
+            <ul class="product-inform">
                 <li>Size: 26, 28, 30, 32, 34, 36</li>
                 <li>Material: Cotton Twill</li>
                 <li>Baggy Fit</li>
@@ -77,23 +78,23 @@
             <div class="related-products">
                 <button class="related-button left">‹</button>
                 <div class="product-item">
-                    <img src="/View/images/jeans.jpg" alt="Related Product">
+                    <img src="/public/assets/images/shirt.png" alt="Related Product">
                     <p class="short">Quần</p>
                     <p>200.000đ</p>
                 </div>
                 
                 <div class="product-item">
-                    <img src="/View/images/jeans.jpg" alt="Related Product">
+                    <img src="/public/assets/images/shirt.png" alt="Related Product">
                     <p class="short">Quần</p>
                     <p>200.000đ</p>
                 </div>
                 <div class="product-item">
-                    <img src="/View/images/jeans.jpg" alt="Related Product">
+                    <img src="/public/assets/images/shirt.png" alt="Related Product">
                     <p class="short">Quần</p>
                     <p>200.000đ</p>
                 </div>
                 <div class="product-item">
-                    <img src="/View/images/jeans.jpg" alt="Related Product">
+                    <img src="/public/assets/images/shirt.png" alt="Related Product">
                     <p class="short">Quần</p>
                     <p>200.000đ</p>
                 </div> 
@@ -101,7 +102,8 @@
              </div>
         </div>
         </main>
-        <footer>
+        <script src="/public/assets/js/productdetailshirt.js"></script>
+    <footer>
         <?php require 'footer.php'; ?>
     </footer>
 

@@ -1,0 +1,109 @@
+body {
+    font-family: 'Baloo 2', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+header {
+    background: #e0e0e0;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.product-container-shoes {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+}
+
+.product-images-shoes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.product-images-shoes img {
+    width: 80px;
+    height: auto;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.product-main-image img {
+    width: 400px;
+    border-radius: 10px;
+}
+
+.product-details-shoes {
+    width: 350px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-details-shoes h2 {
+    font-size: 22px;
+    text-align: center;
+}
+
+.color-options img {
+    width: 50px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.size-options button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 5px;
+    background: white;
+}
+
+.add-to-cart-shoes, .buy-now-shoes {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-to-cart-shoes {
+    background: #ddd;
+}
+
+.buy-now-shoes {
+    background: black;
+    color: white;
+}
+
+.related-products-container-shoes {
+    text-align: center;
+    padding: 20px;
+}
+
+.related-products-shoes {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.product-item-shoes img {
+    width: 120px;
+    border-radius: 5px;
+}
+
+.related-button-shoes {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    cursor: pointer;
+}
