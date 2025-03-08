@@ -55,6 +55,8 @@ body {
 .productmanager-container {
     width: 80%;
     margin: 20px auto;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 h2 {
     font-size: 24px;
@@ -106,6 +108,7 @@ button.btn-add:active {
 .filter-bar button{
     font-family: 'Baloo 2', cursive;
 }
+
 .product-list {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

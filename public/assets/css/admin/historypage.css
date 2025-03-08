@@ -42,7 +42,7 @@ body {
     width: 200px;
 }
 
-.customermanagement-container {
+.historypage-container {
     max-width: 1200px;
     margin: 0 auto;
     background: #ddd;
@@ -64,26 +64,7 @@ body {
     text-align: center;
 }
 
-.filter-bar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    gap: 10px;
-}
-
-.filter-bar button, .filter-bar input {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.customer-table {
+.history-table {
     width: 100%;
     background: white;
     border-radius: 8px;
@@ -205,27 +186,10 @@ table {
   font-size: 14px;
   margin-bottom: 5px;
 }
-.item-sizes {
+.item-id {
   font-size: 13px;
   color: #555;
 }
-.item-bought-date {
-    font-size: 13px;
-    color: #555;
-  }
-
-  /* Phần hiển thị giảm giá (%) và giá */
-  .item-discount {
-    color: #0f9200; /* Màu xanh cho -20% */
-    font-weight: bold;
-    margin-right: 20px;
-    min-width: 50px; 
-    text-align: right;
-  }
-
-  .item-price {
-    font-weight: bold;
-  }
 
   /* ------------------- TÓM TẮT ĐƠN HÀNG ------------------- */
 .divider {
@@ -273,6 +237,9 @@ table {
         flex-direction: column;
         align-items: stretch;
     }
+    .order-table {
+        overflow-x: auto;
+    }
     table {
         font-size: 14px;
         min-width: 100%;
@@ -282,57 +249,8 @@ table {
     }
 }
 
-#bill-price{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .item-row{
   margin-right: 30px;
-}
-
-.item-price, .item-original-price {
-  margin: 0; 
-}
-
-/* Scrollbar chỉ trong product-info */
-.modal-items::-webkit-scrollbar {
-  width: 2px;
-}
-
-.modal-items::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.modal-items::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.modal-items {
-  max-height: 200px; 
-  overflow-y: auto; 
-  margin-top: 30px;
-}
-
-/* Scrollbar chỉ trong product-info */
-.modal-items::-webkit-scrollbar {
-  width: 2px;
-}
-
-.modal-items::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.modal-items::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.order-table {
-  max-height: 470px;
-  overflow-y: auto; 
 }
 
 thead, th {

@@ -1,0 +1,308 @@
+body {
+    display: flex;
+    margin: 0;
+    font-family: 'Baloo 2', cursive;
+    background: #f4f4f4;
+}
+
+.sidebar {
+    width: 250px;
+    background: #7a7a7a;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    justify-items: center;
+}
+
+#logo_img{
+    height: 78px;
+    width: 106px;
+    cursor:pointer
+}
+
+.menu-admin a{
+    text-decoration: none;
+    color: white;
+}
+
+.menu-admin a:hover{
+    color: black;
+}
+
+.menu-admin{
+    margin-right: 30px;
+    height: auto;
+}
+
+.menu-admin li {
+    list-style: none;
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #888;
+    width: 200px;
+}
+
+.voucher-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    display: none;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: white;
+}
+
+.productlist-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.toolbar-voucher {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.toolbar-voucher button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    background: #ddd;
+    cursor: pointer;
+}
+.toolbar-voucher input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  
+}
+
+.voucher-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.voucher-table th, .voucher-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+.voucher-table th {
+    background: #ddd;
+}
+.voucher-table tr:nth-child(2) {
+    background: #e0e0e0;
+}
+.add-voucher-voucher {
+    background: #c3f7c7;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    display: none;
+}
+
+.modal {
+    background: white;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+.modal-body label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.modal-body input {
+    width: 95%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-cancel {
+    background: #ccc;
+}
+.btn-save {
+    background: #c8f7c5;
+    font-weight: bold;
+}
+#btn{
+    float: right;
+    background-color: white;
+    color: black;
+    font-size: 20px;
+    border-color: white;
+}
+
+
+.modal-voucher {
+    background: white;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.modal-header-voucher {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+.modal-body-voucher label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.modal-body-voucher input {
+    width: 95%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.modal-footer-voucher {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.btn-voucher {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-cancel-voucher {
+    background: #ccc;
+}
+.btn-save-voucher {
+    background: #c8f7c5;
+    font-weight: bold;
+}
+#btn-voucher{
+    float: right;
+    background-color: white;
+    color: black;
+    font-size: 20px;
+    border-color: white;
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    background: #ddd;
+    padding: 20px;
+    max-height: 575px; 
+    overflow-y: auto; 
+    margin-bottom: 7px;
+    box-shadow: inset 2px 2px 7px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.product-thumbnail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Đảm bảo phần tử cha chiếm toàn bộ chiều rộng */
+    height: 200px; /* Điều chỉnh chiều cao theo ý muốn */
+    overflow: hidden; /* Ngăn ảnh tràn ra ngoài */
+}
+
+.product-thumbnail_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50%;
+}
+
+.product-thumbnail__image {
+    width: 100%; /* Giảm kích thước hình xuống 30% */
+    height: auto; /* Giữ tỷ lệ khung hình */
+    object-fit: contain; /* Giữ nguyên hình ảnh mà không bị cắt */
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa theo chiều ngang */
+}
+
+.product p{
+    width:60%;
+    text-align: center;
+}
+
+.product:hover{
+    background-color: grey;
+    cursor:pointer;
+    color:white;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.product-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.product-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+.product-list::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+#percent_discount{
+    margin-left: 5px;
+    color: green;
+}
+
+.discount-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Nền mờ phía sau */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}

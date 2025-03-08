@@ -14,10 +14,10 @@
         <ul class="menu-admin">
             <a href="dashboard.php"><li>📊 Dashboard</li></a>
             <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
-            <li>📜 Quản lý đơn hàng</li>
-            <li>👥 Quản lý khách hàng</li>
-            <li>🎟️ Quản lý khuyến mãi</li>
-            <li>📈 Thống kê</li>
+            <a href="ordermanagement.php"><li>📜 Quản lý đơn hàng</li></a>
+            <a href="customermanagement.php"><li>👥 Quản lý khách hàng</li></a>
+            <a href="khuyenmaipage.php"><li>🎟️ Quản lý khuyến mãi</li></a>
+            <a href="historypage.php"><li>📈 Lịch sử</li></a>
         </ul>
     </aside>
 
