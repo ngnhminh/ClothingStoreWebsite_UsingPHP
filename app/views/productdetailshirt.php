@@ -26,11 +26,11 @@
                 </button>
             </div>
             <div class="size-options">
-                <button>26</button>
-                <button>28</button>
-                <button>30</button>
-                <button>32</button>
-                <button>34</button>
+                <button>S</button>
+                <button>M</button>
+                <button>L</button>
+                <button>XL</button>
+                <button>XXL</button>
             </div>
             <h3>Product Details:</h3>
             <ul class="product-inform">
