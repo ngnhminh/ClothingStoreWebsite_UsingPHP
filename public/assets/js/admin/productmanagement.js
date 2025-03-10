@@ -103,5 +103,22 @@ type.addEventListener("change", function(){
     console.log("YES");
 });
 
+//Gán sự kiện cho nút (Sử dụng ajax)
+function GetProductsWithType(funcName, type){
+    fetch(`http://localhost:3000/app/controllers/productmanagementcontroller.php?function=${funcName}&params=${type}`)
+    .then(response => response.text())
+    .then(data => {
+       console.log(data);
+    });
+}
 
-// note display của thanh setting =flex
+const filter_buttons = document.querySelectorAll(".filter-bar button");
+
+filter_buttons.forEach((button)=>{
+    button.addEventListener("click", () => {
+        console.log(button.value);
+        GetProductsWithType("getAllByType", button.value);
+    });
+})
+
+console.log(document.getElementById("za").value);

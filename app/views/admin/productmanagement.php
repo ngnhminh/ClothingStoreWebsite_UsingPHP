@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<?php
+    // require_once('app\controllers\productmanagementcontroller.php');
+    require_once('D:\Workspace\PHP Projects\ClothingStore\app\controllers\productmanagementcontroller.php');
+?>
+
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
@@ -27,47 +31,26 @@
             </div>
             
             <div class="filter-bar">
-                <button>Áo (25)</button>
-                <button>Quần (25)</button>
-                <button>Kính (25)</button>
-                <button>Giày (25)</button>
-                <button>Đồ khóa (25)</button>
+                <button id="za" value="Áo">Áo (25)</button>
+                <button value="Quần"">Quần (25)</button>
+                <button value="Kính">Kính (25)</button>
+                <button value="Giày">Giày (25)</button>
+                <button value="Block">Đồ khóa (25)</button>
                 <input type="text" placeholder="Nhập tên sản phẩm" id="search">
             </div>
-            
+
             <div class="product-list" id="product-list">
-                <div class="product">
-                <div class="product-thumbnail">
-                        <div class="product-thumbnail_wrapper">
-                            <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
+                <?php $products = getAllProducts(); 
+                foreach ($products as $product): ?>
+                    <div class="product">
+                        <div class="product-thumbnail">
+                            <div class="product-thumbnail_wrapper">
+                                <img class="product-thumbnail__image" src="<?php echo $product['duongdananh'];?>" alt="Áo thun" />
+                            </div>
                         </div>
+                        <p><?php echo $product['tensp'];?></p>
                     </div>
-                    <p>Distressed Double Knee Denim Pants Brown</p>
-                </div>
-                <div class="product">
-                    <div class="product-thumbnail">
-                        <div class="product-thumbnail_wrapper">
-                            <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
-                        </div>
-                    </div>
-                    <p>Distressed Double Knee Denim Pants Brown</p>
-                </div>
-                <div class="product">
-                <div class="product-thumbnail">
-                        <div class="product-thumbnail_wrapper">
-                            <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
-                        </div>
-                    </div>
-                    <p>Distressed Double Knee Denim Pants Brown</p>
-                </div>
-                <div class="product">
-                <div class="product-thumbnail">
-                        <div class="product-thumbnail_wrapper">
-                            <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
-                        </div>
-                    </div>
-                    <p>Distressed Double Knee Denim Pants Brown</p>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
 

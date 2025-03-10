@@ -1,16 +1,12 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "abcABC12@";
-$database = "clothing_store";
+    $dsn = "mysql:host=localhost;dbname=clothing_store;charset=utf8";
+    $username = "root";
+    $password = "abcABC12@";
 
-// Kết nối MySQLi
-$conn = mysqli_connect($servername, $username, $password, $database);
-
-// Kiểm tra kết nối
-if (!$conn) {
-    die("Kết nối thất bại: " . mysqli_connect_error());
-}else{
-    echo("Kết nối database thành công");
-}
+    try {
+        $conn = new PDO($dsn, $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        die("Kết nối thất bại: " . $e->getMessage());
+    }
 ?>
