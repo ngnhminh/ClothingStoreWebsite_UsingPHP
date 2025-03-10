@@ -1,10 +1,9 @@
-<?php
+<!-- <?php
 require_once 'db.php'; // Gọi kết nối database
 
-function getDetailProducts($masp, $mau_id, $limit = 10) {
+function getDetailProducts($masp, $mau_id, $limit = 999) {
     global $conn; // Dùng biến $conn từ database.php
 
-    // Câu lệnh SQL với placeholders
     $stmt = $conn->prepare("SELECT *
     FROM sanpham
     INNER JOIN mausanpham ON sanpham.masp = mausanpham.masp
@@ -20,7 +19,6 @@ function getDetailProducts($masp, $mau_id, $limit = 10) {
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 
     $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC); // Lấy tất cả kết quả dưới dạng mảng
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
-?>
+?> -->
