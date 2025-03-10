@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/public/assets/css/productdetailshoes.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
-    <link rel="stylesheet"  href="/public/assets/css/styles.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Product Detail</title>
@@ -18,13 +17,13 @@
 
     <div class="product-container-shoes">
         <div class="product-images-shoes">
-            <img src="/View/images/shoe1.jpg" alt="Hình 1">
-            <img src="/View/images/shoe2.jpg" alt="Hình 2">
-            <img src="/View/images/shoe3.jpg" alt="Hình 3">
-            <img src="/View/images/shoe4.jpg" alt="Hình 4">
+            <img src="/public/assets/images/shoes5.png" alt="Hình 1">
+            <img src="/public/assets/images/shoes5.png" alt="Hình 2">
+            <img src="/public/assets/images/shoes5.png" alt="Hình 3">
+            <img src="/public/assets/images/shoes5.png" alt="Hình 4">
         </div>
         <div class="product-main-image">
-            <img src="/View/images/shoe-main.jpg" alt="Sản phẩm chính">
+            <img src="/public/assets/images/shoes5.png" alt="Sản phẩm chính">
         </div>
         <div class="product-details-shoes">
             <h2>Nike Pegasus Plus</h2>
@@ -35,6 +34,12 @@
                 <img src="/View/images/color2.jpg" alt="Màu 2">
                 <img src="/View/images/color3.jpg" alt="Màu 3">
             </div>
+            <div id="sizenlike">
+                <span id="numberofsize">Size:</span><p class="sold-out">SẮP HẾT HÀNG</p>
+                <button id="likebtn">
+                    <img src="/public/assets/images/love.svg" id="loveicon">Yêu thích
+                </button>
+            </div>
             <h3>Size</h3>
             <div class="size-options">
                 <button>40</button>
@@ -43,6 +48,15 @@
                 <button>43</button>
                 <button>44</button>
             </div>
+            <h3>Product Details:</h3>
+            <ul class="product-inform">
+                <li>Size: 26, 28, 30, 32, 34, 36</li>
+                <li>Material: Cotton Twill</li>
+                <li>Baggy Fit</li>
+                <li>Distressed design</li>
+                <li>Front printed details</li>
+                <li>Small leather patch sewn on the back</li>
+            </ul>
             <button class="add-to-cart-shoes">Thêm vào giỏ hàng</button>
             <button class="buy-now-shoes">Mua ngay</button>
         </div>
@@ -74,8 +88,10 @@
 </div>
 </div>
 </main>
-    <footer>
-        <?php require 'footer.php'; ?>
-    </footer>
+<script src="/public/assets/js/productdetailshirt.js"></script>
+
+<footer>
+    <?php require 'footer.php'; ?>
+</footer>
 </body>
 </html>

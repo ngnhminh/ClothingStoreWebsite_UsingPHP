@@ -21,7 +21,9 @@
             <h2>Distressed Double Knee Denim Pants Brown</h2>
             <div id="sizenlike">
                 <span id="numberofsize">Size:</span><p class="sold-out">SẮP HẾT HÀNG</p>
-                <button id="likebtn"><img src="/public/assets/images/love.svg">Yêu thích</button>
+                <button id="likebtn">
+                    <img src="/public/assets/images/love.svg" id="loveicon">Yêu thích
+                </button>
             </div>
             <div class="size-options">
                 <button>26</button>
@@ -67,6 +69,33 @@
                 </tr>
             </table>
             
+            <table class="size-chart" id="size-chart-pants" style="display: none">
+                <tr>
+                    <th>Size</th>
+                    <th>Waist</th>
+                    <th>Hip</th>
+                    <th>Length</th>
+                </tr>
+                <tr>
+                    <td>26</td>
+                    <td>68 cm</td>
+                    <td>92 cm</td>
+                    <td>100 cm</td>
+                </tr>
+                <tr>
+                    <td>28</td>
+                    <td>72 cm</td>
+                    <td>96 cm</td>
+                    <td>102 cm</td>
+                </tr>
+                <tr>
+                    <td>30</td>
+                    <td>76 cm</td>
+                    <td>100 cm</td>
+                    <td>104 cm</td>
+                </tr>
+            </table>
+
             <button class="add-to-cart">Thêm vào giỏ hàng</button>
             <button class="buy-now">Mua ngay</button>
            
