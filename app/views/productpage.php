@@ -25,61 +25,7 @@
                 <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
                 <p class="product-price"><strong>200.000đ</strong></p>
             </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
-            <div class="product-card">
-                <img src="/public/assets/images/shirt.png" alt="Áo thun">
-                <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
-                <p class="product-price"><strong>200.000đ</strong></p>
-            </div>
+         
         </div>
     </main>
     <footer>

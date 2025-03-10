@@ -1,5 +1,7 @@
 <?php
-include './config/db.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
+
+
 
 $sql = "SELECT * FROM sanpham";
 $result = mysqli_query($conn, $sql);
