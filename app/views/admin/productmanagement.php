@@ -61,8 +61,8 @@
                 
                 <div class="product-info">
                     <div class="product-config">
-                        <div class="column1 changeproduct">
-                            <div class="buttons">
+                        <div class="column1 changeproduct" id ="column1changeproduct">
+                            <div class="buttons" id="changebuttons">
                                 <button class="lock-btn">Khóa</button>
                                 <button class="save-btn">Lưu</button>
                             </div>
@@ -75,15 +75,15 @@
                                     <option value="giay">Giày</option>
                                 </select>
                             </div>
-                            <div class="product-image">
-                                <img src="/public/assets/images/shirt.png" alt="Sản phẩm">
+                            <div class="product-image" id="changeinfoproduct">
+                                <!-- <img src="/public/assets/images/shirt.png" alt="Sản phẩm">
                                 <span>Distressed Double Knee Denim Pants Brown</span>
                                 <div class="price">
                                     <span>Giá:</span> <span>120.000</span> <button class="edit-btn">✎</button>
                                 </div>
-                                <button class="save-addbtn">Lưu</button>
+                                <button class="save-addbtn">Lưu</button> -->
                             </div>
-                            <div class= "addproduct-giay">
+                            <div id="product-add-colornpic" style="display: none">
                                 <div class="color-section">
                                     <button class="btn">Thêm màu</button>
                                     <span class="divider">:</span>
@@ -133,7 +133,7 @@
                                 </div>
                                 <button class="save-addbtn">Lưu</button>
                             </div>
-                            <div id="product-add-colornpic">
+                            <div id="product-add-colornpic" >
                                 <div class="color-section">
                                     <button class="btn">Thêm màu</button>
                                     <span class="divider">:</span>
@@ -166,82 +166,6 @@
                         <div class="column2 changeproduct">
                             <div class="sizes" id="changeproductsize-container">
                                 <span>Số lượng</span>
-                                <div class="size-option">
-                                    <div>S</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option">
-                                    <div>M</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option">
-                                    <div>L</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option">
-                                    <div>XL</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option">
-                                    <div>XXL</div>
-                                    <input type="number" value="5">
-                                </div>
-
-                                <!-- Size Quần -->
-                                <div class="size-option addproduc-quan">
-                                    <div>26</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduc-quan">
-                                    <div>28</div>
-                                    <input type="number addproduc-quan" value="5">
-                                </div>
-                                <div class="size-option addproduc-quan">
-                                    <div>30</div>
-                                    <input type="number addproduc-quan" value="5">
-                                </div>
-                                <div class="size-option addproduc-quan">
-                                    <div>32</div>
-                                    <input type="number addproduc-quan" value="5">
-                                </div>
-                                <div class="size-option addproduc-quan">
-                                    <div>34</div>
-                                    <input type="number" value="5">
-                                </div>
-
-                                <!-- Size Giày -->
-                                <div class="size-option addproduc-giay">
-                                    <div>40</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduc-giay">
-                                    <div>41</div>
-                                    <input type="number addproduc-giay" value="5">
-                                </div>
-                                <div class="size-option addproduc-giay">
-                                    <div>42</div>
-                                    <input type="number addproduc-giay" value="5">
-                                </div>
-                                <div class="size-option addproduc-giay">
-                                    <div>43</div>
-                                    <input type="number addproduc-giay" value="5">
-                                </div>
-                                <div class="size-option addproduc-giay">
-                                    <div>44</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduc-giay">
-                                    <div>45</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduc-giay">
-                                    <div>46</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduc-giay">
-                                    <div>47</div>
-                                    <input type="number" value="5">
-                                </div>
                             </div>
                         </div>
 

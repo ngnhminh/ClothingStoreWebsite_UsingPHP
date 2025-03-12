@@ -80,6 +80,33 @@ LOCK TABLES `chitiethoatdong` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `chitietsanpham`
+--
+
+DROP TABLE IF EXISTS `chitietsanpham`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `chitietsanpham` (
+  `masp_id` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `chitiet` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `masp_id` (`masp_id`),
+  CONSTRAINT `chitietsanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`masp`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chitietsanpham`
+--
+
+LOCK TABLES `chitietsanpham` WRITE;
+/*!40000 ALTER TABLE `chitietsanpham` DISABLE KEYS */;
+INSERT INTO `chitietsanpham` VALUES ('100','Chất liệu: Cotton 2 chiều.',1),('100','Regular Fit.',2),('100','Hình in mặt trước áo áp dụng công nghệ in lụa.',3),('102','Colour Shown: Vivid Purple/Black/Hot Punch',4),('102','Style: FQ7262-500',5),('102','Country/Region of Origin: Vietnam',6);
+/*!40000 ALTER TABLE `chitietsanpham` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `danhsachyeuthich`
 --
 
@@ -384,7 +411,6 @@ CREATE TABLE `sanpham` (
   `tensp` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `gia` int NOT NULL,
   `mota` varchar(5000) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `chitietsanpham` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `giamgia` int NOT NULL,
   `maloai_id` varchar(200) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `matinhtrang` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -402,7 +428,7 @@ CREATE TABLE `sanpham` (
 
 LOCK TABLES `sanpham` WRITE;
 /*!40000 ALTER TABLE `sanpham` DISABLE KEYS */;
-INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,NULL,'• Chất liệu: Cotton 2 chiều.',0,'0','1'),('101','Metal Label Wide Trouser Pants - Brown',590000,NULL,'• Kích thước: 28 - 30 - 32 - 34 - 36',0,'1','2'),('102','Nike Pegasus 41',3829000,'Responsive cushioning in the Pegasus provides an energised ride for everyday road running. Experience lighter-weight energy return with dual Air Zoom units and a ReactX foam midsole. Plus, improved engineered mesh on the upper decreases weight and increases breathability.','Colour Shown: Cool Grey/Wolf Grey/Pure Platinum/White',100000,'2','0');
+INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,NULL,0,'0','1'),('101','Metal Label Wide Trouser Pants - Brown',590000,NULL,0,'1','2'),('102','Nike Pegasus 41',3829000,'Responsive cushioning in the Pegasus provides an energised ride for everyday road running. Experience lighter-weight energy return with dual Air Zoom units and a ReactX foam midsole. Plus, improved engineered mesh on the upper decreases weight and increases breathability.',100000,'2','0');
 /*!40000 ALTER TABLE `sanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -469,4 +495,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-12 15:07:13
+-- Dump completed on 2025-03-12 18:06:42
