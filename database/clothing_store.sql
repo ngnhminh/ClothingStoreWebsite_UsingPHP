@@ -225,16 +225,13 @@ DROP TABLE IF EXISTS `kichco`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `kichco` (
-  `kichco_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `kichco_id` int NOT NULL,
   `tenkichco` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `soluong` int NOT NULL,
-  `masp` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `mau_id` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `mau_sanpham_id` int DEFAULT NULL,
   PRIMARY KEY (`kichco_id`),
-  KEY `masp` (`masp`),
-  KEY `mau_id` (`mau_id`),
-  CONSTRAINT `kichco_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`),
-  CONSTRAINT `kichco_ibfk_2` FOREIGN KEY (`mau_id`) REFERENCES `mau` (`mau_id`)
+  KEY `fk_id_maucuasanpham` (`mau_sanpham_id`),
+  CONSTRAINT `fk_id_maucuasanpham` FOREIGN KEY (`mau_sanpham_id`) REFERENCES `mausanpham` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -244,7 +241,7 @@ CREATE TABLE `kichco` (
 
 LOCK TABLES `kichco` WRITE;
 /*!40000 ALTER TABLE `kichco` DISABLE KEYS */;
-INSERT INTO `kichco` VALUES ('1','26',10,'101','0'),('10','XXL',0,'100','0'),('11','40',5,'102','1'),('12','41',23,'102','1'),('13','42',0,'102','1'),('14','43',6,'102','1'),('15','44',3,'102','1'),('16','40',2,'102','2'),('17','41',3,'102','2'),('18','42',4,'102','2'),('19','43',1,'102','2'),('2','28',10,'101','0'),('20','44',5,'102','2'),('3','30',10,'101','0'),('4','32',0,'101','0'),('5','34',3,'101','0'),('6','S',2,'100','0'),('7','M',4,'100','0'),('8','L',5,'100','0'),('9','XL',10,'100','0');
+INSERT INTO `kichco` VALUES (1,'26',10,1),(2,'28',10,1),(3,'30',10,1),(4,'32',0,1),(5,'34',3,1),(6,'S',2,2),(7,'M',4,2),(8,'L',5,2),(9,'XL',10,2),(10,'XXL',0,2),(11,'40',5,3),(12,'41',23,3),(13,'42',0,3),(14,'43',6,3),(15,'44',3,3),(16,'40',2,4),(17,'41',3,4),(18,'42',4,4),(19,'43',1,4),(20,'44',5,4);
 /*!40000 ALTER TABLE `kichco` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -307,7 +304,7 @@ DROP TABLE IF EXISTS `mau`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mau` (
   `mau_id` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `tenmau` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `mamau` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`mau_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -318,7 +315,7 @@ CREATE TABLE `mau` (
 
 LOCK TABLES `mau` WRITE;
 /*!40000 ALTER TABLE `mau` DISABLE KEYS */;
-INSERT INTO `mau` VALUES ('0','Mặc định'),('1','Xám'),('2','Purple');
+INSERT INTO `mau` VALUES ('0','#5F9EA0'),('1','#6A5ACD'),('2','#708090');
 /*!40000 ALTER TABLE `mau` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -394,7 +391,6 @@ CREATE TABLE `sanpham` (
   `giamgia` int NOT NULL,
   `maloai` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `matinhtrang` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `anhsanpham` varchar(300) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`masp`),
   KEY `maloai` (`maloai`),
   KEY `matinhtrang` (`matinhtrang`),
@@ -409,7 +405,7 @@ CREATE TABLE `sanpham` (
 
 LOCK TABLES `sanpham` WRITE;
 /*!40000 ALTER TABLE `sanpham` DISABLE KEYS */;
-INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,NULL,'• Chất liệu: Cotton 2 chiều.',0,'0','1',NULL),('101','Metal Label Wide Trouser Pants - Brown',590000,NULL,'• Kích thước: 28 - 30 - 32 - 34 - 36',0,'1','2',NULL),('102','Nike Pegasus 41',3829000,'Responsive cushioning in the Pegasus provides an energised ride for everyday road running. Experience lighter-weight energy return with dual Air Zoom units and a ReactX foam midsole. Plus, improved engineered mesh on the upper decreases weight and increases breathability.','Colour Shown: Cool Grey/Wolf Grey/Pure Platinum/White',100000,'2','0',NULL);
+INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,NULL,'• Chất liệu: Cotton 2 chiều.',0,'0','1'),('101','Metal Label Wide Trouser Pants - Brown',590000,NULL,'• Kích thước: 28 - 30 - 32 - 34 - 36',0,'1','2'),('102','Nike Pegasus 41',3829000,'Responsive cushioning in the Pegasus provides an energised ride for everyday road running. Experience lighter-weight energy return with dual Air Zoom units and a ReactX foam midsole. Plus, improved engineered mesh on the upper decreases weight and increases breathability.','Colour Shown: Cool Grey/Wolf Grey/Pure Platinum/White',100000,'2','0');
 /*!40000 ALTER TABLE `sanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -476,4 +472,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-10 21:03:39
+-- Dump completed on 2025-03-12 13:42:20

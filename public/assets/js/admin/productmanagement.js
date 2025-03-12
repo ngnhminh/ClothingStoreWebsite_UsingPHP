@@ -41,13 +41,13 @@ btnadd.addEventListener("click", function(){
 });
 
 // Tác vụ mở thông tin sản phẩm sửa
-const product_list = document.querySelectorAll(".product-list");
+const product_list = document.querySelectorAll(".product-list .product");
 product_list.forEach(element => {
-    element.addEventListener("click", function(event) {
+    element.addEventListener("click", function() {
         openChangePanel();
-        // console.log("Đối tượng được click:", event.target); // Đối tượng bị click
-        // console.log("ID:", event.target.id); // ID của đối tượng (nếu có)
-        // console.log("Nội dung:", event.target.textContent); // Nội dung của đối tượng
+        let productId = element.dataset.masp;
+        console.log(productId);
+        GetProductSizeWithId("getProductInform", productId);
         for(let i=0;i<changeproductclass.length;i++){
             changeproductclass[i].style.display = "flex";
         }
@@ -103,13 +103,36 @@ type.addEventListener("change", function(){
     console.log("YES");
 });
 
+//Thêm sản phẩm vào web
 //Gán sự kiện cho nút (Sử dụng ajax)
-function GetProductsWithType(funcName, type){
-    fetch(`http://localhost:3000/app/controllers/productmanagementcontroller.php?function=${funcName}&params=${type}`)
-    .then(response => response.text())
-    .then(data => {
-       console.log(data);
+function displayProducts(products) {
+    let productContainer = document.getElementById("product-list"); // Lấy thẻ chứa sản phẩm
+    productContainer.innerHTML = ""; // Xóa nội dung cũ
+
+    products.forEach(product => {
+        let productHTML = `
+            <div class="product" data-masp="${product.masp}">
+                <div class="product-thumbnail">
+                    <div class="product-thumbnail_wrapper">
+                        <img class="product-thumbnail__image" src="${product.duongdananh}" alt="Áo thun" />
+                    </div>
+                </div>
+                <p>${product.tensp}</p>
+             </div>
+        `;
+        productContainer.innerHTML += productHTML;
     });
+}
+
+//lấy gửi fetch tới db để trả dữ liệu về
+function GetProductsWithType(funcName, type) {
+    fetch(`http://localhost:3000/app/controllers/productmanagementcontroller.php?function=${funcName}&params=${type}`)
+    .then(response => response.json())
+    .then(data => {
+        displayProducts(data);
+        console.log("Phản hồi từ server:", data);
+    })
+    .catch(error => console.error("Lỗi:", error));
 }
 
 const filter_buttons = document.querySelectorAll(".filter-bar button");
@@ -117,8 +140,61 @@ const filter_buttons = document.querySelectorAll(".filter-bar button");
 filter_buttons.forEach((button)=>{
     button.addEventListener("click", () => {
         console.log(button.value);
-        GetProductsWithType("getAllByType", button.value);
+        if(button.value === "All"){
+            GetProductsWithType("getAllProducts");
+        }else{
+            GetProductsWithType("getAllByType", button.value);
+        }
     });
 })
 
-console.log(document.getElementById("za").value);
+//Hiện thông tin sản phẩm qua masp
+////---------------------------------------
+function displaySizeProducts(sizes) {
+    let sizeContainer = document.getElementById("changeproductsize-container");
+    sizeContainer.innerHTML = ""; // Xóa nội dung cũ
+
+    sizes.forEach(size => {
+        let sizeHTML = `
+            <div class="size-option">
+                <div>${size.tenkichco}</div>
+                <input type="number" value="${size.soluong}">
+            </div>
+        `;
+        sizeContainer.innerHTML += sizeHTML;
+    });
+}
+
+//Hàm gọi size và số lượng
+function GetProductSizeWithId(funcName, masp) {
+    fetch(`http://localhost:3000/app/controllers/productmanagementcontroller.php?function=${funcName}&params=${masp}`)
+    .then(response => response.json())
+    .then(data => {
+        displaySizeProducts(data);
+        console.log("Phản hồi từ server:", data);
+    })
+    .catch(error => console.error("Lỗi:", error));
+
+    //kiểm tra dữ liệu trả về cái gì ?
+    // fetch(`http://localhost:3000/app/controllers/productmanagementcontroller.php?function=${funcName}&params=${masp}`)
+    // .then(response => response.text()) // Đọc dữ liệu dạng text trước
+    // .then(data => {
+    //     console.log("Dữ liệu nhận được:", data); // Kiểm tra xem server trả về gì
+    //     return JSON.parse(data); // Chuyển đổi sang JSON
+    // })
+    // .then(jsonData => {
+    //     displaySizeProducts(jsonData);
+    //     console.log("Phản hồi JSON hợp lệ:", jsonData);
+    // })
+    // .catch(error => console.error("Lỗi:", error));
+
+}
+
+function GetProductInform(funcName, masp){
+    fetch(`http://localhost:3000/app/controllers/productmanagementcontroller.php?function=${funcName}&params=${masp}`)
+    .then(response => response.json())
+    .then(data => {
+        displaySizeProducts(data);
+        console.log("Phản hồi từ server:", data);
+    })
+}

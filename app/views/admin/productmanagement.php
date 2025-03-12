@@ -32,9 +32,10 @@
             
             <div class="filter-bar">
                 <button id="za" value="Áo">Áo (25)</button>
-                <button value="Quần"">Quần (25)</button>
+                <button value="Quần">Quần (25)</button>
                 <button value="Kính">Kính (25)</button>
                 <button value="Giày">Giày (25)</button>
+                <button value="All">Tất cả</button>
                 <button value="Block">Đồ khóa (25)</button>
                 <input type="text" placeholder="Nhập tên sản phẩm" id="search">
             </div>
@@ -42,13 +43,13 @@
             <div class="product-list" id="product-list">
                 <?php $products = getAllProducts(); 
                 foreach ($products as $product): ?>
-                    <div class="product">
+                    <div class="product" data-masp="<?php echo htmlspecialchars($product['masp']); ?>">
                         <div class="product-thumbnail">
                             <div class="product-thumbnail_wrapper">
-                                <img class="product-thumbnail__image" src="<?php echo $product['duongdananh'];?>" alt="Áo thun" />
+                                <img class="product-thumbnail__image" src="<?php echo htmlspecialchars($product['duongdananh']); ?>" alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
                             </div>
                         </div>
-                        <p><?php echo $product['tensp'];?></p>
+                        <p><?php echo htmlspecialchars($product['tensp']); ?></p>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -163,7 +164,7 @@
                         </div>
 
                         <div class="column2 changeproduct">
-                            <div class="sizes">
+                            <div class="sizes" id="changeproductsize-container">
                                 <span>Số lượng</span>
                                 <div class="size-option">
                                     <div>S</div>

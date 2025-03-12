@@ -1,6 +1,5 @@
 <?php
-require_once('D:\Workspace\PHP Projects\ClothingStore\config\db.php');// Gọi kết nối database
-
+include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
 function getAllProducts() {
     global $conn; 
     $sql = "SELECT *
@@ -20,6 +19,7 @@ function getAllProducts() {
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+//TRuy vấn lấy sản phẩm qua loại
 function getAllByType($loaisanpham) {
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT * 
@@ -41,7 +41,26 @@ function getAllByType($loaisanpham) {
     $result = mysqli_stmt_get_result($stmt);
     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
     mysqli_stmt_close($stmt);
+    return $data;
+}
 
+//TRuy vấn lấy số lượng và size sản phẩm qua idproduct
+function getProductInform($masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * FROM sanpham 
+            INNER JOIN mausanpham ON sanpham.masp = mausanpham.masp
+            INNER JOIN kichco ON kichco.masp = sanpham.masp
+            WHERE sanpham.masp=?
+            ORDER BY kichco.kichco_id ASC";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "s", $masp);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
     return $data;
 }
 
@@ -52,7 +71,8 @@ if (isset($_GET['function'])) {
     $params = isset($_GET['params']) ? explode(',', $_GET['params']) : []; // Lấy danh sách tham số
 
     if (function_exists($functionName)) {
-        echo "Tồn tại hàm";
+        $result = call_user_func_array($functionName, $params); // Gọi hàm với tham số
+        echo json_encode($result);
     } else {
         echo "Hàm không tồn tại!";
     }
