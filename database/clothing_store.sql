@@ -138,14 +138,11 @@ DROP TABLE IF EXISTS `hinhanh`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hinhanh` (
   `mahinhanh` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `masp` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `mau_id` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
   `duongdananh` varchar(300) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `mau_sanpham_id` int DEFAULT NULL,
   PRIMARY KEY (`mahinhanh`),
-  KEY `masp` (`masp`),
-  KEY `mau_id` (`mau_id`),
-  CONSTRAINT `hinhanh_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`),
-  CONSTRAINT `hinhanh_ibfk_2` FOREIGN KEY (`mau_id`) REFERENCES `mau` (`mau_id`)
+  KEY `fk_maucuasanpham` (`mau_sanpham_id`),
+  CONSTRAINT `fk_maucuasanpham` FOREIGN KEY (`mau_sanpham_id`) REFERENCES `mausanpham` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -155,7 +152,7 @@ CREATE TABLE `hinhanh` (
 
 LOCK TABLES `hinhanh` WRITE;
 /*!40000 ALTER TABLE `hinhanh` DISABLE KEYS */;
-INSERT INTO `hinhanh` VALUES ('1','102','1','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (1).png'),('2','102','1','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (2).png'),('3','102','1','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (3).png'),('4','102','1','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41.png'),('5','100','0','/public/assets/images/anh/ao/hanoilover/image.png'),('6','101','0','/public/assets/images/anh/quan/MetalWildLabelTrouserPants/image.png');
+INSERT INTO `hinhanh` VALUES ('1','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (1).png',3),('2','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (2).png',3),('3','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (3).png',3),('4','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41.png',3),('5','/public/assets/images/anh/ao/hanoilover/image.png',1),('6','/public/assets/images/anh/quan/MetalWildLabelTrouserPants/image.png',2);
 /*!40000 ALTER TABLE `hinhanh` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -472,4 +469,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-12 13:42:20
+-- Dump completed on 2025-03-12 14:30:42
