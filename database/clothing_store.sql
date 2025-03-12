@@ -325,12 +325,12 @@ DROP TABLE IF EXISTS `mausanpham`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mausanpham` (
   `id` int NOT NULL,
-  `masp` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `masp_id` varchar(200) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `mau_id` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `masp` (`masp`),
   KEY `mau_id` (`mau_id`),
-  CONSTRAINT `mausanpham_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`),
+  KEY `maucuasanpham_ibfk_1` (`masp_id`),
+  CONSTRAINT `maucuasanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`masp`),
   CONSTRAINT `mausanpham_ibfk_2` FOREIGN KEY (`mau_id`) REFERENCES `mau` (`mau_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -386,12 +386,12 @@ CREATE TABLE `sanpham` (
   `mota` varchar(5000) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `chitietsanpham` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `giamgia` int NOT NULL,
-  `maloai` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `maloai_id` varchar(200) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `matinhtrang` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`masp`),
-  KEY `maloai` (`maloai`),
   KEY `matinhtrang` (`matinhtrang`),
-  CONSTRAINT `sanpham_ibfk_1` FOREIGN KEY (`maloai`) REFERENCES `loaisanpham` (`maloai`),
+  KEY `sanpham_ibfk_1` (`maloai_id`),
+  CONSTRAINT `sanpham_ibfk_1` FOREIGN KEY (`maloai_id`) REFERENCES `loaisanpham` (`maloai`),
   CONSTRAINT `sanpham_ibfk_2` FOREIGN KEY (`matinhtrang`) REFERENCES `tinhtrang` (`matinhtrang`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -469,4 +469,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-12 14:30:42
+-- Dump completed on 2025-03-12 15:07:13

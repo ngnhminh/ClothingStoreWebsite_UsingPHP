@@ -2,15 +2,13 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
 function getAllProducts() {
     global $conn; 
-    $sql = "SELECT *
-            FROM hinhanh h1
+    $sql = "SELECT * FROM hinhanh h1
             JOIN (
-                SELECT masp, mau_id, MIN(mahinhanh) AS min_id
-                FROM hinhanh
-                GROUP BY masp, mau_id
-            ) h2 ON h1.mahinhanh = h2.min_id 
-            INNER JOIN sanpham ON sanpham.masp = h1.masp";
-
+                SELECT masp, mau_sanpham_id, MIN(mahinhanh) AS min_id
+                FROM hinhanh 
+                INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
+                GROUP BY masp, mau_sanpham_id
+            ) h2 ON h1.mahinhanh = h2.min_id ";
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {
@@ -25,13 +23,13 @@ function getAllByType($loaisanpham) {
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT masp, mau_id, MIN(mahinhanh) AS min_id
-                FROM hinhanh
-                GROUP BY masp, mau_id
-            ) h2 ON h1.mahinhanh = h2.min_id 
-            INNER JOIN sanpham ON sanpham.masp = h1.masp
-            INNER JOIN loaisanpham ON sanpham.maloai = loaisanpham.maloai
-            WHERE loaisanpham.tenloai = ?";
+                SELECT sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, MIN(hinhanh.mahinhanh) AS min_id
+                FROM hinhanh 
+                INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
+                INNER JOIN sanpham ON sanpham.masp = mausanpham.masp_id
+                INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
+                GROUP BY sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id;";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
