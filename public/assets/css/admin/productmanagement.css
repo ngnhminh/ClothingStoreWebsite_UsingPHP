@@ -263,11 +263,15 @@ button.save-btn:active {
     align-items: center; 
 }
 
-#product-type{
-    justify-content: center; 
-    align-items: center;
+#product-type {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    gap: 10px; /* Khoảng cách giữa các phần tử */
+    text-align: center;
+    margin: 10px auto; /* Canh giữa cả khối */
+    width: fit-content; /* Thu nhỏ theo nội dung */
     background-color: #D9D9D9;
-    width:150px;
 }
 
 #product-type span, select{
@@ -363,12 +367,12 @@ button.save-btn:active {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
-    gap: 10px;
+    margin-left: 25px;
 }
 
 .description textarea {
     display:flex;
-    width: 48%;
+    width: 44%;
     height: 80px;
     padding: 5px;
     border: 1px solid #000;
@@ -377,28 +381,39 @@ button.save-btn:active {
     align-items: center;
 }
 
-.product-config{
+#detail-container-change textarea{
+    display:flex;
+    width: 100%;
+    height: 50px;
+    padding: 5px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+#detail-container-change{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-direction: column;
+    margin-right: 35px;
+}
+
+.product-config {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    grid-template-areas: 
-      "left-side separator right-side";
-    gap: 0;
+    grid-template-columns: 1fr 1fr; /* Chia layout thành 2 cột bằng nhau */
+    gap: 20px; /* Khoảng cách giữa hai cột */
+    align-items: start; /* Căn chỉnh theo chiều dọc */
+    width: 100%; /* Đảm bảo nó chiếm toàn bộ không gian */
 }
 
-.column1 {
-    grid-area: left-side; /* Giữ nguyên nếu đang đặt vùng trong grid cha */
-    display: flex; /* Chuyển sang chế độ Flexbox */
-    flex-direction: column; /* Sắp xếp theo chiều dọc */
-    align-items: center; /* Căn lề trái */
+
+.column1, .column2 {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Giữ mỗi cột chiếm 50% không gian */
     gap: 15px; /* Thêm khoảng cách giữa các phần tử */
-}
-
-
-.column2{
-    grid-area: right-side;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    margin-left: 30px;
 }
 
 .color-section {
@@ -433,6 +448,7 @@ button.save-btn:active {
     border-radius: 50%;
     display: inline-block;
     border: 1px solid #000;
+    cursor: pointer;
 }
 
 .black { background: black; }
@@ -446,26 +462,34 @@ button.save-btn:active {
 }
 
 .image-box {
-    width: 200px;
-    border: 1px solid black;
-    padding: 10px;
-    margin: 10px 0;
-    background: white;
+    margin-top: 20px;
 }
-
-.image-box p {
+.image-item {
     display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
+    align-items: center;
+    margin-bottom: 10px;
 }
-
-.remove {
+.image-item img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.image-item button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
+}
+.image-item button:hover {
+    background-color: #c0392b;
 }
 
 .product-info {
-    max-height: 500px; /* Giới hạn chiều cao để scrollbar xuất hiện */
+    max-height: 400px; /* Giới hạn chiều cao để scrollbar xuất hiện */
     overflow-y: auto; /* Tạo thanh cuộn dọc */
 }
 

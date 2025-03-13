@@ -26,7 +26,7 @@ function getAllByType($loaisanpham) {
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.mota, MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
                 INNER JOIN sanpham ON sanpham.masp = mausanpham.masp_id
@@ -92,12 +92,122 @@ function getProductInform($masp){
 }
 // i - số nguyên, s - chuỗi, d - số thực, b - nhị phân
 
+function getProductDetailInform($masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * from sanpham
+            INNER JOIN chitietsanpham ON sanpham.masp = chitietsanpham.masp_id
+            WHERE sanpham.masp = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "s", $masp);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function getProductDescription($masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * from sanpham
+            WHERE sanpham.masp = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "s", $masp);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function getTypeOfProduct($masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * FROM loaisanpham
+            INNER JOIN sanpham 
+            ON sanpham.maloai_id = loaisanpham.maloai
+            WHERE sanpham.masp = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "s", $masp);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function getProductColor($masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * from mau
+            INNER JOIN mausanpham ON mau.mau_id = mausanpham.mau_id
+            WHERE mausanpham.masp_id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "s", $masp);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function getSizeOfProductColor($masp, $mamau){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * FROM sanpham 
+            INNER JOIN mausanpham ON sanpham.masp = mausanpham.masp_id
+            INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
+            INNER JOIN mau ON mau.mau_id = mausanpham.mau_id
+            WHERE sanpham.masp = ? AND mau.mamau = ?
+            ORDER BY kichco.kichco_id ASC";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "ss", $masp, $mamau);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function getSizeName($masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT kichco.tenkichco, MIN(kichco.kichco_id) as kichco_id
+            FROM sanpham 
+            INNER JOIN mausanpham ON sanpham.masp = mausanpham.masp_id
+            INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
+            WHERE sanpham.masp = ?
+            GROUP BY kichco.tenkichco
+            ORDER BY kichco_id ASC;";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "s", $masp);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
 if (isset($_GET['function'])) {
     $functionName = $_GET['function'];
     $params = isset($_GET['params']) ? explode(',', $_GET['params']) : []; // Lấy danh sách tham số
+    $color = isset($_GET['color']) ? explode(',', $_GET['color']) : [];
 
     if (function_exists($functionName)) {
-        $result = call_user_func_array($functionName, $params); // Gọi hàm với tham số
+        $result = call_user_func_array($functionName, array_merge($params, $color)); // Gọi hàm với tham số
         echo json_encode($result);
     } else {
         echo "Hàm không tồn tại!";

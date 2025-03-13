@@ -85,31 +85,20 @@
                             </div>
                             <div id="product-add-colornpic" style="display: none">
                                 <div class="color-section">
-                                    <button class="btn">Thêm màu</button>
+                                    <button class="btn btn-change" id="btn-change">Thêm màu</button>
+                                    <input type="color" id="colorPicker" style="display: none;">
+                                    <div id="colorDisplay" style="display:none">Giá trị màu: <span id="colorValue">#000000</span></div>
                                     <span class="divider">:</span>
-                                    <div class="color-options">
+                                    <div class="color-options color-options-change" id="color-options-change">
                                         <span class="color black"></span>
                                         <span class="color beige"></span>
                                         <span class="color brown"></span>
                                     </div>
-                                    <input type="checkbox" class="checkbox">
                                 </div>
 
-                                <button class="btn">Thêm hình ảnh màu</button>
-                                <div class="image-box">
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                </div>
-
-                                <button class="btn">Hình ảnh</button>
-                                <div class="image-box">
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                </div>
+                                <button class="btn" id="btn-image-change">Thêm hình ảnh màu</button>
+                                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                                <div class="image-box" id="image-box-change"></div>
                             </div>
                         </div>
 
@@ -169,7 +158,7 @@
                             </div>
                         </div>
 
-                        <div class="column2 addproduct">
+                        <div class="column2 addproduct" id ="column2changeproduct">
                             <div class="sizes">
                                 <span>Số lượng</span>
                                 <div class="size-option addproduct-ao" >
@@ -259,8 +248,10 @@
                     </div>              
 
                     <div class="description">
-                        <textarea placeholder="Mô tả"></textarea>
-                        <textarea placeholder="Chi tiết sản phẩm"></textarea>
+                        <textarea id="description-box" placeholder="Mô tả"></textarea>
+                        <div id="detail-container-change">
+                            <textarea placeholder="Chi tiết sản phẩm"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
