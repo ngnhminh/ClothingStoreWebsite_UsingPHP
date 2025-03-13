@@ -1,3 +1,10 @@
+<?php
+     
+     require_once __DIR__ . "/../../controllers/detailproductforFE.php";
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>

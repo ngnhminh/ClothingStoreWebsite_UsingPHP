@@ -1,6 +1,7 @@
 <?php
-    // require_once('app\controllers\productmanagementcontroller.php');
-    require_once('D:\Workspace\PHP Projects\ClothingStore\app\controllers\productmanagementcontroller.php');
+     
+     require_once __DIR__ . "/../../controllers/productmanagementcontroller.php";
+
 ?>
 
 <html lang="vi">
