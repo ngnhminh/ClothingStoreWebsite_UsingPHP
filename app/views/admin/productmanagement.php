@@ -65,7 +65,7 @@
                         <div class="column1 changeproduct" id ="column1changeproduct">
                             <div class="buttons" id="changebuttons">
                                 <button class="lock-btn" id="change-lock-btn">Khóa</button>
-                                <button class="save-btn">Lưu</button>
+                                <button class="save-btn" id="change-save-btn">Lưu</button>
                             </div>
                             <div id="product-type">
                                 <span>Loại:</span>
@@ -253,9 +253,14 @@
                         <div id="detail-container-change">
                             <textarea placeholder="Chi tiết sản phẩm"></textarea>
                         </div>
+                        <button id="add-textarea-btn">+</button>
+                        <button id="remove-textarea-btn">-</button>
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="loading-indicator" class="spinner-container">
+            <div class="spinner"></div>
         </div>
         <script src="/public/assets/js/admin/productmanagement.js"></script>
     </body>

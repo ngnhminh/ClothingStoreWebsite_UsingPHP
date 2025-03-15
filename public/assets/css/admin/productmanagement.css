@@ -397,7 +397,7 @@ button.save-btn:active {
     justify-content: space-between;
     gap: 10px;
     flex-direction: column;
-    margin-right: 35px;
+    /* margin-right: 35px; */
 }
 
 .product-config {
@@ -550,4 +550,55 @@ button.save-addbtn:active {
 #nameofpeoduct{
     border-radius: 10px;
     height: 20px;
+}
+
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f44336;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    z-index: 1000;
+    animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Ẩn Spinner mặc định */
+.spinner-container {
+    display: none; 
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.6); 
+    padding: 20px; 
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Vòng xoay */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Hiệu ứng xoay */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

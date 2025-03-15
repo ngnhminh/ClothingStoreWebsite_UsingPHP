@@ -5,6 +5,7 @@ var btnadd = document.getElementById("add-product-btn");
 const size_option = document.querySelectorAll(".size-option");
 const product_add_colornpic = document.getElementById("product-add-colornpic");
 let producttypestatus = "";
+let presentpage = "All";
 function normalizeString(str) {
     // Loại bỏ dấu và chuyển đổi thành chữ thường
     return str.normalize("NFD") // Tách ký tự và dấu
@@ -20,8 +21,44 @@ function removeHash(str) {
     return str.replace(/^#/, ''); 
 }
 
-console.log(removeHash("#abc")); // "abc"
-console.log(removeHash("abc"));  // "abc" (không bị ảnh hưởng)
+//alert vjp
+function alertCustom(message, bgColor = "#f44336") {
+    // Tạo phần tử alert
+    let alertBox = document.createElement("div");
+    alertBox.className = "custom-alert";
+    alertBox.style.backgroundColor = bgColor;
+    alertBox.textContent = message;
+
+    // Thêm vào body
+    document.body.appendChild(alertBox);
+
+    // Xóa sau 3 giây
+    setTimeout(() => {
+      alertBox.remove();
+    }, 1500);
+  }
+
+//Nút thêm ô trong description
+document.getElementById("add-textarea-btn").addEventListener("click", function () {
+    let container = document.getElementById("detail-container-change");
+
+    let newTextarea = document.createElement("textarea");
+    newTextarea.placeholder = "Chi tiết sản phẩm";
+    newTextarea.classList.add("extra-textarea"); // Thêm class để dễ quản lý
+
+    container.appendChild(newTextarea);
+});
+
+document.getElementById("remove-textarea-btn").addEventListener("click", function () {
+    let container = document.getElementById("detail-container-change");
+    let extraTextareas = container.getElementsByClassName("extra-textarea");
+
+    if (extraTextareas.length > 0) {
+        container.removeChild(extraTextareas[extraTextareas.length - 1]); // Xóa textarea cuối cùng
+    }
+});
+
+
 
 //Chọn bảng màu
 var btn_change = document.getElementById("btn-change");
@@ -56,7 +93,7 @@ function addNewColor(color, masp){
             let masp = this.getAttribute("data-masp_id");
             let hexcode = this.getAttribute("data-colorcode");
             console.log("Clicked color:", hexcode);
-            await GetFunctionWithAttribute("getSizeName", masp);
+            await GetFunctionWithAttribute("getSizeName", {masp: masp});
         });
 
         colorContainer.appendChild(span);
@@ -140,15 +177,15 @@ function openModalChangeProduct(){
             let productId = element.dataset.masp;
             console.log(productId);
             // GetFunctionWithAttribute("getProductInform", productId);
-            await GetFunctionWithAttribute("getProductInform", productId);
-            await GetFunctionWithAttribute("getProductDetailInform", productId);
-            await GetFunctionWithAttribute("getProductDescription", productId);
-            await GetFunctionWithAttribute("getTypeOfProduct", productId);
+            await GetFunctionWithAttribute("getProductInform", {masp: productId});
+            await GetFunctionWithAttribute("getProductDetailInform", {masp: productId});
+            await GetFunctionWithAttribute("getProductDescription", {masp: productId});
+            await GetFunctionWithAttribute("getTypeOfProduct", {masp: productId});
             //Kiểm tra loại sản phẩm để lấu size
             if(producttypestatus === "Giày" || producttypestatus === "Kính"){
-                await GetFunctionWithAttribute("getProductColor", productId);
+                await GetFunctionWithAttribute("getProductColor", {masp: productId});
             }else{
-                await GetFunctionWithAttribute("getProductSizeInform", productId);
+                await GetFunctionWithAttribute("getProductSizeInform", {masp: productId});
             }
 
             for(let i=0;i<changeproductclass.length;i++){
@@ -235,11 +272,13 @@ filter_buttons.forEach((button)=>{
     button.addEventListener("click", () => {
         console.log(button.value);
         if(button.value === "All"){
-            GetFunctionWithAttribute("getAllProducts");
+            GetFunctionWithAttribute("getAllProducts", {});
         }else if(button.value === "Block"){
-            GetFunctionWithAttribute("getAllProductsBlocked");
+            GetFunctionWithAttribute("getAllProductsBlocked", {});
+            presentpage = "Block";
         }else{
-            GetFunctionWithAttribute("getAllByType", button.value);
+            GetFunctionWithAttribute("getAllByType", {loaisanpham: button.value});
+            presentpage = "button.value";
         }
     });
 })
@@ -323,19 +362,109 @@ function displayInfoProducts(data) {
             change_price.style.display = "none";
         });
 
+        //Sự kiện nút block
         var lock_btn = document.getElementById("change-lock-btn");
-        if(product.matinhtrang === "0"){
+        if(product.matinhtrang === 0){
             lock_btn.innerText = "Mở khóa";
         }else{
             lock_btn.innerText = "Khóa";
         }
 
-        if(productvalue == "giay" || productvalue == "kinh"){
-            product_add_colornpic.style.display = "block";
+        lock_btn.addEventListener("click", function(){
+            if(product.matinhtrang === 0){
+                // lock_btn.style.backgroundColor="red";
+                GetFunctionWithAttribute("updateStatusProduct", 1, {masp: product.id});
+                GetFunctionWithAttribute("getAllProductsBlocked",{});
+            }else{
+                // lock_btn.style.backgroundColor="blue";
+                GetFunctionWithAttribute("updateStatusProduct", 0, {masp: product.id});
+                //Chuyển về trang hiện tại
+                if(presentpage === "All"){
+                    GetFunctionWithAttribute("getAllProducts",{})
+                }else{
+                    GetFunctionWithAttribute("getAllByType", {loaisanpham: normalizeString(presentpage)});
+                }
+            }
+        });
 
-        }else{
+        //Sự kiện nút Save
+        var save_btn = document.getElementById("change-save-btn");
+        save_btn.addEventListener("click", async function () {
+            let loadingIndicator = document.getElementById("loading-indicator");
+            let newprice = document.getElementById("changeproductprice").value;
+            let description = document.getElementById("description-box").value;
+
+            // Hiện hiệu ứng loading
+            loadingIndicator.style.display = "block";
+
+            try {
+                console.log("Giá mới:", newprice);
+                console.log("Mô tả:", description);
+
+                // Cập nhật sản phẩm
+                let updateResult = await GetFunctionWithAttribute("updateProduct", {
+                    gia: newprice,
+                    mota: description,
+                    masp: product.id
+                });
+
+                if (updateResult) {
+                    alertCustom("Sản phẩm đã được cập nhật!", "#4CAF50");
+                    change_modal[0].style.display = "none";
+                } else {
+                    alertCustom("Lỗi khi cập nhật sản phẩm!");
+                }
+
+                // Thêm chi tiết sản phẩm mới (nếu có)
+                let container = document.querySelectorAll("#detail-container-change .extra-textarea");
+                let updatePromises = [];
+                container.forEach(textarea => {
+                    if (textarea.value.trim() !== "") {
+                        updatePromises.push(
+                            GetFunctionWithAttribute("updateProductDetail", {
+                                masp: product.id,
+                                chitiet: textarea.value
+                            })
+                        );
+                    }
+                });
+
+                await Promise.all(updatePromises); // Chờ cập nhật xong
+
+                // Xóa chi tiết sản phẩm cũ nếu trống
+                let oldcontainer = document.querySelectorAll("#detail-container-change textarea");
+                let deletePromises = [];
+                oldcontainer.forEach(textarea => {
+                    if (textarea.value.trim() === "") {
+                        let detailId = textarea.getAttribute("data-id");
+                        if (detailId) {
+                            deletePromises.push(
+                                GetFunctionWithAttribute("deleteProductDetail", { id: detailId })
+                            );
+                        }
+                    }
+                });
+
+                await Promise.all(deletePromises); // Chờ xóa xong
+
+                // Xóa nội dung trong `#detail-container-change`
+                document.getElementById("detail-container-change").innerHTML = "";
+
+            } catch (error) {
+                console.error("Lỗi khi xử lý:", error);
+            } finally {
+                // Ẩn hiệu ứng loading
+                loadingIndicator.style.display = "none";
+            }
+        });
+
+        // Hiển thị hoặc ẩn phần màu sắc & ảnh
+        if (productvalue === "giay" || productvalue === "kinh") {
+            product_add_colornpic.style.display = "block";
+        } else {
             product_add_colornpic.style.display = "none";
-        } 
+        }
+
     });
 }
 
@@ -345,7 +474,7 @@ function displayInfoProductsDetail(data) {
 
     data.forEach(product => {
         let detailHTML = `
-            <textarea placeholder="Chi tiết sản phẩm">${product.chitiet}</textarea>
+            <textarea placeholder="Chi tiết sản phẩm" data-id = ${product.id}>${product.chitiet}</textarea>
         `;
         detailContainer.innerHTML += detailHTML;
     });
@@ -379,7 +508,7 @@ function displayColorProducts(colors) {
             let masp = this.getAttribute("data-masp_id");
             let hexcode = this.getAttribute("data-colorcode");
             console.log("Clicked color:", hexcode);
-            await GetFunctionWithAttribute("getSizeOfProductColor", masp, hexcode);
+            await GetFunctionWithAttribute("getSizeOfProductColor", {masp: masp, mamau: hexcode});
         });
 
         colorContainer.appendChild(span);
@@ -387,58 +516,77 @@ function displayColorProducts(colors) {
 }
 
 //vì fetch bất đồng bộ phải sử dụng thêm async function
-async function GetFunctionWithAttribute(funcName, masp, mamau) {
-    console.log("Màu được truyền vào:", mamau);
-    let url = `http://localhost:3000/app/controllers/productmanagementcontroller.php?function=${funcName}&params=${masp}`;
-    if (mamau != null) {
-        url += `&color=${mamau}`; 
-    }
-    console.log("URL gọi API:", url); 
+async function GetFunctionWithAttribute(funcName, paramsObj) {
+    console.log("Hàm gọi:", funcName);
+    console.log("Dữ liệu gửi đi:", paramsObj);
+
+    let url = `http://localhost:3000/app/controllers/productmanagementcontroller.php`;
 
     try {
-        let response = await fetch(url);
+        let response = await fetch(url, {
+            method: "POST", // Chuyển sang POST
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                function: funcName, // Gửi tên function
+                params: paramsObj, // Gửi object chứa tham số
+            }),
+        });
+
         let data = await response.json();
+        console.log("Dữ liệu nhận được:", data);
 
-        console.log("Dữ liệu nhận được:", data); 
-
-        // Kiểm tra kiểu dữ liệu trả về
         if (!data || typeof data !== "object") {
-            console.warn("Dữ liệu không hợp lệ hoặc không phải object:", data);
+            console.warn("Dữ liệu không hợp lệ:", data);
             return null;
         }
 
-        // Kiểm tra các giá trị cụ thể
-        if (Array.isArray(data)) {
-            console.log("Dữ liệu là một mảng, số lượng phần tử:", data.length);
-        } else {
-            console.log("Dữ liệu không phải mảng, kiểu dữ liệu:", typeof data);
-        }
-
-        if (funcName === "getTypeOfProduct") {
-            producttypestatus = data[0]?.tenloai || "Không có dữ liệu";
-            console.log("Type:", producttypestatus);
-        } else if (funcName === "getProductSizeInform") {
-            displaySizeProducts(data);
-        } else if (funcName === "getProductInform") {
-            displayInfoProducts(data);
-        } else if (funcName === "getProductDetailInform") {
-            displayInfoProductsDetail(data);
-        } else if (funcName === "getProductDescription") {
-            displayProductsDescription(data);
-        } else if (funcName === "getProductColor") {
-            displayColorProducts(data);
-        }else if (funcName === "getSizeOfProductColor") {
-            displaySizeProducts(data);
-        }else if(funcName === "getSizeName") {
-            displaySizeNewProducts(data);
-        }else if(funcName === "getAllByType"){
-            displayProducts(data);
-            openModalChangeProduct();
-        }else if(funcName === "getAllProducts"){
-            displayProducts(data);
-        }else if(funcName === "getAllProductsBlocked"){
-            displayProducts(data);
-            openModalChangeProduct();
+        // Xử lý theo loại function
+        switch (funcName) {
+            case "getTypeOfProduct":
+                producttypestatus = data[0]?.tenloai || "Không có dữ liệu";
+                console.log("Type:", producttypestatus);
+                break;
+            case "getProductDescription":
+                displayProductsDescription(data);
+                break;
+            case "updateProduct":
+            case "updateStatusProduct":
+                change_modal[0].style.display = "none";
+                break;
+            case "getProductSizeInform":
+                displaySizeProducts(data);
+                break;
+            case "getProductInform":
+                displayInfoProducts(data);
+                break;
+            case "getProductDetailInform":
+                displayInfoProductsDetail(data);
+                break;
+            case "getProductColor":
+                displayColorProducts(data);
+                break;
+            case "getSizeOfProductColor":
+                displaySizeProducts(data);
+                break;
+            case "getSizeName":
+                displaySizeNewProducts(data);
+                break;
+            case "getAllByType":
+            case "getAllProducts":
+            case "getAllProductsBlocked":
+                displayProducts(data);
+                openModalChangeProduct();
+                break;
+            case "updateProductDetail":
+                change_modal[0].style.display="none";
+                break;
+            case "deleteProductDetail":
+                change_modal[0].style.display="none";
+            break;
+            default:
+                console.warn("Hàm không được xử lý:", funcName);
         }
         return data;
     } catch (error) {
@@ -446,6 +594,7 @@ async function GetFunctionWithAttribute(funcName, masp, mamau) {
         return null;
     }
 }
+
 
 
 
