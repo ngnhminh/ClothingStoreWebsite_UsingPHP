@@ -1,3 +1,11 @@
+
+<?php
+     
+     require_once __DIR__ . "/../../controllers/khuyenmaimanagement.php";
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -96,5 +104,69 @@
     </div>
     <div class="discount-modal"><?php require 'voucheradd.php'; ?></div>
     <script src="/public/assets/js/admin/khuyenmaipage.js"></script>
+    <script>
+        
+        async function addVoucher() {
+  
+    let voucherName = document.getElementById("voucher_name")?.value.trim() || "";
+    let voucherCode = document.getElementById("voucher_code")?.value.trim() || "";
+    let quantity = document.getElementById("quantity")?.value.trim() || "";
+
+    if (!discount && !voucherName && !voucherCode && !quantity) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+    }
+
+    let formData = new FormData();
+ 
+    formData.append("voucher_name", voucherName);
+    formData.append("voucher_code", voucherCode);
+    formData.append("quantity", quantity);
+
+    try {
+        let response = await fetch("khuyenmai.php", {
+            method: "POST",
+            body: formData
+        });
+
+        let textResponse = await response.text();
+        console.log("Response từ PHP:", textResponse);
+
+        if (textResponse.includes("Thêm voucher thành công")) {
+            alert("Thêm voucher thành công!");
+
+            // ✅ Cập nhật bảng hiển thị voucher
+            let status = (parseInt(quantity) > 0) ? "Còn" : "Hết";
+            let voucherList = document.querySelector(".voucher-table tbody");
+            let newVoucher = document.createElement("tr");
+            newVoucher.innerHTML = `
+                <td>${voucherCode}</td>
+                <td>${voucherName}</td>
+                <td>${quantity}</td>
+                <td>${status}</td>
+            `;
+            voucherList.appendChild(newVoucher);
+
+            // ✅ Xóa dữ liệu trong form
+         
+            document.getElementById("voucher_name").value = "";
+            document.getElementById("voucher_code").value = "";
+            document.getElementById("quantity").value = "";
+
+            // ✅ Đóng modal (nếu có)
+            if (typeof closeModal === "function") closeModal();
+        } else {
+            alert("Có lỗi xảy ra: " + textResponse);
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Lỗi khi gửi dữ liệu: " + error.message);
+    }
+}
+
+
+
+    </script>
+
 </body>
 </html>

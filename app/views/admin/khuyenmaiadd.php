@@ -11,9 +11,9 @@
 <body>
 
 <div class="modal-voucher">
-    <button id="btn-voucher">&times;</button>
+
     <div class="modal-header-voucher">
-        <span>Thêm Khuyen Mai</span>
+        <span>Thêm Khuyến Mãi</span>
        
     </div>
     <div class="modal-body-voucher">

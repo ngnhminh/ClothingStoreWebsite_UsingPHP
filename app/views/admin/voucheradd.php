@@ -11,26 +11,28 @@
 <body>
 
 <div class="modal">
-    <button id="btn">&times;</button>
+   
     <div class="modal-header">
         <span>Thêm Voucher</span>
     </div>
     <div class="modal-body">
-        <label for="discount">Nhập giảm giá:</label>
-        <input type="text" id="discount" title="Nhập giảm giá" placeholder="Nhập giảm giá">
+    <form  method="POST">
+    <label for="voucher-name">Tên mã giảm giá:</label>
+    <input type="text" name="voucher_name" id="voucher_name"><br>
 
-        <label for="voucher-name">Tên voucher:</label>
-        <input type="text" id="voucher-name" title="Tên voucher" placeholder="Nhập tên voucher">
+    <label for="quantity">Số lượng:</label>
+    <input type="number" name="quantity" id="quantity"><br>
 
-        <label for="voucher-code">Mã voucher:</label>
-        <input type="text" id="voucher-code" title="Mã voucher" placeholder="Nhập mã voucher">
+    <label for="voucher-code">Mã giảm giá:</label>
+    <input type="text" name="voucher_code" id="voucher_code"><br>
 
-        <label for="quantity">Số lượng:</label>
-        <input type="number" id="quantity" title="Số lượng" placeholder="Nhập số lượng">
+   
+</form>
+
     </div>
     <div class="modal-footer">
         <button class="btn btn-cancel" onclick="closeModal()">Hủy</button>
-        <button class="btn btn-save">Lưu</button>
+        <button class="btn btn-save"  onclick="addVoucher()">Lưu</button>
     </div>
 </div>
 

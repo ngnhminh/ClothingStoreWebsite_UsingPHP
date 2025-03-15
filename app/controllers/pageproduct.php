@@ -7,12 +7,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
     global $conn; // Sử dụng kết nối từ config.php
 
     $query = "SELECT 
-    s.masp, 
+    s.id, 
     s.tensp, 
     s.gia, 
     h.duongdananh 
 FROM sanpham s
-INNER JOIN mausanpham m ON s.masp = m.masp_id
+INNER JOIN mausanpham m ON s.id = m.id
 INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id";
 
 
@@ -32,9 +32,9 @@ INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id";
  function getProductsbyprice($order = 'DESC') {
     global $conn;
 
-    $query = "SELECT s.masp, s.tensp, s.gia, h.duongdananh 
+    $query = "SELECT s.id, s.tensp, s.gia, h.duongdananh 
               FROM sanpham s
-              INNER JOIN mausanpham m ON s.masp = m.masp_id
+              INNER JOIN mausanpham m ON s.id = m.masp_id
               INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id
               ORDER BY s.gia $order"; // Sắp xếp theo giá
 
@@ -52,9 +52,9 @@ function getProductsByFilter($order = 'DESC', $maloai_id = null) {
     global $conn;
 
     // Câu lệnh SQL có điều kiện lọc theo loại nếu có
-    $query = "SELECT s.masp, s.tensp, s.gia, h.duongdananh 
+    $query = "SELECT s.id, s.tensp, s.gia, h.duongdananh 
               FROM sanpham s
-              INNER JOIN mausanpham m ON s.masp = m.masp_id
+              INNER JOIN mausanpham m ON s.id = m.masp_id
               INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id";
 
     if ($maloai_id) {
