@@ -116,7 +116,7 @@ function getProductInform($masp){
 
 function getProductDetailInform($masp){
     global $conn; // Sử dụng kết nối MySQLi
-    $sql = "SELECT * from sanpham
+    $sql = "SELECT chitietsanpham.chitiet, chitietsanpham.id from sanpham
             INNER JOIN chitietsanpham ON sanpham.id = chitietsanpham.masp_id
             WHERE sanpham.id = ?";
     $stmt = mysqli_prepare($conn, $sql);
@@ -223,16 +223,132 @@ function getSizeName($masp){
     return $data;
 }
 
-if (isset($_GET['function'])) {
-    $functionName = $_GET['function'];
-    $params = isset($_GET['params']) ? explode(',', $_GET['params']) : []; // Lấy danh sách tham số
-    $color = isset($_GET['color']) ? explode(',', $_GET['color']) : [];
+function updateStatusProduct($matinhtrang, $masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "UPDATE sanpham 
+            SET matinhtrang = ?
+            WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    mysqli_stmt_bind_param($stmt, "ii", $matinhtrang, $masp);
+    $success = mysqli_stmt_execute($stmt);
 
-    if (function_exists($functionName)) {
-        $result = call_user_func_array($functionName, array_merge($params, $color)); // Gọi hàm với tham số
-        echo json_encode($result);
+    // Kiểm tra số dòng bị ảnh hưởng
+    $affectedRows = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+    if ($success) {
+        return ["success" => true, "affected_rows" => $affectedRows];
     } else {
-        echo "Hàm không tồn tại!";
+        return ["success" => false, "error" => mysqli_error($conn)];
     }
 }
+
+function updateProduct($gia, $mota, $masp){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "UPDATE sanpham 
+            SET gia = ?, mota = ? 
+            WHERE id = ?";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "isi", $gia, $mota, $masp);
+    $success = mysqli_stmt_execute($stmt);
+
+    $affectedRows = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+
+    if ($success) {
+        return ["success" => true, "affected_rows" => $affectedRows];
+    } else {
+        return ["success" => false, "error" => mysqli_error($conn)];
+    }
+}
+
+function updateProductDetail($masp, $chitiet){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "INSERT INTO chitietsanpham(masp_id, chitiet) VALUES(?, ?)";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "is", $masp, $chitiet);
+    $success = mysqli_stmt_execute($stmt);
+
+    $affectedRows = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+
+    if ($success) {
+        return ["success" => true, "affected_rows" => $affectedRows];
+    } else {
+        return ["success" => false, "error" => mysqli_error($conn)];
+    }
+}
+
+function deleteProductDetail($id){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "DELETE FROM chitietsanpham WHERE id=?";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    $success = mysqli_stmt_execute($stmt);
+
+    $affectedRows = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+
+    if ($success) {
+        return ["success" => true, "affected_rows" => $affectedRows];
+    } else {
+        return ["success" => false, "error" => mysqli_error($conn)];
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (isset($data['function']) && isset($data['params']) && is_array($data['params'])) {
+        $functionName = $data['function'];
+        $params = $data['params'];
+
+        // Chỉ cho phép gọi các hàm hợp lệ
+        $allowedFunctions = [
+            "getTypeOfProduct",
+            "getProductDescription",
+            "updateProduct",
+            "getProductSizeInform",
+            "getProductInform",
+            "getProductDetailInform",
+            "getProductColor",
+            "getSizeOfProductColor",
+            "getSizeName",
+            "getAllByType",
+            "getAllProducts",
+            "getAllProductsBlocked",
+            "updateStatusProduct",
+            "updateProductDetail",
+            "deleteProductDetail"
+        ];
+
+        if (in_array($functionName, $allowedFunctions) && function_exists($functionName)) {
+            $result = call_user_func_array($functionName, $params);
+            echo json_encode($result);
+        } else {
+            echo json_encode(["error" => "Hàm không tồn tại hoặc không được phép!"]);
+        }
+    } else {
+        echo json_encode(["error" => "Thiếu function hoặc params không hợp lệ"]);
+    }
+}
+
+
 ?>
