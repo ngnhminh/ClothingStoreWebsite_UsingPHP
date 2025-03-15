@@ -44,7 +44,7 @@
             <div class="product-list" id="product-list">
                 <?php $products = getAllProducts(); 
                 foreach ($products as $product): ?>
-                    <div class="product" data-masp="<?php echo htmlspecialchars($product['masp']); ?>">
+                    <div class="product" data-masp="<?php echo htmlspecialchars($product['id']); ?>">
                         <div class="product-thumbnail">
                             <div class="product-thumbnail_wrapper">
                                 <img class="product-thumbnail__image" src="<?php echo htmlspecialchars($product['duongdananh']); ?>" alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
@@ -64,7 +64,7 @@
                     <div class="product-config">
                         <div class="column1 changeproduct" id ="column1changeproduct">
                             <div class="buttons" id="changebuttons">
-                                <button class="lock-btn">Khóa</button>
+                                <button class="lock-btn" id="change-lock-btn">Khóa</button>
                                 <button class="save-btn">Lưu</button>
                             </div>
                             <div id="product-type">

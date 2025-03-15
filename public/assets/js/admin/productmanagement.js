@@ -112,7 +112,7 @@ var changeproductclass = document.getElementsByClassName("changeproduct");
 var addproductclass = document.getElementsByClassName("addproduct")
 
 // Tạo sự kiện cho nút thêm sản phẩm
-btnadd.addEventListener("click", function(){
+btnadd.addEventListener("click", function(){ 
     openChangePanel();
     size_option.forEach(function (item) {
         item.style.display = "none";
@@ -128,34 +128,38 @@ btnadd.addEventListener("click", function(){
     }
 });
 
-// Tác vụ mở thông tin sản phẩm sửa
-const product_list = document.querySelectorAll(".product-list .product");
-product_list.forEach(element => {
-    element.addEventListener("click", async function() {
-        openChangePanel();
-        masp=element.dataset.masp;
-        let productId = element.dataset.masp;
-        console.log(productId);
-        // GetFunctionWithAttribute("getProductInform", productId);
-        await GetFunctionWithAttribute("getProductInform", productId);
-        await GetFunctionWithAttribute("getProductDetailInform", productId);
-        await GetFunctionWithAttribute("getProductDescription", productId);
-        await GetFunctionWithAttribute("getTypeOfProduct", productId);
-        //Kiểm tra loại sản phẩm để lấu size
-        if(producttypestatus === "Giày" || producttypestatus === "Kính"){
-            await GetFunctionWithAttribute("getProductColor", productId);
-        }else{
-            await GetFunctionWithAttribute("getProductSizeInform", productId);
-        }
+openModalChangeProduct();
 
-        for(let i=0;i<changeproductclass.length;i++){
-            changeproductclass[i].style.display = "flex";
-        }
-        for(let i=0;i<addproductclass.length;i++){
-            addproductclass[i].style.display = "none";
-        }
+// Tác vụ mở thông tin sản phẩm sửa
+function openModalChangeProduct(){
+    const product_list = document.querySelectorAll(".product-list .product");
+    product_list.forEach(element => {
+        element.addEventListener("click", async function() {
+            openChangePanel();
+            masp=element.dataset.masp;
+            let productId = element.dataset.masp;
+            console.log(productId);
+            // GetFunctionWithAttribute("getProductInform", productId);
+            await GetFunctionWithAttribute("getProductInform", productId);
+            await GetFunctionWithAttribute("getProductDetailInform", productId);
+            await GetFunctionWithAttribute("getProductDescription", productId);
+            await GetFunctionWithAttribute("getTypeOfProduct", productId);
+            //Kiểm tra loại sản phẩm để lấu size
+            if(producttypestatus === "Giày" || producttypestatus === "Kính"){
+                await GetFunctionWithAttribute("getProductColor", productId);
+            }else{
+                await GetFunctionWithAttribute("getProductSizeInform", productId);
+            }
+
+            for(let i=0;i<changeproductclass.length;i++){
+                changeproductclass[i].style.display = "flex";
+            }
+            for(let i=0;i<addproductclass.length;i++){
+                addproductclass[i].style.display = "none";
+            }
+        });
     });
-});
+}
 
 //Tạo sự kiện thay đổi khi nhấp vào loại
 const type = document.getElementById("product-type-selected");
@@ -211,7 +215,7 @@ function displayProducts(products) {
 
     products.forEach(product => {
         let productHTML = `
-            <div class="product" data-masp="${product.masp}">
+            <div class="product" data-masp="${product.id}">
                 <div class="product-thumbnail">
                     <div class="product-thumbnail_wrapper">
                         <img class="product-thumbnail__image" src="${product.duongdananh}" alt="Áo thun" />
@@ -232,6 +236,8 @@ filter_buttons.forEach((button)=>{
         console.log(button.value);
         if(button.value === "All"){
             GetFunctionWithAttribute("getAllProducts");
+        }else if(button.value === "Block"){
+            GetFunctionWithAttribute("getAllProductsBlocked");
         }else{
             GetFunctionWithAttribute("getAllByType", button.value);
         }
@@ -286,7 +292,7 @@ function displayInfoProducts(data) {
 
         let infoHTML = `
             <img src="${product.duongdananh}" alt="Sản phẩm">
-            <span id="nameofproduct-change" data-masp="${product.masp}">${product.tensp}</span>
+            <span id="nameofproduct-change" data-masp="${product.id}">${product.tensp}</span>
             <div class="price" id="change-price-input" style="display: none">
                 <span>Giá:</span> 
                 <input id="changeproductprice" value="${product.gia}">
@@ -298,7 +304,6 @@ function displayInfoProducts(data) {
                 </div> 
                 <button class="edit-btn" id="edit-btn-change">✎</button>
             </div>
-            <button class="save-addbtn">Lưu</button>
         `;
 
         let typeHTML = `
@@ -318,12 +323,19 @@ function displayInfoProducts(data) {
             change_price.style.display = "none";
         });
 
+        var lock_btn = document.getElementById("change-lock-btn");
+        if(product.matinhtrang === "0"){
+            lock_btn.innerText = "Mở khóa";
+        }else{
+            lock_btn.innerText = "Khóa";
+        }
+
         if(productvalue == "giay" || productvalue == "kinh"){
             product_add_colornpic.style.display = "block";
 
         }else{
             product_add_colornpic.style.display = "none";
-        }  
+        } 
     });
 }
 
@@ -374,7 +386,6 @@ function displayColorProducts(colors) {
     });
 }
 
-
 //vì fetch bất đồng bộ phải sử dụng thêm async function
 async function GetFunctionWithAttribute(funcName, masp, mamau) {
     console.log("Màu được truyền vào:", mamau);
@@ -420,6 +431,14 @@ async function GetFunctionWithAttribute(funcName, masp, mamau) {
             displaySizeProducts(data);
         }else if(funcName === "getSizeName") {
             displaySizeNewProducts(data);
+        }else if(funcName === "getAllByType"){
+            displayProducts(data);
+            openModalChangeProduct();
+        }else if(funcName === "getAllProducts"){
+            displayProducts(data);
+        }else if(funcName === "getAllProductsBlocked"){
+            displayProducts(data);
+            openModalChangeProduct();
         }
         return data;
     } catch (error) {

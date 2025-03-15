@@ -27,12 +27,12 @@ CREATE TABLE `chitiethoadon` (
   `soluong` int NOT NULL,
   `size` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `mahoadon` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `masp` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `masp` int DEFAULT NULL,
   PRIMARY KEY (`chitiethoadon_id`),
   KEY `mahoadon` (`mahoadon`),
-  KEY `masp` (`masp`),
+  KEY `chitiethoadon_ibfk_2` (`masp`),
   CONSTRAINT `chitiethoadon_ibfk_1` FOREIGN KEY (`mahoadon`) REFERENCES `hoadon` (`mahoadon`),
-  CONSTRAINT `chitiethoadon_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`)
+  CONSTRAINT `chitiethoadon_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -57,15 +57,15 @@ CREATE TABLE `chitiethoatdong` (
   `thaydoi` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `thoigian` int NOT NULL,
   `ngay` date NOT NULL,
-  `masp` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `magiamgia_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `masp` int DEFAULT NULL,
+  `magiamgia_id` int DEFAULT NULL,
   `nhatki_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`chitiethoatdong_id`),
-  KEY `masp` (`masp`),
-  KEY `magiamgia_id` (`magiamgia_id`),
   KEY `nhatki_id` (`nhatki_id`),
-  CONSTRAINT `chitiethoatdong_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`),
-  CONSTRAINT `chitiethoatdong_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`magiamgia_id`),
+  KEY `chitiethoatdong_ibfk_2` (`magiamgia_id`),
+  KEY `chitiethoatdong_ibfk_1` (`masp`),
+  CONSTRAINT `chitiethoatdong_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`id`),
+  CONSTRAINT `chitiethoatdong_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`id`),
   CONSTRAINT `chitiethoatdong_ibfk_3` FOREIGN KEY (`nhatki_id`) REFERENCES `nhatki` (`nhatki_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -87,12 +87,12 @@ DROP TABLE IF EXISTS `chitietsanpham`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `chitietsanpham` (
-  `masp_id` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `masp_id` int DEFAULT NULL,
   `chitiet` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  KEY `masp_id` (`masp_id`),
-  CONSTRAINT `chitietsanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`masp`)
+  KEY `chitietsanpham_ibfk_1` (`masp_id`),
+  CONSTRAINT `chitietsanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -102,7 +102,7 @@ CREATE TABLE `chitietsanpham` (
 
 LOCK TABLES `chitietsanpham` WRITE;
 /*!40000 ALTER TABLE `chitietsanpham` DISABLE KEYS */;
-INSERT INTO `chitietsanpham` VALUES ('100','Chất liệu: Cotton 2 chiều.',1),('100','Regular Fit.',2),('100','Hình in mặt trước áo áp dụng công nghệ in lụa.',3),('102','Colour Shown: Vivid Purple/Black/Hot Punch',4),('102','Style: FQ7262-500',5),('102','Country/Region of Origin: Vietnam',6);
+INSERT INTO `chitietsanpham` VALUES (1,'Chất liệu: Cotton 2 chiều.',1),(1,'Regular Fit.',2),(1,'Hình in mặt trước áo áp dụng công nghệ in lụa.',3),(3,'Colour Shown: Vivid Purple/Black/Hot Punch',4),(3,'Style: FQ7262-500',5),(3,'Country/Region of Origin: Vietnam',6);
 /*!40000 ALTER TABLE `chitietsanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,12 +114,12 @@ DROP TABLE IF EXISTS `danhsachyeuthich`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `danhsachyeuthich` (
-  `masp` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `masp` int NOT NULL,
   `matk` int NOT NULL,
   PRIMARY KEY (`masp`,`matk`),
   UNIQUE KEY `masp` (`masp`,`matk`),
   KEY `matk` (`matk`),
-  CONSTRAINT `danhsachyeuthich_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`),
+  CONSTRAINT `danhsachyeuthich_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`id`),
   CONSTRAINT `danhsachyeuthich_ibfk_2` FOREIGN KEY (`matk`) REFERENCES `taikhoan` (`matk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -196,12 +196,12 @@ CREATE TABLE `hoadon` (
   `diemtichluydasudung` int NOT NULL,
   `tongtien` int NOT NULL,
   `mahk` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `magiamgia_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `magiamgia_id` int DEFAULT NULL,
   PRIMARY KEY (`mahoadon`),
   KEY `mahk` (`mahk`),
-  KEY `magiamgia_id` (`magiamgia_id`),
+  KEY `hoadon_ibfk_2` (`magiamgia_id`),
   CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`mahk`) REFERENCES `khachhang` (`makh`),
-  CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`magiamgia_id`)
+  CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -306,7 +306,8 @@ CREATE TABLE `magiamgia` (
   `soluong` int NOT NULL,
   `codegiamgia` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `tiengiam` int NOT NULL,
-  PRIMARY KEY (`magiamgia_id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -352,12 +353,12 @@ DROP TABLE IF EXISTS `mausanpham`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mausanpham` (
   `id` int NOT NULL,
-  `masp_id` varchar(200) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `masp_id` int DEFAULT NULL,
   `mau_id` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `mau_id` (`mau_id`),
-  KEY `maucuasanpham_ibfk_1` (`masp_id`),
-  CONSTRAINT `maucuasanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`masp`),
+  KEY `mausanpham_ibfk_1` (`masp_id`),
+  CONSTRAINT `mausanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`id`),
   CONSTRAINT `mausanpham_ibfk_2` FOREIGN KEY (`mau_id`) REFERENCES `mau` (`mau_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -368,7 +369,7 @@ CREATE TABLE `mausanpham` (
 
 LOCK TABLES `mausanpham` WRITE;
 /*!40000 ALTER TABLE `mausanpham` DISABLE KEYS */;
-INSERT INTO `mausanpham` VALUES (1,'100','0'),(2,'101','0'),(3,'102','1'),(4,'102','2');
+INSERT INTO `mausanpham` VALUES (1,1,'0'),(2,2,'0'),(3,3,'1'),(4,3,'2');
 /*!40000 ALTER TABLE `mausanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -414,12 +415,12 @@ CREATE TABLE `sanpham` (
   `giamgia` int NOT NULL,
   `maloai_id` varchar(200) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `matinhtrang` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`masp`),
+  `id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
   KEY `matinhtrang` (`matinhtrang`),
   KEY `sanpham_ibfk_1` (`maloai_id`),
-  CONSTRAINT `sanpham_ibfk_1` FOREIGN KEY (`maloai_id`) REFERENCES `loaisanpham` (`maloai`),
-  CONSTRAINT `sanpham_ibfk_2` FOREIGN KEY (`matinhtrang`) REFERENCES `tinhtrang` (`matinhtrang`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  CONSTRAINT `sanpham_ibfk_1` FOREIGN KEY (`maloai_id`) REFERENCES `loaisanpham` (`maloai`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -428,7 +429,7 @@ CREATE TABLE `sanpham` (
 
 LOCK TABLES `sanpham` WRITE;
 /*!40000 ALTER TABLE `sanpham` DISABLE KEYS */;
-INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,NULL,0,'0','1'),('101','Metal Label Wide Trouser Pants - Brown',590000,NULL,0,'1','2'),('102','Nike Pegasus 41',3829000,'Responsive cushioning in the Pegasus provides an energised ride for everyday road running. Experience lighter-weight energy return with dual Air Zoom units and a ReactX foam midsole. Plus, improved engineered mesh on the upper decreases weight and increases breathability.',100000,'2','0');
+INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,NULL,0,'0','1',1),('101','Metal Label Wide Trouser Pants - Brown',590000,NULL,0,'1','1',2),('102','Nike Pegasus 41',3829000,'Responsive cushioning in the Pegasus provides an energised ride for everyday road running. Experience lighter-weight energy return with dual Air Zoom units and a ReactX foam midsole. Plus, improved engineered mesh on the upper decreases weight and increases breathability.',100000,'2','0',3);
 /*!40000 ALTER TABLE `sanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -461,30 +462,6 @@ LOCK TABLES `taikhoan` WRITE;
 INSERT INTO `taikhoan` VALUES (1,'duongminh','123456',100,'1'),(2,'nguyenlan','abcdef',200,'2'),(3,'tranvan','qwerty',150,'3'),(4,'phamhoa','password',120,'4'),(5,'levantam','letmein',180,'5');
 /*!40000 ALTER TABLE `taikhoan` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tinhtrang`
---
-
-DROP TABLE IF EXISTS `tinhtrang`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tinhtrang` (
-  `matinhtrang` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `ten` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  PRIMARY KEY (`matinhtrang`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tinhtrang`
---
-
-LOCK TABLES `tinhtrang` WRITE;
-/*!40000 ALTER TABLE `tinhtrang` DISABLE KEYS */;
-INSERT INTO `tinhtrang` VALUES ('0','CÒN HÀNG'),('1','SẮP HẾT HÀNG'),('2','HẾT HÀNG');
-/*!40000 ALTER TABLE `tinhtrang` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -495,4 +472,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-13 22:25:45
+-- Dump completed on 2025-03-15 10:40:48

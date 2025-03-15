@@ -5,12 +5,34 @@ function getAllProducts() {
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
-                INNER JOIN sanpham ON sanpham.masp = mausanpham.masp_id
+                INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
                 INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
-                GROUP BY sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id
+                WHERE sanpham.matinhtrang = 1
+                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id";
+    $result = mysqli_query($conn, $sql);
+
+    if (!$result) {
+        die("Lỗi truy vấn: " . mysqli_error($conn));
+    }
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function getAllProductsBlocked() {
+    global $conn; 
+    $sql = "SELECT * 
+            FROM hinhanh h1
+            JOIN (
+                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, MIN(hinhanh.mahinhanh) AS min_id
+                FROM hinhanh 
+                INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
+                INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
+                INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
+                WHERE sanpham.matinhtrang = 0
+                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
             ) h2 ON h1.mahinhanh = h2.min_id";
     $result = mysqli_query($conn, $sql);
 
@@ -26,13 +48,13 @@ function getAllByType($loaisanpham) {
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.mota, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.mota, MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
-                INNER JOIN sanpham ON sanpham.masp = mausanpham.masp_id
+                INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
                 INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
-                WHERE loaisanpham.tenloai = ?
-                GROUP BY sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id
+                WHERE loaisanpham.tenloai = ? AND sanpham.matinhtrang = 1
+                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
             ) h2 ON h1.mahinhanh = h2.min_id";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
@@ -50,9 +72,9 @@ function getAllByType($loaisanpham) {
 function getProductSizeInform($masp){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT * FROM sanpham 
-            INNER JOIN mausanpham ON sanpham.masp = mausanpham.masp_id
+            INNER JOIN mausanpham ON sanpham.id = mausanpham.masp_id
             INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
-            WHERE sanpham.masp= ?
+            WHERE sanpham.id= ?
             ORDER BY kichco.kichco_id ASC";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
@@ -71,13 +93,13 @@ function getProductInform($masp){
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, sanpham.matinhtrang, MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
-                INNER JOIN sanpham ON sanpham.masp = mausanpham.masp_id
+                INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
                 INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
-                WHERE sanpham.masp= ?
-                GROUP BY sanpham.masp, hinhanh.mau_sanpham_id, sanpham.maloai_id
+                WHERE sanpham.id= ?
+                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
             ) h2 ON h1.mahinhanh = h2.min_id";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
@@ -95,8 +117,8 @@ function getProductInform($masp){
 function getProductDetailInform($masp){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT * from sanpham
-            INNER JOIN chitietsanpham ON sanpham.masp = chitietsanpham.masp_id
-            WHERE sanpham.masp = ?";
+            INNER JOIN chitietsanpham ON sanpham.id = chitietsanpham.masp_id
+            WHERE sanpham.id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
@@ -112,7 +134,7 @@ function getProductDetailInform($masp){
 function getProductDescription($masp){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT * from sanpham
-            WHERE sanpham.masp = ?";
+            WHERE sanpham.id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
@@ -130,7 +152,7 @@ function getTypeOfProduct($masp){
     $sql = "SELECT * FROM loaisanpham
             INNER JOIN sanpham 
             ON sanpham.maloai_id = loaisanpham.maloai
-            WHERE sanpham.masp = ?";
+            WHERE sanpham.id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
@@ -163,10 +185,10 @@ function getProductColor($masp){
 function getSizeOfProductColor($masp, $mamau){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT * FROM sanpham 
-            INNER JOIN mausanpham ON sanpham.masp = mausanpham.masp_id
+            INNER JOIN mausanpham ON sanpham.id = mausanpham.masp_id
             INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
             INNER JOIN mau ON mau.mau_id = mausanpham.mau_id
-            WHERE sanpham.masp = ? AND mau.mamau = ?
+            WHERE sanpham.id = ? AND mau.mamau = ?
             ORDER BY kichco.kichco_id ASC";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
@@ -184,9 +206,9 @@ function getSizeName($masp){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT kichco.tenkichco, MIN(kichco.kichco_id) as kichco_id
             FROM sanpham 
-            INNER JOIN mausanpham ON sanpham.masp = mausanpham.masp_id
+            INNER JOIN mausanpham ON sanpham.id = mausanpham.masp_id
             INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
-            WHERE sanpham.masp = ?
+            WHERE sanpham.id = ?
             GROUP BY kichco.tenkichco
             ORDER BY kichco_id ASC;";
     $stmt = mysqli_prepare($conn, $sql);
