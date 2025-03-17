@@ -1,18 +1,19 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
+include(__DIR__ . "/../../config/db.php");
 function getAllProducts() {
     global $conn; 
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, 
+                    MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
                 INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
                 INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
                 WHERE sanpham.matinhtrang = 1
-                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
-            ) h2 ON h1.mahinhanh = h2.min_id";
+                GROUP BY sanpham.id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id;";
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {
@@ -26,14 +27,15 @@ function getAllProductsBlocked() {
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, 
+                    MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
                 INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
                 INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
                 WHERE sanpham.matinhtrang = 0
-                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
-            ) h2 ON h1.mahinhanh = h2.min_id";
+                GROUP BY sanpham.id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id;";
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {
@@ -48,14 +50,15 @@ function getAllByType($loaisanpham) {
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.mota, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.mota, 
+                    MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
                 INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
                 INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
                 WHERE loaisanpham.tenloai = ? AND sanpham.matinhtrang = 1
-                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
-            ) h2 ON h1.mahinhanh = h2.min_id";
+                GROUP BY sanpham.id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id;";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
@@ -93,14 +96,15 @@ function getProductInform($masp){
     $sql = "SELECT * 
             FROM hinhanh h1
             JOIN (
-                SELECT sanpham.tensp, sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, sanpham.matinhtrang, MIN(hinhanh.mahinhanh) AS min_id
+                SELECT sanpham.tensp, sanpham.id, sanpham.maloai_id, loaisanpham.tenloai, 
+                    sanpham.gia, sanpham.matinhtrang, sanpham.nsx, MIN(hinhanh.mahinhanh) AS min_id
                 FROM hinhanh 
                 INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
                 INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
                 INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
-                WHERE sanpham.id= ?
-                GROUP BY sanpham.id, hinhanh.mau_sanpham_id, sanpham.maloai_id
-            ) h2 ON h1.mahinhanh = h2.min_id";
+                WHERE sanpham.id = ?
+                GROUP BY sanpham.id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id;";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
@@ -168,7 +172,7 @@ function getTypeOfProduct($masp){
 function getProductColor($masp){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT * from mau
-            INNER JOIN mausanpham ON mau.mau_id = mausanpham.mau_id
+            INNER JOIN mausanpham ON mau.id = mausanpham.mau_id
             WHERE mausanpham.masp_id = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
@@ -187,7 +191,7 @@ function getSizeOfProductColor($masp, $mamau){
     $sql = "SELECT * FROM sanpham 
             INNER JOIN mausanpham ON sanpham.id = mausanpham.masp_id
             INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
-            INNER JOIN mau ON mau.mau_id = mausanpham.mau_id
+            INNER JOIN mau ON mau.id = mausanpham.mau_id
             WHERE sanpham.id = ? AND mau.mamau = ?
             ORDER BY kichco.kichco_id ASC";
     $stmt = mysqli_prepare($conn, $sql);
@@ -313,6 +317,193 @@ function deleteProductDetail($id){
     }
 }
 
+function addColorOfProduct($mamau, $masp_id) {
+    global $conn; // Sử dụng kết nối MySQLi
+
+    if (!$masp_id || !is_numeric($masp_id)) {
+        return ["success" => false, "error" => "ID sản phẩm không hợp lệ"];
+    }
+
+    error_log("Thêm màu: mamau = $mamau, masp_id = $masp_id");
+
+    // Kiểm tra xem sản phẩm có tồn tại không
+    $checkProductSql = "SELECT id FROM sanpham WHERE id = ?";
+    $checkProductStmt = mysqli_prepare($conn, $checkProductSql);
+    mysqli_stmt_bind_param($checkProductStmt, "i", $masp_id);
+    mysqli_stmt_execute($checkProductStmt);
+    mysqli_stmt_store_result($checkProductStmt);
+
+    if (mysqli_stmt_num_rows($checkProductStmt) == 0) {
+        mysqli_stmt_close($checkProductStmt);
+        return ["success" => false, "error" => "ID sản phẩm không tồn tại"];
+    }
+    mysqli_stmt_close($checkProductStmt);
+
+    // Kiểm tra màu đã tồn tại chưa
+    $checkSql = "SELECT id FROM mau WHERE mamau = ?";
+    $checkStmt = mysqli_prepare($conn, $checkSql);
+    mysqli_stmt_bind_param($checkStmt, "s", $mamau);
+    mysqli_stmt_execute($checkStmt);
+    mysqli_stmt_store_result($checkStmt);
+
+    if (mysqli_stmt_num_rows($checkStmt) > 0) {
+        mysqli_stmt_bind_result($checkStmt, $newMauId);
+        mysqli_stmt_fetch($checkStmt);
+        mysqli_stmt_close($checkStmt);
+    } else {
+        mysqli_stmt_close($checkStmt);
+
+        // Thêm màu mới vào bảng `mau`
+        $sql = "INSERT INTO mau (mamau) VALUES (?)";
+        $stmt = mysqli_prepare($conn, $sql);
+
+        if (!$stmt) {
+            return ["success" => false, "error" => "Lỗi chuẩn bị truy vấn 1: " . mysqli_error($conn)];
+        }
+
+        mysqli_stmt_bind_param($stmt, "s", $mamau);
+        $success = mysqli_stmt_execute($stmt);
+
+        if (!$success) {
+            error_log("Lỗi khi thêm vào mau: " . mysqli_error($conn));
+            mysqli_stmt_close($stmt);
+            return ["success" => false, "error" => "Lỗi khi thêm vào `mau`: " . mysqli_error($conn)];
+        }
+
+        $newMauId = mysqli_insert_id($conn);
+        mysqli_stmt_close($stmt);
+    }
+
+    error_log("Màu mới thêm có ID: $newMauId");
+
+    // Thêm vào bảng `mausanpham`
+    $sql2 = "INSERT INTO mausanpham (masp_id, mau_id) VALUES (?, ?)";
+    $stmt2 = mysqli_prepare($conn, $sql2);
+
+    if (!$stmt2) {
+        return ["success" => false, "error" => "Lỗi chuẩn bị truy vấn 2: " . mysqli_error($conn)];
+    }
+
+    mysqli_stmt_bind_param($stmt2, "ii", $masp_id, $newMauId);
+    $success2 = mysqli_stmt_execute($stmt2);
+    mysqli_stmt_close($stmt2);
+
+    if (!$success2) {
+        error_log("Lỗi khi thêm vào mausanpham: " . mysqli_error($conn));
+        return ["success" => false, "error" => "Lỗi khi thêm vào `mausanpham`: " . mysqli_error($conn)];
+    }
+
+    $newMauCuaSanPhamId = mysqli_insert_id($conn);
+    error_log("Thêm vào mausanpham thành công!");
+
+    return ["success" => true, "new_mau_id" => $newMauId, "mau_san_pham_id" => $newMauCuaSanPhamId];
+}
+
+
+
+
+function addSizeOfProduct($tenkichco, $soluong, $mau_sanpham_id){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "INSERT INTO kichco(tenkichco, soluong, mau_sanpham_id) VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "sii", $tenkichco, $soluong, $mau_sanpham_id);
+    $success = mysqli_stmt_execute($stmt);
+
+    $affectedRows = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+
+    if ($success) {
+        return ["success" => true, "affected_rows" => $affectedRows];
+    } else {
+        return ["success" => false, "error" => mysqli_error($conn)];
+    }
+}
+
+function getImageOfProductByColor($mamau, $masp_id){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * from hinhanh 
+            INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
+            INNER JOIN mau ON mausanpham.mau_id = mau.id
+            WHERE mau.mamau = ? && mausanpham.masp_id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "si", $mamau, $masp_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function addImageOfProduct($duongdananh, $mau_sanpham_id){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "INSERT INTO hinhanh(duongdananh, mau_sanpham_id) VALUES (?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "si", $duongdananh, $mau_sanpham_id);
+    $success = mysqli_stmt_execute($stmt);
+
+    $affectedRows = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+
+    if ($success) {
+        return ["success" => true, "affected_rows" => $affectedRows];
+    } else {
+        return ["success" => false, "error" => mysqli_error($conn)];
+    }
+}
+
+function deleteProductImage($mahinhanh){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "DELETE FROM hinhanh WHERE mahinhanh=?";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "i", $mahinhanh);
+    $success = mysqli_stmt_execute($stmt);
+
+    $affectedRows = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+
+    if ($success) {
+        return ["success" => true, "affected_rows" => $affectedRows];
+    } else {
+        return ["success" => false, "error" => mysqli_error($conn)];
+    }
+}
+
+function getMauSanPhamId($masp_id, $mamau){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT mausanpham.id from mausanpham
+            INNER JOIN mau ON mau.id = mausanpham.mau_id
+            WHERE mausanpham.masp_id = ? AND mau.mamau = ?";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "is", $masp_id, $mamau);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -336,7 +527,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "getAllProductsBlocked",
             "updateStatusProduct",
             "updateProductDetail",
-            "deleteProductDetail"
+            "deleteProductDetail",
+            "addColorOfProduct",
+            "addSizeOfProduct",
+            "getImageOfProductByColor",
+            "deleteProductImage",
+            "getMauSanPhamId",
+            "addImageOfProduct"
         ];
 
         if (in_array($functionName, $allowedFunctions) && function_exists($functionName)) {
@@ -349,6 +546,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(["error" => "Thiếu function hoặc params không hợp lệ"]);
     }
 }
-
 
 ?>

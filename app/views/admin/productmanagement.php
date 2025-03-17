@@ -1,7 +1,5 @@
 <?php
-     
      require_once __DIR__ . "/../../controllers/productmanagementcontroller.php";
-
 ?>
 
 <html lang="vi">
@@ -9,13 +7,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin</title>
-        <link rel="stylesheet" type="text/css" href="/public/assets/css/admin/productmanagement.css">
+        <link rel="stylesheet" href="http://localhost/ClothingStore/public/assets/css/admin/productmanagement.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     </head>
     <body>
         <aside class="sidebar">
-            <img id="logo_img" src="/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
+            <img id="logo_img" src="http://localhost/ClothingStore/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
             <ul class="menu-admin">
                 <a href="dashboard.php"><li>📊 Dashboard</li></a>
                 <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
@@ -114,7 +112,7 @@
                                 </select>
                             </div>
                             <div class="product-image">
-                                <img src="/public/assets/images/vector.svg" alt="Sản phẩm" class="addproduct">
+                                <img src="http://localhost/ClothingStore/public/assets/images/vector.svg" alt="Sản phẩm" class="addproduct">
                                 <input type="text" id="nameofpeoduct" placeholder="Nhập tên sản phẩm" required>
                                 <div class="price">
                                     <label for="cost">Giá</label>
@@ -262,6 +260,6 @@
         <div id="loading-indicator" class="spinner-container">
             <div class="spinner"></div>
         </div>
-        <script src="/public/assets/js/admin/productmanagement.js"></script>
+        <script src="http://localhost/ClothingStore/public/assets/js/admin/productmanagement.js"></script>
     </body>
 </html>

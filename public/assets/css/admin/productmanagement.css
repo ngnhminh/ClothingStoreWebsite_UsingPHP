@@ -324,7 +324,7 @@ button.save-btn:active {
     margin-bottom: 5px;
 }
 
-.size-option div {
+.size-option label {
     display: flex; 
     justify-content: center; 
     align-items: center; 
