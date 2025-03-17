@@ -504,6 +504,36 @@ function getMauSanPhamId($masp_id, $mamau){
     return $data;
 }
 
+function getSanPhamByName($tensanpham){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * 
+            FROM hinhanh h1
+            JOIN (
+                SELECT sanpham.tensp, sanpham.id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, 
+                    MIN(hinhanh.mahinhanh) AS min_id
+                FROM hinhanh 
+                INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
+                INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
+                INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
+                WHERE sanpham.tensp LIKE ?
+                GROUP BY sanpham.id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id;";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    
+    $searchParam = "%{$tensanpham}%"; //Kiếm gần đúng cho thêm % vào
+    mysqli_stmt_bind_param($stmt, "s", $searchParam);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -533,7 +563,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "getImageOfProductByColor",
             "deleteProductImage",
             "getMauSanPhamId",
-            "addImageOfProduct"
+            "addImageOfProduct",
+            "getSanPhamByName"
         ];
 
         if (in_array($functionName, $allowedFunctions) && function_exists($functionName)) {

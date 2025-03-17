@@ -23,6 +23,11 @@ function removeHash(str) {
     return str.replace(/^#/, ''); 
 }
 
+var search = document.getElementById("search");
+search.addEventListener("input", function(){
+    GetFunctionWithAttribute("getSanPhamByName", {tensanpham: search.value})
+});
+
 //alert vjp
 function alertCustom(message, bgColor = "#f44336") {
     // Tạo phần tử alert
@@ -68,18 +73,15 @@ btn_change.addEventListener("click", () => {
     colorPicker.click(); 
 });
 
-colorPicker.addEventListener("change", () => {
-    colorValue.textContent = colorPicker.value; 
-    var masp = document.getElementById("nameofproduct-change").getAttribute("data-masp");
-    // console.log(masp);
-    let existingColor = document.querySelectorAll(".color-options-change .color").length; // Đếm số size-option hiện tại
+const colorPicker = document.getElementById("color-picker"); // Định nghĩa đúng ID
+if (colorPicker) {
+    colorPicker.addEventListener("change", () => {
+        colorValue.textContent = colorPicker.value;
+    });
+} else {
+    console.warn("Không tìm thấy colorPicker!");
+}
 
-    // if (existingColor > 2) {
-    //     alert("Chỉ được thêm 1 màu mỗi lần");
-    //     return; 
-    // }
-    addNewColor(colorPicker.value, masp); 
-});
 
 function addNewColor(color, masp){
     let colorContainer = document.getElementById("color-options-change");
@@ -294,20 +296,39 @@ function displayProducts(products) {
 //lấy gửi fetch tới db để trả dữ liệu về
 const filter_buttons = document.querySelectorAll(".filter-bar button");
 
-filter_buttons.forEach((button)=>{
-    button.addEventListener("click", () => {
+let isLoading = false;
+
+filter_buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+        if (isLoading) return; // Tránh request liên tục
+        isLoading = true;
+
+        filter_buttons.forEach(btn => btn.classList.remove("active"));
+        button.classList.add("active");
+
         console.log(button.value);
-        if(button.value === "All"){
-            GetFunctionWithAttribute("getAllProducts", {});
-        }else if(button.value === "Block"){
-            GetFunctionWithAttribute("getAllProductsBlocked", {});
-            presentpage = "Block";
-        }else{
-            GetFunctionWithAttribute("getAllByType", {loaisanpham: button.value});
-            presentpage = "button.value";
+
+        try {
+            if (button.value === "All") {
+                await GetFunctionWithAttribute("getAllProducts", {});
+                presentpage = "All";
+            } else if (button.value === "Block") {
+                await GetFunctionWithAttribute("getAllProductsBlocked", {});
+                presentpage = "Block";
+            } else {
+                presentpage = button.value;
+                await GetFunctionWithAttribute("getAllByType", { loaisanpham: button.value });
+            }
+        } catch (error) {
+            console.error("Lỗi khi lọc sản phẩm:", error);
+        } finally {
+            isLoading = false;
         }
     });
-})
+});
+
+
+
 
 //Hiện thông tin sản phẩm qua masp
 ////---------------------------------------
@@ -390,28 +411,43 @@ function displayInfoProducts(data) {
 
         //Sự kiện nút block
         var lock_btn = document.getElementById("change-lock-btn");
-        if(product.matinhtrang === 0){
-            lock_btn.innerText = "Mở khóa";
-        }else{
-            lock_btn.innerText = "Khóa";
+        if (lock_btn) {  // Kiểm tra nếu phần tử tồn tại
+            lock_btn.innerText = product.matinhtrang === 0 ? "Mở khóa" : "Khóa";
+        } else {
+            console.warn("Không tìm thấy nút khóa!");
         }
 
-        lock_btn.addEventListener("click", function(){
-            if(product.matinhtrang === 0){
-                // lock_btn.style.backgroundColor="red";
-                GetFunctionWithAttribute("updateStatusProduct", 1, {masp: product.id});
-                GetFunctionWithAttribute("getAllProductsBlocked",{});
-            }else{
-                // lock_btn.style.backgroundColor="blue";
-                GetFunctionWithAttribute("updateStatusProduct", 0, {masp: product.id});
-                //Chuyển về trang hiện tại
-                if(presentpage === "All"){
-                    GetFunctionWithAttribute("getAllProducts",{})
-                }else{
-                    GetFunctionWithAttribute("getAllByType", {loaisanpham: normalizeString(presentpage)});
+
+        let isProcessing = false; // Biến trạng thái
+
+        lock_btn.addEventListener("click", async function () {
+            if (isProcessing) return; // Nếu đang xử lý, bỏ qua click mới
+            isProcessing = true;
+
+            let loadingIndicator = document.getElementById("loading-indicator");
+            loadingIndicator.style.display = "block";
+
+            try {
+                if (product.matinhtrang === 0) {
+                    await GetFunctionWithAttribute("updateStatusProduct", { matinhtrang: 1, masp: product.id });
+                    await GetFunctionWithAttribute("getAllProductsBlocked", {});
+                } else {
+                    await GetFunctionWithAttribute("updateStatusProduct", { matinhtrang: 0, masp: product.id });
+                    if (presentpage === "All") {
+                        await GetFunctionWithAttribute("getAllProducts", {});
+                    } else {
+                        await GetFunctionWithAttribute("getAllByType", { loaisanpham: normalizeString(presentpage) });
+                    }
                 }
+            } catch (error) {
+                console.error("Lỗi khi cập nhật trạng thái sản phẩm:", error);
+            } finally {
+                loadingIndicator.style.display = "none";
+                isProcessing = false; // Hoàn tất xử lý, cho phép click lại
             }
         });
+
+        
 
         //Sự kiện nút Save
         var save_btn = document.getElementById("change-save-btn");
@@ -565,6 +601,7 @@ function displayProductsDescription(data) {
 
 function displayColorProducts(colors) {
     let colorContainer = document.getElementById("color-options-change");
+    let btnImageChange = document.getElementById("btn-image-change");
     if (!colorContainer) return; // Tránh lỗi nếu ID không tồn tại
 
     colorContainer.innerHTML = ""; // Xóa nội dung cũ
@@ -585,11 +622,19 @@ function displayColorProducts(colors) {
             console.log("Clicked color:", hexcode);
             await GetFunctionWithAttribute("getSizeOfProductColor", {masp: masp, mamau: hexcode});
             await GetFunctionWithAttribute("getImageOfProductByColor", {mamau: hexcode, masp_id: masp})
+            btnImageChange.style.display = "block";
         });
 
         colorContainer.appendChild(span);
     });
 }
+
+var image_box_change = document.getElementById("image-box-change");
+image_box_change.addEventListener("change", function(){
+    var btn = document.getElementById("btn-image-change");
+    btn.style.display = "block";
+});
+
 
 function addSizeFunction(data) {
     let sizeContainer = document.querySelector("#changeproductsize-container");
@@ -743,6 +788,9 @@ async function GetFunctionWithAttribute(funcName, paramsObj) {
                 } else {
                     console.log("Thêm ảnh thành công!");
                 }
+                break;
+            case "getSanPhamByName":
+                displayProducts(data);
                 break;
             default:
                 console.warn("Hàm không được xử lý:", funcName);

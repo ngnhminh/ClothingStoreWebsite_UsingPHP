@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
 
-                                <button class="btn" id="btn-image-change">Thêm hình ảnh màu</button>
+                                <button class="btn" id="btn-image-change" style="display: none;">Thêm hình ảnh màu</button>
                                 <input type="file" id="fileInput" accept="image/*" style="display: none;">
                                 <div class="image-box" id="image-box-change"></div>
                             </div>
