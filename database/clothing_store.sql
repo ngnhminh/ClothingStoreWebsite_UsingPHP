@@ -93,7 +93,7 @@ CREATE TABLE `chitietsanpham` (
   PRIMARY KEY (`id`),
   KEY `chitietsanpham_ibfk_1` (`masp_id`),
   CONSTRAINT `chitietsanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE `chitietsanpham` (
 
 LOCK TABLES `chitietsanpham` WRITE;
 /*!40000 ALTER TABLE `chitietsanpham` DISABLE KEYS */;
-INSERT INTO `chitietsanpham` VALUES (1,'Chất liệu: Cotton 2 chiều.',1),(1,'Regular Fit.',2),(1,'Hình in mặt trước áo áp dụng công nghệ in lụa.',3),(3,'Colour Shown: Vivid Purple/Black/Hot Punch',4),(3,'Style: FQ7262-500',5),(3,'Country/Region of Origin: Vietnam',6);
+INSERT INTO `chitietsanpham` VALUES (1,'Chất liệu: Cotton 2 chiều.',1),(1,'Regular Fit.',2),(1,'Hình in mặt trước áo áp dụng công nghệ in lụa.',3),(3,'Colour Shown: Vivid Purple/Black/Hot Punch',4),(3,'Style: FQ7262-500',5),(3,'Country/Region of Origin: Vietnam',6),(2,'ư',50),(3,'ư',51),(3,'ư',52);
 /*!40000 ALTER TABLE `chitietsanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,13 +164,13 @@ DROP TABLE IF EXISTS `hinhanh`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hinhanh` (
-  `mahinhanh` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `mahinhanh` int NOT NULL AUTO_INCREMENT,
   `duongdananh` varchar(300) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `mau_sanpham_id` int DEFAULT NULL,
   PRIMARY KEY (`mahinhanh`),
-  KEY `fk_maucuasanpham` (`mau_sanpham_id`),
-  CONSTRAINT `fk_maucuasanpham` FOREIGN KEY (`mau_sanpham_id`) REFERENCES `mausanpham` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  KEY `mausanpham_ibfk_id` (`mau_sanpham_id`),
+  CONSTRAINT `mausanpham_ibfk_id` FOREIGN KEY (`mau_sanpham_id`) REFERENCES `mausanpham` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +179,7 @@ CREATE TABLE `hinhanh` (
 
 LOCK TABLES `hinhanh` WRITE;
 /*!40000 ALTER TABLE `hinhanh` DISABLE KEYS */;
-INSERT INTO `hinhanh` VALUES ('1','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (1).png',3),('2','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (2).png',3),('3','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (3).png',3),('4','/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41.png',3),('5','/public/assets/images/anh/ao/hanoilover/image.png',1),('6','/public/assets/images/anh/quan/MetalWildLabelTrouserPants/image.png',2);
+INSERT INTO `hinhanh` VALUES (1,'http://localhost/ClothingStore/public/assets/images/anh/giay/nike/Nike Pegasus 41/grey/AIR+ZOOM+PEGASUS+41 (1).png',3),(2,'http://localhost/ClothingStore/public/assets/images/anh/ao/hanoilover/image.png',1),(3,'http://localhost/ClothingStore/public/assets/images/anh/quan/MetalWildLabelTrouserPants/image.png',2),(4,'http://localhost/ClothingStore/public/assets/images/anh/giay/nike/Nike Pegasus 41/purple/AIR+ZOOM+PEGASUS+41 (1).jpg',4),(8,'abcs',1),(10,'http://localhost/ClothingStore/public/uploads/482074402_1155262886388631_7608195704829811394_n.jpg',3);
 /*!40000 ALTER TABLE `hinhanh` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -249,14 +249,14 @@ DROP TABLE IF EXISTS `kichco`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `kichco` (
-  `kichco_id` int NOT NULL,
+  `kichco_id` int NOT NULL AUTO_INCREMENT,
   `tenkichco` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `soluong` int NOT NULL,
   `mau_sanpham_id` int DEFAULT NULL,
   PRIMARY KEY (`kichco_id`),
   KEY `fk_id_maucuasanpham` (`mau_sanpham_id`),
   CONSTRAINT `fk_id_maucuasanpham` FOREIGN KEY (`mau_sanpham_id`) REFERENCES `mausanpham` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,7 +265,7 @@ CREATE TABLE `kichco` (
 
 LOCK TABLES `kichco` WRITE;
 /*!40000 ALTER TABLE `kichco` DISABLE KEYS */;
-INSERT INTO `kichco` VALUES (1,'26',10,1),(2,'28',10,1),(3,'30',10,1),(4,'32',0,1),(5,'34',3,1),(6,'S',2,2),(7,'M',4,2),(8,'L',5,2),(9,'XL',10,2),(10,'XXL',0,2),(11,'40',5,3),(12,'41',23,3),(13,'42',0,3),(14,'43',6,3),(15,'44',3,3),(16,'40',2,4),(17,'41',3,4),(18,'42',4,4),(19,'43',1,4),(20,'44',5,4);
+INSERT INTO `kichco` VALUES (1,'26',10,1),(2,'28',10,1),(3,'30',10,1),(4,'32',0,1),(5,'34',3,1),(6,'S',2,2),(7,'M',4,2),(8,'L',5,2),(9,'XL',10,2),(10,'XXL',0,2),(11,'40',5,3),(12,'41',23,3),(13,'42',0,3),(14,'43',6,3),(15,'44',3,3),(16,'40',2,4),(17,'41',3,4),(18,'42',4,4),(19,'43',1,4),(20,'44',5,4),(26,'40',4,7),(27,'41',20,7),(28,'42',5,7),(29,'43',5,7),(30,'44',50,7),(31,'40',5,8);
 /*!40000 ALTER TABLE `kichco` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -328,10 +328,10 @@ DROP TABLE IF EXISTS `mau`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mau` (
-  `mau_id` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
   `mamau` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`mau_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -340,7 +340,7 @@ CREATE TABLE `mau` (
 
 LOCK TABLES `mau` WRITE;
 /*!40000 ALTER TABLE `mau` DISABLE KEYS */;
-INSERT INTO `mau` VALUES ('0','5F9EA0'),('1','6A5ACD'),('2','708090');
+INSERT INTO `mau` VALUES ('5F9EA0',0),('6A5ACD',1),('708090',2),('471515',4),('4c1010',5),('6d3131',6),('dcab56',7),('1e9970',8),('9c2b2b',9),('602929',10),('632727',11),('a33333',12),('702929',13),('983434',14),('2f1313',15),('5f261c',16),('8d3a3a',17),('691717',18),('6b2929',19),('8a2424',20);
 /*!40000 ALTER TABLE `mau` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -352,15 +352,15 @@ DROP TABLE IF EXISTS `mausanpham`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mausanpham` (
-  `id` int NOT NULL,
   `masp_id` int DEFAULT NULL,
-  `mau_id` varchar(50) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `mau_id` int DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
-  KEY `mau_id` (`mau_id`),
   KEY `mausanpham_ibfk_1` (`masp_id`),
+  KEY `mausanpham_ibfk_2` (`mau_id`),
   CONSTRAINT `mausanpham_ibfk_1` FOREIGN KEY (`masp_id`) REFERENCES `sanpham` (`id`),
-  CONSTRAINT `mausanpham_ibfk_2` FOREIGN KEY (`mau_id`) REFERENCES `mau` (`mau_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  CONSTRAINT `mausanpham_ibfk_2` FOREIGN KEY (`mau_id`) REFERENCES `mau` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -369,7 +369,7 @@ CREATE TABLE `mausanpham` (
 
 LOCK TABLES `mausanpham` WRITE;
 /*!40000 ALTER TABLE `mausanpham` DISABLE KEYS */;
-INSERT INTO `mausanpham` VALUES (1,1,'0'),(2,2,'0'),(3,3,'1'),(4,3,'2');
+INSERT INTO `mausanpham` VALUES (1,0,1),(2,0,2),(3,1,3),(3,2,4),(3,17,5),(3,18,6),(3,19,7),(3,20,8);
 /*!40000 ALTER TABLE `mausanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -414,8 +414,9 @@ CREATE TABLE `sanpham` (
   `mota` varchar(5000) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `giamgia` int NOT NULL,
   `maloai_id` varchar(200) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `matinhtrang` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `matinhtrang` int DEFAULT NULL,
   `id` int NOT NULL AUTO_INCREMENT,
+  `nsx` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `matinhtrang` (`matinhtrang`),
   KEY `sanpham_ibfk_1` (`maloai_id`),
@@ -429,7 +430,7 @@ CREATE TABLE `sanpham` (
 
 LOCK TABLES `sanpham` WRITE;
 /*!40000 ALTER TABLE `sanpham` DISABLE KEYS */;
-INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,NULL,0,'0','1',1),('101','Metal Label Wide Trouser Pants - Brown',590000,NULL,0,'1','1',2),('102','Nike Pegasus 41',3829000,'Responsive cushioning in the Pegasus provides an energised ride for everyday road running. Experience lighter-weight energy return with dual Air Zoom units and a ReactX foam midsole. Plus, improved engineered mesh on the upper decreases weight and increases breathability.',100000,'2','0',3);
+INSERT INTO `sanpham` VALUES ('100','Áo thun  Hà Nội Lover Green ',400000,'Abc, xyz',0,'0',0,1,NULL),('101','Metal Label Wide Trouser Pants - Brown',590000,'null',0,'1',1,2,NULL),('102','Nike Pegasus 41',590000,'null',100000,'2',0,3,'Nike');
 /*!40000 ALTER TABLE `sanpham` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -472,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-15 10:40:48
+-- Dump completed on 2025-03-17 23:09:50
