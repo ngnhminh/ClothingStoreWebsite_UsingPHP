@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "abcABC12@";
+$password = "1234";
 $database = "clothing_store";
 
 // Kết nối MySQLi

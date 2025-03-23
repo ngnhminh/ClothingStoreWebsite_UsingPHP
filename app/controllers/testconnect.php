@@ -1,5 +1,5 @@
 <?php
-require_once('config/db.php'); // Gọi kết nối database
+require_once('./config/db.php'); // Gọi kết nối database
 
 function checkDatabaseConnection() {
     global $conn; // Dùng biến $conn từ db.phpwe

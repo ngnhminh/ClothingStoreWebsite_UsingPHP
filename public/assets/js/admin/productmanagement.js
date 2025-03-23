@@ -8,7 +8,7 @@ let producttypestatus = "";
 let presentpage = "All";
 let maspglobal = "";
 let hexcodeglobal ="";
-function normalizeString(str) {
+function normalizeString(str) {``
     // Loại bỏ dấu và chuyển đổi thành chữ thường
     return str.normalize("NFD") // Tách ký tự và dấu
               .replace(/[\u0300-\u036f]/g, "") // Xóa các dấu bằng regex
