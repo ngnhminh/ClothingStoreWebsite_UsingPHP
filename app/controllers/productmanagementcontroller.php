@@ -1,5 +1,5 @@
 <?php
-include(__DIR__ . "/../../config/db.php");
+include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
 function getAllProducts() {
     global $conn; 
     $sql = "SELECT * 

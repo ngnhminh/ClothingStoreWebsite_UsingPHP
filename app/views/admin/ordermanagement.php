@@ -1,3 +1,47 @@
+<?php
+
+include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
+$sql = "SELECT * FROM hoadon";
+$result = $conn->query($sql);
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_status'])) {
+    $mahoadon = $_POST['mahoadon'];
+    $tinhtrang = $_POST['tinhtrang']; // Nhận giá trị "Đã xử lý" hoặc "Chưa xử lý"
+
+    // Cập nhật trạng thái đơn hàng
+    $stmt = $conn->prepare("UPDATE hoadon SET tinhtrang = ? WHERE mahoadon = ?");
+    $stmt->bind_param("ss", $tinhtrang, $mahoadon);
+    $stmt->execute();
+
+    // Chuyển hướng về trang quản lý đơn hàng
+    header("Location: ordermanagement.php");
+    exit();
+}
+
+// Truy vấn lấy danh sách hóa đơn và chi tiết hóa đơn
+$sql2 = "
+    SELECT h.mahoadon, h.ngay, h.tongtien, h.tinhtrang, c.masp, c.size, c.soluong, magiamgia.tenma
+    FROM hoadon h
+    JOIN chitiethoadon c ON h.mahoadon = c.mahoadon
+    LEFT JOIN magiamgia ON h.id = magiamgia.id
+    ORDER BY h.mahoadon DESC"; 
+
+$result2 = $conn->query($sql2);
+
+$where = "";
+if (!empty($_GET['from_date']) && !empty($_GET['to_date'])) {
+    $from_date = $_GET['from_date'];
+    $to_date = $_GET['to_date'];
+    $where = "WHERE ngay BETWEEN '$from_date' AND '$to_date'";
+}
+
+// Truy vấn lấy đơn hàng
+$sql = "SELECT * FROM hoadon $where ORDER BY ngay DESC";
+$result3 = $conn->query($sql);
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -7,6 +51,11 @@
         <link rel="stylesheet" type="text/css" href="/public/assets/css/admin/ordermanagement.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+        <style>
+        .status.processed { color: green; }
+        .status.pending { color: orange; }
+        .status.canceled { color: red; }
+    </style>
     </head>
     <body>
         <aside class="sidebar">
@@ -27,122 +76,64 @@
                 <button>Đã xử lý (5)</button>
                 <button>Chưa xử lý (5)</button>
                 <button>Đã hủy (5)</button>
-                <input type="date">
-                <input type="date">
-                <button>🔍</button>
+                <form method="GET">
+    <input type="date" name="from_date" value="<?= isset($_GET['from_date']) ? $_GET['from_date'] : '' ?>">
+    <input type="date" name="to_date" value="<?= isset($_GET['to_date']) ? $_GET['to_date'] : '' ?>">
+    <button type="submit">🔍</button>
+</form>
+
             </div>
             <div class="order-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Mã đơn hàng</th>
-                            <th>Tên đơn</th>
-                            <th>Số lượng</th>
-                            <th>Ngày đặt</th>
-                            <th>Tình trạng đơn</th>
-                            <th>Thông tin</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-container">
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status processed">Đã xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status pending">Chưa xử lý</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Giày, dép ...</td>
-                            <td>1</td>
-                            <td>25/12/2025 22:10</td>
-                            <td class="status canceled">Đã hủy</td>
-                            <td onclick="openModal()"><a href="#">Thông tin đơn</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Mã đơn hàng</th>
+                <th>diemtichluydasudung</th>
+                <th>Tổng Tiền</th>
+                <th>Ngày đặt</th>
+                <th>Tình trạng đơn</th>
+                <th>Thông tin</th>
+            </tr>
+        </thead>
+        <tbody id="orders-container">
+    <?php
+    if ($result3->num_rows > 0) {
+        while ($row = $result3->fetch_assoc()) {
+            $statusClass = "";
+            switch ($row["tinhtrang"]) {
+                case "Đã xử lý":
+                    $statusClass = "status processed";
+                    $statusText = "Đã xử lý";
+                    break;
+                case "Chưa xử lý":
+                    $statusClass = "status pending";
+                    $statusText = "Chưa xử lý";
+                    break;
+                case "Đã hủy":
+                    $statusClass = "status canceled";
+                    $statusText = "Đã hủy";
+                    break;
+                default:
+                    $statusText = "Không xác định";
+                    break;
+            }
+            echo "<tr>
+                    <td>{$row['mahoadon']}</td>
+                    <td>{$row['diemtichluydasudung']}</td>
+                    <td>{$row['tongtien']}</td>
+                    <td>{$row['ngay']}</td>
+                    <td class='{$statusClass}'>{$statusText}</td>
+                    <td onclick='openModal()'><a href='#'>Thông tin đơn</a></td>
+                  </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='6'>Không có đơn hàng nào</td></tr>";
+    }
+    ?>
+</tbody>
+
+    </table>
+</div>
         </div>
         <div class="modal" id="orderModal">
         <div class="modal-content">
@@ -151,159 +142,64 @@
 
         <!-- Danh sách sản phẩm -->
         <div class="modal-items">
-            <!-- Sản phẩm 1 -->
-            <div class="item-row">
-            <div class="product-info">
-                <img
-                src="/public/assets/images/shirt.png"
-                alt="Sản phẩm 1"
-                class="product-img"
-                />
-                <div class="item-detail">
-                <div class="item-name">Distressed Double Knee Denim Pants Brown</div>
-                <div class="item-sizes">Size: M &nbsp; Sl: 2</div>
-                </div>
-            </div>
-            <div class="item-discount">-20%</div>
-            <div id="bill-price">
-                <del class="item-original-price">200.000đ</del>
-                <div class="item-price">100.000đ</div>
-            </div>
-            </div>
+    <?php 
+    $current_invoice = null;
+    while($row = $result2->fetch_assoc()): 
+        if ($current_invoice !== $row['mahoadon']):
+            if ($current_invoice !== null) echo '</div>'; // Đóng div của hóa đơn trước
+            $current_invoice = $row['mahoadon'];
+    ?>
+        <div class="invoice">
+            <h3>Hóa đơn: <?= $row['mahoadon']; ?> | Ngày: <?= $row['ngay']; ?></h3>
 
-            <!-- Sản phẩm 2 -->
-            <div class="item-row">
-            <div class="product-info">
-                <img
-                src="/public/assets/images/shirt.png"
-                alt="Sản phẩm 2"
-                class="product-img"
-                />
-                <div class="item-detail">
-                <div class="item-name">Distressed Double Knee Denim Pants Brown</div>
-                <div class="item-sizes">Size: M &nbsp; Sl: 2</div>
-                </div>
-            </div>
-            <div class="item-discount">&nbsp;</div>
-            <div class="item-price">250.000đ</div>
-            </div>
-
-            <div class="item-row">
-            <div class="product-info">
-                <img
-                src="/public/assets/images/shirt.png"
-                alt="Sản phẩm 2"
-                class="product-img"
-                />
-                <div class="item-detail">
-                <div class="item-name">Distressed Double Knee Denim Pants Brown</div>
-                <div class="item-sizes">Size: M &nbsp; Sl: 2</div>
-                </div>
-            </div>
-            <div class="item-discount">&nbsp;</div>
-            <div class="item-price">250.000đ</div>
-            </div>
-
-            <div class="item-row">
-            <div class="product-info">
-                <img
-                src="/public/assets/images/shirt.png"
-                alt="Sản phẩm 2"
-                class="product-img"
-                />
-                <div class="item-detail">
-                <div class="item-name">Distressed Double Knee Denim Pants Brown</div>
-                <div class="item-sizes">Size: M &nbsp; Sl: 2</div>
-                </div>
-            </div>
-            <div class="item-discount">&nbsp;</div>
-            <div class="item-price">250.000đ</div>
-            </div>
-
-            <div class="item-row">
-            <div class="product-info">
-                <img
-                src="/public/assets/images/shirt.png"
-                alt="Sản phẩm 2"
-                class="product-img"
-                />
-                <div class="item-detail">
-                <div class="item-name">Distressed Double Knee Denim Pants Brown</div>
-                <div class="item-sizes">Size: M &nbsp; Sl: 2</div>
-                </div>
-            </div>
-            <div class="item-discount">&nbsp;</div>
-            <div class="item-price">250.000đ</div>
-            </div>
-
-            <!-- Sản phẩm 3 -->
-            <div class="item-row">
-            <div class="product-info">
-                <img
-                src="/public/assets/images/shirt.png"
-                alt="Sản phẩm 3"
-                class="product-img"
-                />
-                <div class="item-detail">
-                <div class="item-name">Distressed Double Knee Denim Pants Brown</div>
-                <div class="item-sizes">Size: M &nbsp; Sl: 2</div>
-                </div>
-            </div>
-            <div class="item-discount">&nbsp;</div>
-            <div class="item-price">250.000đ</div>
-            </div>
-        </div>
-
-        <!-- Đường kẻ ngang -->
-        <div class="divider"></div>
-
-        <!-- Thông tin thanh toán -->
-        <div class="summary">
-            <div class="summary-row">
-                <span>Tên KH</span>
-                <span>Dương Văn Minh</span>
-            </div>
-            <div class="summary-row">
-                <span>Giảm giá:</span>
-                <span>500.000đ</span>
-            </div>
-            <div class="summary-row">
-                <span>Tạm tính:</span>
-                <span>500.000đ</span>
-            </div>
-            <div class="summary-row">
-                <span>Phí vận chuyển:</span>
-                <span>500.000đ</span>
-            </div>
-            <div class="summary-row">
-                <span>Phương thức thanh toán:</span>
-                <span>Chuyển khoản</span>
-            </div>
-            <div class="summary-row">
-                <span>Trạng thái:</span>
-            <div class="status-toggle">
-                <span class="status-text" style="color: green;">Đã xử lý</span>
-                <!-- Toggle switch -->
-                <label class="switch">
-                <input type="checkbox" checked>
+            <!-- Trạng thái hóa đơn -->
+            <form method="POST" >
+    <input type="hidden" name="mahoadon" value="<?= $row['mahoadon']; ?>">
+    <input type="hidden" name="tinhtrang" value="<?= ($row['tinhtrang'] == 'Đã xử lý') ? 'Chưa xử lý' : 'Đã xử lý'; ?>"> <!-- Đảo trạng thái -->
+    
+    <div class="summary-row">
+        <span>Trạng thái:</span>
+        <div class="status-toggle">
+            <span class="status-text" style="color: <?= ($row['tinhtrang'] == 'Đã xử lý') ? 'red' : 'green'; ?>">
+                <?= ($row['tinhtrang'] == 'Đã xử lý') ? 'Đã xử lý' : 'Chưa xử lý'; ?>
+            </span>
+            <label class="switch">
+                <input type="submit" name="update_status" class="status-checkbox" <?= ($row['tinhtrang'] == 'Đã xử lý') ? 'checked' : ''; ?>>
                 <span class="slider"></span>
-                </label>
-            </div>
-            </div>
-        </div>
-
-        <!-- Nút in đơn -->
-        <div class="print-btn">
-            <button>In đơn</button>
-        </div>
-
-        <!-- Tổng tiền -->
-        <div class="total">
-            <span>Tổng tiền:</span>
-            <span class="total-price">1.000.000đ</span>
-        </div>
+            </label>
         </div>
     </div>
+</form>
+
+            <div class="invoice-items">
+    <?php endif; ?>
+
+        <!-- Hiển thị sản phẩm -->
+        <div class="item-row">
+            <div class="product-info">
+                <img src="/public/assets/images/shirt.png" alt="<?= $row['masp']; ?>" class="product-img"/>
+                <div class="item-detail">
+                    <div class="item-name"><?= $row['masp']; ?></div>
+                    <div class="item-sizes">Size: <?= $row['size']; ?> | SL: <?= $row['soluong']; ?></div>
+                </div>
+            </div>
+             <div class="item-discount"><?= ($row['tenma'] > 0) ? "-{$row['tenma']}%" : "&nbsp;"; ?></div>
+          <!--  <div class="item-price"><?= number_format($row['dongia']); ?>đ</div>   -->
+        </div>
+
+            </div> <!-- Đóng div của invoice-items -->
+        </div> <!-- Đóng div của invoice -->
+</div>
+
+<div class="divider"></div>
+
+<!-- Tổng kết hóa đơn -->
+<div class="total">
+    <span>Tổng tiền:</span>
+    <span class="total-price"><?= number_format($row['tongtien']); ?>đ</span>
+
+    <?php endwhile; ?>
+</div>
     <script src="/public/assets/js/admin/ordermanagement.js"></script>
     </body>
 </html>

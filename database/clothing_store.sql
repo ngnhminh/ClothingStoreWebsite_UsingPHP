@@ -58,14 +58,14 @@ CREATE TABLE `chitiethoatdong` (
   `thoigian` int NOT NULL,
   `ngay` date NOT NULL,
   `masp` int DEFAULT NULL,
-  `magiamgia_id` int DEFAULT NULL,
+  `id` int DEFAULT NULL,
   `nhatki_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`chitiethoatdong_id`),
   KEY `nhatki_id` (`nhatki_id`),
-  KEY `chitiethoatdong_ibfk_2` (`magiamgia_id`),
+  KEY `chitiethoatdong_ibfk_2` (`id`),
   KEY `chitiethoatdong_ibfk_1` (`masp`),
   CONSTRAINT `chitiethoatdong_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`id`),
-  CONSTRAINT `chitiethoatdong_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`id`),
+  CONSTRAINT `chitiethoatdong_ibfk_2` FOREIGN KEY (`id`) REFERENCES `magiamgia` (`id`),
   CONSTRAINT `chitiethoatdong_ibfk_3` FOREIGN KEY (`nhatki_id`) REFERENCES `nhatki` (`nhatki_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -196,12 +196,12 @@ CREATE TABLE `hoadon` (
   `diemtichluydasudung` int NOT NULL,
   `tongtien` int NOT NULL,
   `mahk` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `magiamgia_id` int DEFAULT NULL,
+  `id` int DEFAULT NULL,
   PRIMARY KEY (`mahoadon`),
   KEY `mahk` (`mahk`),
-  KEY `hoadon_ibfk_2` (`magiamgia_id`),
+  KEY `hoadon_ibfk_2` (`id`),
   CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`mahk`) REFERENCES `khachhang` (`makh`),
-  CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`id`)
+  CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`id`) REFERENCES `magiamgia` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -301,11 +301,11 @@ DROP TABLE IF EXISTS `magiamgia`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `magiamgia` (
-  `magiamgia_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+ 
   `tenma` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `soluong` int NOT NULL,
   `codegiamgia` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `tiengiam` int NOT NULL,
+ 
   `id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;

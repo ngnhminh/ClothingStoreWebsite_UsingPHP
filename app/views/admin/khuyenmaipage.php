@@ -2,7 +2,43 @@
 <?php
      
      require_once __DIR__ . "/../../controllers/khuyenmaimanagement.php";
+// get san pham 
+$sql = "SELECT id, tensp, gia, giamgia FROM sanpham";
+$result = $conn->query($sql);
+// so luong laoi san phampham
+$sql2 = "SELECT loaisanpham.tenloai, SUM(soluong) AS tong_soluong  
+FROM sanpham  
+INNER JOIN mausanpham ON sanpham.id = mausanpham.masp_id  
+INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id  
+INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id  
+INNER JOIN mau ON mau.id = mausanpham.mau_id  
 
+GROUP BY loaisanpham.tenloai  
+ORDER BY loaisanpham.tenloai ASC  
+LIMIT 0, 1000";
+$result2 = $conn->query($sql2);
+
+// Lưu dữ liệu vào mảng
+$counts = [];
+while ($row = $result2->fetch_assoc()) {
+    $counts[$row['tenloai']] = $row['tong_soluong'];
+}
+// get voucher
+$sql3 = "SELECT codegiamgia, tenma, soluong FROM magiamgia";
+$result3 = $conn->query($sql3);
+// timkiemtimkiem
+$search = "";
+if (isset($_POST['query'])) {
+    $search = $conn->real_escape_string($_POST['query']);
+}
+
+// Truy vấn lấy sản phẩm theo tên
+$sql4 = "SELECT id, tensp, gia, giamgia FROM sanpham 
+        WHERE tensp LIKE '%$search%'";
+
+$result4 = $conn->query($sql4);
+
+$conn->close();
 ?>
 
 
@@ -34,74 +70,77 @@
         </div>
         
         <div class="toolbar-voucher">
-            <button>Áo (25)</button>
-            <button>Quần (25)</button>
-            <button>Kính (25)</button>
-            <button>Giày (25)</button>
-            <button>SP giảm giá</button>
-            <button id="storage">Tất cả</button>
-            <button id="voucherstorage">Kho voucher</button>
-            <input type="text" placeholder="Nhập tên sản phẩm">
-        </div>
+    <button>Áo (<?= $counts['Áo'] ?? 0 ?>)</button>
+    <button>Quần (<?= $counts['Quần'] ?? 0 ?>)</button>
+    <button>Kính (<?= $counts['Kính'] ?? 0 ?>)</button>
+    <button>Giày (<?= $counts['Giày'] ?? 0 ?>)</button>
+    <button id="storage">Tất cả</button>
+    <button id="voucherstorage">Kho voucher</button>
+    <form method="POST" action="">
+        <input type="text" name="query" placeholder="Nhập tên sản phẩm" value="<?php echo htmlspecialchars($search); ?>">
+        <button type="submit">Tìm kiếm</button>
+    </form>
+</div>
 
-        <div class="product-list" id="product-list">
-            <div class="product">
-            <div class="product-thumbnail">
-                    <div class="product-thumbnail_wrapper">
-                        <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
+
+
+<div class="product-list"  id="product-list">
+        <?php if ($result4->num_rows > 0): ?>
+            <?php while ($row = $result4->fetch_assoc()): ?>
+                <div class="product">
+                    <div class="product-thumbnail">
+                        <img src="/public/assets/images/shirt.png" alt="<?php echo htmlspecialchars($row['tensp']); ?>">
                     </div>
+                    <p><?php echo htmlspecialchars($row['tensp']); ?></p>
+                    <span>
+                        <del><?php echo number_format($row['gia']); ?>đ</del>
+                        <span id="percent_discount">-<?php echo $row['giamgia']; ?>%</span>
+                    </span>
+                    <span><?php echo number_format($row['gia'] * (1 - $row['giamgia'] / 100)); ?>đ</span>
                 </div>
-                <p>Distressed Double Knee Denim Pants Brown</p>
-                <span><del>500.000đ</del><span id="percent_discount">-20%</span></span>
-                <span>300.000đ</span>
-            </div>
-            <div class="product">
-                <div class="product-thumbnail">
-                    <div class="product-thumbnail_wrapper">
-                        <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
-                    </div>
-                </div>
-                <p>Distressed Double Knee Denim Pants Brown</p>
-            </div>
-            <div class="product">
-            <div class="product-thumbnail">
-                    <div class="product-thumbnail_wrapper">
-                        <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
-                    </div>
-                </div>
-                <p>Distressed Double Knee Denim Pants Brown</p>
-            </div>
-            <div class="product">
-            <div class="product-thumbnail">
-                    <div class="product-thumbnail_wrapper">
-                        <img class="product-thumbnail__image" src="/public/assets/images/shirt.png" alt="Áo thun" />
-                    </div>
-                </div>
-                <p>Distressed Double Knee Denim Pants Brown</p>
-            </div>
-        </div>
-        <div class="discount-modal"><?php require 'khuyenmaiadd.php'; ?></div>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <p>Không tìm thấy sản phẩm</p>
+        <?php endif; ?>
     </div>
-    <div class="voucher-container">
-        <table class="voucher-table">
-            <thead>
-                <tr>
-                    <th>Mã voucher</th>
-                    <th>Tên voucher</th>
-                    <th>Số lượng</th>
-                    <th>Tình trạng</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>VTG69898k</td>
-                    <td>Vui tết </td>
-                    <td>100</td>
-                    <td>Còn</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+
+<!-- Form nhập khuyến mãi -->
+<div class="discount-modal"><?php require 'khuyenmaiadd.php'; ?></div>
+</div>
+<div class="voucher-container">
+    <table class="voucher-table">
+        <thead>
+            <tr>
+                <th>Mã voucher</th>
+                <th>Tên voucher</th>
+                <th>Số lượng</th>
+                <th>Tình trạng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            // 3. Hiển thị dữ liệu từ database lên bảng HTML
+            if ($result3->num_rows > 0) {
+                while($row = $result3->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row["codegiamgia"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["tenma"]) . "</td>";
+                    echo "<td>" . htmlspecialchars($row["soluong"]) . "</td>";
+                    
+                    // Xác định tình trạng dựa trên số lượng
+                    $status = ($row["soluong"] > 0) ? "Còn" : "Hết";
+                    echo "<td>" . $status . "</td>";
+
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>Không có voucher nào.</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+ 
     <div class="discount-modal"><?php require 'voucheradd.php'; ?></div>
     <script src="/public/assets/js/admin/khuyenmaipage.js"></script>
     <script>
@@ -166,7 +205,18 @@
 
 
 
+document.querySelectorAll('.product').forEach(product => {
+    product.addEventListener('click', function () {
+        let productId = this.id.replace('product-', ''); // Lấy ID thật của sản phẩm
+        document.getElementById('product-id').value = productId; // Gán vào input ẩn
+        console.log("Sản phẩm đã chọn có ID:", productId);
+    });
+});
+
+
     </script>
+
+    
 
 </body>
 </html>

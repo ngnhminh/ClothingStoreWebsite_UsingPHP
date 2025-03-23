@@ -23,7 +23,7 @@
     <label for="quantity">Số lượng:</label>
     <input type="number" name="quantity" id="quantity"><br>
 
-    <label for="voucher-code">Mã giảm giá:</label>
+    <label for="voucher-code">Mã giảm giá theo %(vd:VuiTet15%):</label>
     <input type="text" name="voucher_code" id="voucher_code"><br>
 
    
