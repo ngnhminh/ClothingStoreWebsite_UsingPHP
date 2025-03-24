@@ -26,114 +26,102 @@ document.addEventListener("DOMContentLoaded", function () {
             closeModal();
         }
     });
-    document.querySelectorAll(".order-info").forEach(cell => {
-        cell.addEventListener("click", function () {
-            const row = this.closest("tr");
-            const orderId = row.dataset.orderId; // Lấy order_id từ data attribute
+    
+    window.openModal = function(row) {
+        const orderStatus = document.querySelector('.status')
+        const switchContainer = document.querySelector('.status-toggle');
+        const statusToggle = document.querySelector('.status-toggle input');
+        const cancelButton = document.querySelector('.cancel-btn');
+        const restoreBtn = document.querySelector('.restore-btn');
+        const modal = document.getElementById("orderModal");
+        const customerName = document.getElementById("customer-name");
+        const subtotal = document.getElementById("subtotal");
+        const paymentMethod = document.getElementById("payment-method");
+        const totalPrice = document.getElementById("total-price");
+        const orderDetailsContainer = document.querySelector(".modal-items");
 
-            console.log("orderId nhận được:", orderId);
-            console.log("Row element:", row);
+        const orderId = row.querySelector("td:first-child").textContent.trim();
 
-            if (!orderId || isNaN(orderId)) {
-                console.error("❌ Lỗi: orderId không hợp lệ!", orderId);
+        console.log("openModal called!", row);
+
+        fetch(`http://localhost/ClothingStore/app/controllers/ordermanagerment.controller.php?order_id=${orderId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                console.log("Dữ liệu API trả về:", data);
+                orderDetailsContainer.innerHTML = "<p>Không có dữ liệu đơn hàng.</p>";
                 return;
             }
 
-            openModal(orderId, row);
-        });
-    });
-    function openModal(orderId, row) {
-        fetch(`http://localhost/ClothingStore/app/controllers/ordermanagerment.controller.php?order_id=${orderId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (!Array.isArray(data) || data.length === 0) {
-                    console.error("❌ Không có dữ liệu đơn hàng!");
-                    return;
-                }
-    
-                console.log("📌 Dữ liệu từ server:", data);
-                
-                const customerName = data[0].customer_name;
-                let discount = 0, subtotal = 0, shippingFee = 0, paymentMethod = '', orderStatus = '';
-    
-                const itemsHTML = data.map(item => {
-                    discount += parseFloat(item.discount) || 0;
-                    subtotal += parseFloat(item.total_price) || 0;
-                    shippingFee = parseFloat(item.shipping_fee) || 0;
-                    paymentMethod = item.payment_method;
-                    orderStatus = item.order_status;
-    
-                    return `
-                        <div class="item-row">
-                            <div class="product-info">
-                                <div class="item-detail">
-                                    <div class="item-name">${item.product_name}</div>
-                                    <div class="item-sizes">Size: ${item.size} &nbsp; Sl: ${item.soluong}</div>
-                                </div>
-                            </div>
-                            <div class="item-discount">-${item.discount}%</div>
-                            <div id="bill-price">
-                                <del class="item-original-price">${item.product_price.toLocaleString()}đ</del>
-                                <div class="item-price">${item.total_price.toLocaleString()}đ</div>
+            let orderInfo = data[0]; // Lấy thông tin chung của đơn hàng
+            customerName.textContent = orderInfo.customer_name;
+            paymentMethod.textContent = orderInfo.phuongthucthanhtoan;
+            statusText.textContent = orderInfo.status;
+            
+            statusText.textContent = orderStatus.textContent;
+            switch (statusText.textContent) {
+                case "Đã xử lý":
+                    statusText.style.color = "green";
+                    switchContainer.style.display = "flex";
+                    statusToggle.checked = true;
+                    cancelButton.style.display = "inline";
+                    restoreBtn.style.display = "none";
+                    break;
+                case "Chờ xử lý":
+                    statusText.style.color = "orange";
+                    switchContainer.style.display = "flex";
+                    statusToggle.checked = false;
+                    cancelButton.style.display = "inline";
+                    restoreBtn.style.display = "none";
+                    break;
+                case "Đã hủy":
+                    statusText.style.color = "red";
+                    switchContainer.style.display = "none";
+                    cancelButton.style.display = "none";
+                    restoreBtn.style.display = "inline";
+                    break;
+                default:
+                    statusText.style.color = "black";
+                    switchContainer.style.display = "none";
+                    statusToggle.checked = false;
+            }
+
+            // Hiển thị danh sách sản phẩm trong đơn hàng
+            let detailsHtml = "";
+            let total = 0;
+            data.forEach(item => {
+                total += item.total_price; // Tính tổng tiền
+                detailsHtml += `
+                    <div class="item-row">
+                        <div class="product-info">
+                            <div class="item-detail">
+                                <img src="http://localhost/ClothingStore/public/assets/images/anh/ao/den/OUG (1).jpg" alt="${item.product_name}" class="product-img">
+                                <div class="item-name">${item.product_name}</div>
+                                <div class="item-sizes">Size: ${item.size} &nbsp; Sl: ${item.soluong}</div>
                             </div>
                         </div>
-                        <div class="divider"></div>
-                    `;
-                }).join('');
-    
-                document.getElementById('modal-items').innerHTML = itemsHTML;
-                document.getElementById('customer-name').innerText = customerName;
-                document.getElementById('discount').innerText = discount.toLocaleString() + "đ";
-                document.getElementById('subtotal').innerText = subtotal.toLocaleString() + "đ";
-                document.getElementById('shipping-fee').innerText = shippingFee.toLocaleString() + "đ";
-                document.getElementById('payment-method').innerText = paymentMethod;
-                document.getElementById('total-price').innerText = (subtotal - discount + shippingFee).toLocaleString() + "đ";
-    
-                // Cập nhật trạng thái đơn hàng
-                const statusText = document.getElementById('order-status');
-                const switchContainer = document.querySelector('.status-toggle');
-                const statusToggle = document.querySelector('.status-toggle input');
-                const cancelButton = document.querySelector('.cancel-btn');
-                const restoreBtn = document.querySelector('.restore-btn');
-    
-                statusText.textContent = orderStatus;
-                switch (orderStatus) {
-                    case "Đã xử lý":
-                        statusText.style.color = "green";
-                        switchContainer.style.display = "flex";
-                        statusToggle.checked = true;
-                        cancelButton.style.display = "inline";
-                        restoreBtn.style.display = "none";
-                        break;
-                    case "Chưa xử lý":
-                        statusText.style.color = "orange";
-                        switchContainer.style.display = "flex";
-                        statusToggle.checked = false;
-                        cancelButton.style.display = "inline";
-                        restoreBtn.style.display = "none";
-                        break;
-                    case "Đã hủy":
-                        statusText.style.color = "red";
-                        switchContainer.style.display = "none";
-                        cancelButton.style.display = "none";
-                        restoreBtn.style.display = "inline";
-                        break;
-                    default:
-                        statusText.style.color = "black";
-                        switchContainer.style.display = "none";
-                        statusToggle.checked = false;
-                }
-    
-                // Đánh dấu hàng được chọn
-                document.querySelectorAll(".order-table tbody tr").forEach(tr => tr.classList.remove("selected"));
-                row.classList.add("selected");
-    
-                // Hiển thị modal
-                document.getElementById('orderModal').style.display = "flex";
-            })
-            .catch(error => console.error("❌ Lỗi fetch:", error));
+                        <div id="bill-price">
+                            <del class="item-original-price">${item.product_price * 1.2} đ</del>
+                            <div class="item-price">${item.product_price} đ</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            orderDetailsContainer.innerHTML = detailsHtml;
+            subtotal.textContent = total + " đ";
+            totalPrice.textContent = (total + 10) + " đ"; // Thêm phí vận chuyển
+                    // Đánh dấu hàng được chọn
+            document.querySelectorAll(".order-table tbody tr").forEach(tr => tr.classList.remove("selected"));
+            row.classList.add("selected");
+            // Hiển thị modal
+            modal.style.display = "flex";
+        })
+        .catch(error => {
+            console.error("Lỗi khi tải chi tiết đơn hàng:", error);
+            orderDetailsContainer.innerHTML = "<p>Lỗi khi lấy dữ liệu đơn hàng.</p>";
+        });
     }
-    
 
     function closeModal() {
         modal.style.display = "none";
@@ -181,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!selectedRow) return;
     
         // Cập nhật trạng thái trong modal
-        statusText.textContent = "Chưa xử lý"; 
+        statusText.textContent = "Chờ xử lý"; 
         statusText.style.color = "orange"; // Đổi màu cam giống trạng thái ban đầu
         switchContainer.style.display = "flex"; // Hiện lại switch
         statusToggle.checked = false; 
@@ -191,12 +179,12 @@ document.addEventListener("DOMContentLoaded", function () {
         restoreBtn.style.display = "none"; 
     
         // Cập nhật trạng thái trong bảng
-        selectedRow.querySelector(".status").textContent = "Chưa xử lý";
+        selectedRow.querySelector(".status").textContent = "Chờ xử lý";
         selectedRow.querySelector(".status").style.color = "orange";
     });
 
     saveButton.addEventListener("click", function () {
-        const newStatus = statusToggle.checked ? "Đã xử lý" : "Chưa xử lý";
+        const newStatus = statusToggle.checked ? "Đã xử lý" : "Chờ xử lý";
 
         // Nếu trạng thái hiện tại là "Đã hủy", giữ nguyên
         if (statusText.textContent === "Đã hủy") {
@@ -254,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function () {
             statusText.textContent = "Đã xử lý";
             statusText.style.color = "green";
         } else {
-            statusText.textContent = "Chưa xử lý";
+            statusText.textContent = "Chờ xử lý";
             statusText.style.color = "orange";
         }
     });

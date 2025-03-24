@@ -1,11 +1,13 @@
 <?php
 include(__DIR__ . "/../../config/db.php");
 
+
+
 // Hàm Lấy Danh Sách Đơn Hàng
 function getOrders() {
     global $conn;
-    $sql = "SELECT orders.* FROM orders 
-            ORDER BY orders.order_date DESC";
+    $sql = "SELECT hoadon.* FROM hoadon 
+            ORDER BY hoadon.ngay_dat DESC";
     $result = $conn->query($sql);
     return $result;
 }
@@ -16,22 +18,20 @@ function getOrderDetails($order_id) {
 
     $sql = "
         SELECT 
-            o.order_id,
-            kh.tenkh AS customer_name,
+            hd.id,
+            kh.hoten AS customer_name,
             sp.tensp AS product_name,
             sp.gia AS product_price,
-            od.soluong,
-            od.size,
-            (sp.gia * od.soluong) AS total_price,
-            od.discount,
-            od.shipping_fee,
-            od.payment_method,
-            o.order_status
-        FROM order_details od
-        JOIN orders o ON od.order_id = o.order_id
-        JOIN khachhang kh ON o.customer_id = kh.makh
-        JOIN sanpham sp ON od.product_id = sp.id
-        WHERE o.order_id = ?
+            chitiet_hd.soluong,
+            chitiet_hd.size,
+            (sp.gia * chitiet_hd.soluong) AS total_price,
+            chitiet_hd.phuongthucthanhtoan,
+            hd.order_status
+        FROM chitiethoadon chitiet_hd
+        JOIN hoadon hd ON chitiet_hd.id_hoadon = hd.id
+        JOIN khachhang kh ON hd.id_khachhang = kh.makh
+        JOIN sanpham sp ON chitiet_hd.id_sanpham = sp.id
+        WHERE hd.id = ?
     ";
 
     $stmt = $conn->prepare($sql);
@@ -46,37 +46,43 @@ function getOrderDetails($order_id) {
 
     return $orderDetails;
 }
-// Kiểm tra nếu có yêu cầu lấy dữ liệu từ AJAX
+
+
 if (isset($_GET['order_id'])) {
     $order_id = intval($_GET['order_id']);
-    echo json_encode(getOrderDetails($order_id));
-    exit();
-}
+    
+    // Truy vấn lấy thông tin chi tiết đơn hàng
+    $sql = "
+        SELECT 
+            hd.id,
+            kh.hoten AS customer_name,
+            sp.tensp AS product_name,
+            sp.gia AS product_price,
+            chitiet_hd.soluong,
+            chitiet_hd.size,
+            (sp.gia * chitiet_hd.soluong) AS total_price,
+            chitiet_hd.phuongthucthanhtoan,
+            hd.status
+        FROM chitiethoadon chitiet_hd
+        JOIN hoadon hd ON chitiet_hd.id_hoadon = hd.id
+        JOIN khachhang kh ON hd.id_khachhang = kh.makh
+        JOIN sanpham sp ON chitiet_hd.id_sanpham = sp.id
+        WHERE hd.id = ?
+    ";
 
-// Hàm Cập Nhật Trạng Thái Đơn Hàng
-function updateOrderStatus($order_id, $status) {
-    global $conn;
-    $sql = "UPDATE orders SET order_status = ? WHERE order_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("si", $status, $order_id);
-    return $stmt->execute();
-}
-// Hàm Hủy Đơn Hàng
-function cancelOrder($order_id) {
-    return updateOrderStatus($order_id, "Đã hủy");
-}
+    $stmt->bind_param("i", $order_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-// Hàm Khôi Phục Đơn Hàng
-function restoreOrder($order_id) {
-    return updateOrderStatus($order_id, "Chưa xử lý");
-}
+    $orderDetails = [];
+    while ($row = $result->fetch_assoc()) {
+        $orderDetails[] = $row;
+    }
 
-// Xử lý AJAX cập nhật trạng thái đơn hàng
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["order_id"]) && isset($_POST["status"])) {
-    $order_id = $_POST["order_id"];
-    $status = $_POST["status"];
-    echo json_encode(["success" => updateOrderStatus($order_id, $status)]);
-    exit;
+    // Trả về JSON
+    header("Content-Type: application/json");
+    echo json_encode($orderDetails);
 }
 
 ?>

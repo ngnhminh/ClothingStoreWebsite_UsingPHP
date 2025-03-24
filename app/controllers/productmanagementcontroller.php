@@ -1,5 +1,6 @@
 <?php
-include(__DIR__ . "/../../config/db.php");
+include $_SERVER['DOCUMENT_ROOT'] . '/ClothingStore/config/db.php';
+
 function getAllProducts() {
     global $conn; 
     $sql = "SELECT * 
@@ -398,9 +399,6 @@ function addColorOfProduct($mamau, $masp_id) {
 
     return ["success" => true, "new_mau_id" => $newMauId, "mau_san_pham_id" => $newMauCuaSanPhamId];
 }
-
-
-
 
 function addSizeOfProduct($tenkichco, $soluong, $mau_sanpham_id){
     global $conn; // Sử dụng kết nối MySQLi

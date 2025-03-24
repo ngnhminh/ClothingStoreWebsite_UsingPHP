@@ -19,37 +19,22 @@
 -- Table structure for table `chitiethoadon`
 --
 
--- DROP TABLE IF EXISTS `chitiethoadon`;
-
--- CREATE TABLE `chitiethoadon` (
---   `chitiethoadon_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
---   `soluong` int NOT NULL,
---   `size` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
---   `mahoadon` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
---   `masp` int DEFAULT NULL,
---   PRIMARY KEY (`chitiethoadon_id`),
---   KEY `mahoadon` (`mahoadon`),
---   KEY `chitiethoadon_ibfk_2` (`masp`),
---   CONSTRAINT `chitiethoadon_ibfk_1` FOREIGN KEY (`mahoadon`) REFERENCES `hoadon` (`mahoadon`),
---   CONSTRAINT `chitiethoadon_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
-
-DROP TABLE IF EXISTS `order_details`;
-
-CREATE TABLE 'order_details' (
-    'detail_id' INT AUTO_INCREMENT PRIMARY KEY,  
-    'order_id' INT NOT NULL,                     
-    'product_id' INT NOT NULL,       
-    'soluong' INT NOT NULL CHECK (quantity > 0),-- Số lượng sản phẩm
-    `size` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-    `total_amount` DECIMAL(10,2) NOT NULL,         
-    `discount` DECIMAL(10,2) DEFAULT 0,            
-    `shipping_fee` DECIMAL(10,2) DEFAULT 0,        
-    `payment_method` VARCHAR(50) NOT NULL,   
-    FOREIGN KEY (`order_id`) REFERENCES orders(`order_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`product_id`) REFERENCES sanpham(`id`) ON DELETE CASCADE
-)
+DROP TABLE IF EXISTS `chitiethoadon`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `chitiethoadon` (
+  `chitiethoadon_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `soluong` int NOT NULL,
+  `size` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `mahoadon` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `masp` int DEFAULT NULL,
+  PRIMARY KEY (`chitiethoadon_id`),
+  KEY `mahoadon` (`mahoadon`),
+  KEY `chitiethoadon_ibfk_2` (`masp`),
+  CONSTRAINT `chitiethoadon_ibfk_1` FOREIGN KEY (`mahoadon`) REFERENCES `hoadon` (`mahoadon`),
+  CONSTRAINT `chitiethoadon_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `chitiethoadon`
@@ -73,14 +58,14 @@ CREATE TABLE `chitiethoatdong` (
   `thoigian` int NOT NULL,
   `ngay` date NOT NULL,
   `masp` int DEFAULT NULL,
-  `magiamgia_id` int DEFAULT NULL,
+  `id` int DEFAULT NULL,
   `nhatki_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`chitiethoatdong_id`),
   KEY `nhatki_id` (`nhatki_id`),
-  KEY `chitiethoatdong_ibfk_2` (`magiamgia_id`),
+  KEY `chitiethoatdong_ibfk_2` (`id`),
   KEY `chitiethoatdong_ibfk_1` (`masp`),
   CONSTRAINT `chitiethoatdong_ibfk_1` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`id`),
-  CONSTRAINT `chitiethoatdong_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`id`),
+  CONSTRAINT `chitiethoatdong_ibfk_2` FOREIGN KEY (`id`) REFERENCES `magiamgia` (`id`),
   CONSTRAINT `chitiethoatdong_ibfk_3` FOREIGN KEY (`nhatki_id`) REFERENCES `nhatki` (`nhatki_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -202,33 +187,23 @@ UNLOCK TABLES;
 -- Table structure for table `hoadon`
 --
 
--- DROP TABLE IF EXISTS `hoadon`;
-
--- CREATE TABLE `hoadon` (
---   `mahoadon` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
---   `ngay` date NOT NULL,
---   `diemtichluydasudung` int NOT NULL,
---   `tongtien` int NOT NULL,
---   `mahk` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
---   `magiamgia_id` int DEFAULT NULL,
---   PRIMARY KEY (`mahoadon`),
---   KEY `mahk` (`mahk`),
---   KEY `hoadon_ibfk_2` (`magiamgia_id`),
---   CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`mahk`) REFERENCES `khachhang` (`makh`),
---   CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`magiamgia_id`) REFERENCES `magiamgia` (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
-
-
-DROP TABLE IF EXISTS `orders`;
-
-CREATE TABLE `orders` (
-    `order_id` INT AUTO_INCREMENT PRIMARY KEY,      
-    `customer_id` varchar(100) NOT NULL,                 
-    `order_status` ENUM('Chưa xử lý', 'Đã xử lý', 'Đã hủy') DEFAULT 'Chưa xử lý',  
-    `order_date` DATETIME DEFAULT CURRENT_TIMESTAMP 
-    FOREIGN KEY (`customer_id`) REFERENCES `khachhang`(`makh`) ON DELETE CASCADE,
-);
+DROP TABLE IF EXISTS `hoadon`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `hoadon` (
+  `mahoadon` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `ngay` date NOT NULL,
+  `diemtichluydasudung` int NOT NULL,
+  `tongtien` int NOT NULL,
+  `mahk` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `id` int DEFAULT NULL,
+  PRIMARY KEY (`mahoadon`),
+  KEY `mahk` (`mahk`),
+  KEY `hoadon_ibfk_2` (`id`),
+  CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`mahk`) REFERENCES `khachhang` (`makh`),
+  CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`id`) REFERENCES `magiamgia` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `hoadon`
@@ -326,11 +301,11 @@ DROP TABLE IF EXISTS `magiamgia`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `magiamgia` (
-  `magiamgia_id` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
+ 
   `tenma` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
   `soluong` int NOT NULL,
   `codegiamgia` varchar(200) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `tiengiam` int NOT NULL,
+ 
   `id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;

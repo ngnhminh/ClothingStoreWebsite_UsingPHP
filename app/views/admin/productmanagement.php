@@ -7,7 +7,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin</title>
-        <link rel="stylesheet" href="http://localhost/ClothingStore/public/assets/css/admin/productmanagement.css">
+        <link rel="stylesheet" href="/public/assets/css/admin/productmanagement.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     </head>

@@ -292,7 +292,6 @@ function displayProducts(products) {
         productContainer.innerHTML += productHTML;
     });
 }
-
 //lấy gửi fetch tới db để trả dữ liệu về
 const filter_buttons = document.querySelectorAll(".filter-bar button");
 
@@ -326,9 +325,6 @@ filter_buttons.forEach((button) => {
         }
     });
 });
-
-
-
 
 //Hiện thông tin sản phẩm qua masp
 ////---------------------------------------

@@ -16,15 +16,21 @@
         <span>Thêm Khuyến Mãi</span>
        
     </div>
+    <form id="promotion-form" action="addkhuyenmai.php" method="POST">
     <div class="modal-body-voucher">
-        <label for="discount">Nhập giảm giá:</label>
-        <input type="text" id="discount" title="Nhập giảm giá" placeholder="Nhập giảm giá">
+    <input type="hidden" id="product-id" name="masp" value="">
 
-        <label for="voucher-name">Giá gốc:</label>
+<label for="discount">Nhập % giảm giá:</label>
+<input type="number" id="discount" name="giamgia" required><br>
+
+        </form>
+
+       <!-- <label for="voucher-name">Giá gốc:</label>
         <input type="text" id="voucher-name" title="Tên voucher" placeholder="Giá gốc">
 
         <label for="voucher-code">Sau giảm:</label>
         <input type="text" id="voucher-code" title="Mã voucher" placeholder="Sau giảm">
+-->
 
        
     <div class="modal-footer-voucher">

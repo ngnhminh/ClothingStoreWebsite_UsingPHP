@@ -11,9 +11,13 @@
         <link rel="stylesheet" type="text/css" href="http://localhost/ClothingStore/public/assets/css/admin/ordermanagement.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+        <style>
+        .status.processed { color: green; }
+        .status.pending { color: orange; }
+        .status.canceled { color: red; }
+    </style>
     </head>
     <body>
-        <script src="http://localhost/ClothingStore/public/assets/js/admin/ordermanagement.js"></script>
         <aside class="sidebar">
             <img id="logo_img" src="http://localhost/ClothingStore/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
             <ul class="menu-admin">
@@ -51,14 +55,13 @@
                     <?php
                     $orders = getOrders();
                     while ($row = $orders->fetch_assoc()) {
-                        $orderId = htmlspecialchars($row['order_id'], ENT_QUOTES, 'UTF-8'); // Đảm bảo không bị lỗi ký tự đặc biệt
                         echo "
-                            <tr data-order-id='{$orderId}'> 
-                                <td>{$row['order_id']}</td>
-                                <td>{$row['customer_id']}</td>
-                                <td>" . date("d/m/Y H:i", strtotime($row['order_date'])) . "</td>
-                                <td class='status'>{$row['order_status']}</td>
-                                <td class='order-info'><a href='#'>Thông tin đơn</a></td>
+                            <tr> 
+                                <td>{$row['id']}</td>
+                                <td>{$row['id_khachhang']}</td>
+                                <td>" . date("d/m/Y H:i", strtotime($row['ngay_dat'])) . "</td>
+                                <td class='status'>{$row['status']}</td>
+                                <td onclick='openModal(this.parentElement)'><a href='#'>Thông tin đơn</a></td>
                             </tr>
                         ";
                     }
@@ -72,56 +75,72 @@
         <!-- Modal chi tiết đơn hàng -->
         <div class="modal" id="orderModal">
             <div class="modal-content">
-            <!-- Nút đóng -->
-            <button class="close-btn" onclick="closeModal()">&times;</button>
-
-            <!-- Danh sách sản phẩm -->
-            <div class="modal-items"></div>
-
-            <!-- Đường kẻ ngang -->
-            <div class="divider"></div>
-
-            <!-- Thông tin thanh toán -->
-            <div class="summary">
-                <div class="summary-row"><span>Tên KH:</span> <span id="customer-name"></span></div>
-                <div class="summary-row"><span>Giảm giá:</span> <span id="discount"></span></div>
-                <div class="summary-row"><span>Tạm tính:</span> <span id="subtotal"></span></div>
-                <div class="summary-row"><span>Phí vận chuyển:</span> <span id="shipping-fee"></span></div>
-                <div class="summary-row"><span>Phương thức thanh toán:</span> <span id="payment-method"></span></div>
-                <div class="summary-row">
-                    <span>Trạng thái:</span>
-                    <div class="status-toggle">
-                        <span class="status-text" id="order-status" style="color: green;"></span>
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider"></span>
-                        </label>
+                <!-- Nút đóng -->
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <!-- Danh sách sản phẩm -->
+                <div class="modal-items">
+                    <div class="item-row">
+                        <div class="product-info">
+                            <div class="item-detail">
+                                <img src="http://localhost/ClothingStore/public/assets/images/anh/ao/den/OUG (1).jpg" alt="ao" class="product-img">
+                                <div class="item-name">haha</div>
+                                <div class="item-sizes">Size:  &nbsp; Sl: </div>
+                            </div>
+                        </div>
+                        <div class="item-discount">-50%</div>
+                        <div id="bill-price">
+                            <del class="item-original-price">đ</del>
+                            <div class="item-price">đ</div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                    <!-- Đường kẻ ngang -->
+                <div class="divider"></div>
 
-            <div>
-                <!-- Nút in đơn -->
-                <div class="handle-btn">
-                    <!-- Nút bên trái -->
-                    <div class="left-buttons">
-                        <button class="restore-btn">Khôi phục</button>
-                        <button class="cancel-btn">Hủy</button>
-                    </div>
-
-                    <!-- Nút bên phải -->
-                    <div class="right-buttons">
-                        <button class="save-btn">Lưu</button>
-                        <button class="print-btn">In đơn</button>
+                <!-- Thông tin thanh toán -->
+                <div class="summary">
+                    <div class="summary-row"><span>Tên KH:</span> <span id="customer-name"></span></div>
+                    <div class="summary-row"><span>Giảm giá:</span> <span id="discount"></span></div>
+                    <div class="summary-row"><span>Tạm tính:</span> <span id="subtotal"></span></div>
+                    <div class="summary-row"><span>Phí vận chuyển:</span> <span id="shipping-fee"> 10</span></div>
+                    <div class="summary-row"><span>Phương thức thanh toán:</span> <span id="payment-method"></span></div>
+                    <div class="summary-row">
+                        <span>Trạng thái:</span>
+                        <div class="status-toggle">
+                            <span class="status-text"></span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <!-- Tổng tiền -->
-                <div class="total">
-                    <span>Tổng tiền:</span>
-                    <span class="total-price" id="total-price"></span>
+
+                <div class="divider"></div>
+                <div>
+                    <!-- Nút in đơn -->
+                    <div class="handle-btn">
+                        <!-- Nút bên trái -->
+                        <div class="left-buttons">
+                            <button class="restore-btn">Khôi phục</button>
+                            <button class="cancel-btn">Hủy</button>
+                        </div>
+
+                        <!-- Nút bên phải -->
+                        <div class="right-buttons">
+                            <button class="save-btn">Lưu</button>
+                            <button class="print-btn">In đơn</button>
+                        </div>
+                    </div>
+                    <!-- Tổng tiền -->
+                    <div class="total">
+                        <span>Tổng tiền:</span>
+                        <span class="total-price" id="total-price"></span>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </div> <!-- Đóng div của invoice-items -->
+        </div> <!-- Đóng div của invoice -->
+
     <script src="http://localhost/ClothingStore/public/assets/js/admin/ordermanagement.js"></script>
     </body>
 </html>
