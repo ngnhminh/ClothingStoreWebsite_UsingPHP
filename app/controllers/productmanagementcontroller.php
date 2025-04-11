@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/ClothingStore/config/db.php';
+include __DIR__ . '\..\..\config\db.php';
 
 function getAllProducts() {
     global $conn; 
@@ -274,6 +274,48 @@ function updateProduct($gia, $mota, $masp){
     }
 }
 
+function addProduct($tensp, $gia, $mota, $maloai_id, $duongdananh){
+    global $conn;
+
+    $sql = "INSERT INTO sanpham (tensp, gia, mota, giamgia, maloai_id, matinhtrang, nsx)
+            VALUES (?, ?, ?, 0, ?, 0, NULL)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+
+    mysqli_stmt_bind_param($stmt, "sdsi", $tensp, $gia, $mota, $maloai_id); // sửa kiểu dữ liệu
+    $success = mysqli_stmt_execute($stmt);
+    $new_masp = mysqli_insert_id($conn); // lấy ID mới tạo
+
+    mysqli_stmt_close($stmt);
+
+    if ($success) {
+        if($maloai_id != 2){
+            // Insert vào bảng mausanpham
+            $sql1 = "INSERT INTO mausanpham (masp_id, mau_id) VALUES (?, 21)";
+            $stmt1 = mysqli_prepare($conn, $sql1);
+            mysqli_stmt_bind_param($stmt1, "i", $new_masp);
+            $success = mysqli_stmt_execute($stmt1);
+            $new_mamausanpham = mysqli_insert_id($conn);
+
+            mysqli_stmt_close($stmt1);
+
+            if($success){
+                $sql2 = "INSERT INTO hinhanh (mau_sanpham_id, duongdananh) VALUES (?, ?)";
+                $stmt2 = mysqli_prepare($conn, $sql2);
+                mysqli_stmt_bind_param($stmt2, "is", $new_mamausanpham, $duongdananh);
+                $success = mysqli_stmt_execute($stmt2);
+            }
+            return ["success" => true, "mamausanpham" => $new_mamausanpham, "newmasp" => $new_masp];
+        }else{
+            return ["success" => true, "newmasp" => $new_masp];
+        }
+    } else {
+        return ["success" => false, "error" => mysqli_error($conn)];
+    }
+}
+
 function updateProductDetail($masp, $chitiet){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "INSERT INTO chitietsanpham(masp_id, chitiet) VALUES(?, ?)";
@@ -421,6 +463,22 @@ function addSizeOfProduct($tenkichco, $soluong, $mau_sanpham_id){
     }
 }
 
+function getSizeOfProductByMaloai($maloai){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * from tenkichco 
+            WHERE loaisanpham_id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die(json_encode(["error" => "Lỗi chuẩn bị truy vấn: " . mysqli_error($conn)]));
+    }
+    mysqli_stmt_bind_param($stmt, "s", $maloai);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
 function getImageOfProductByColor($mamau, $masp_id){
     global $conn; // Sử dụng kết nối MySQLi
     $sql = "SELECT * from hinhanh 
@@ -562,7 +620,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "deleteProductImage",
             "getMauSanPhamId",
             "addImageOfProduct",
-            "getSanPhamByName"
+            "getSanPhamByName",
+            "getSizeOfProductByMaloai",
+            "addProduct",
         ];
 
         if (in_array($functionName, $allowedFunctions) && function_exists($functionName)) {

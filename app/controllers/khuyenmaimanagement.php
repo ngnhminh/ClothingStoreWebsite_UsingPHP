@@ -1,5 +1,3 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
-
-
+include(__DIR__ .  '/../../config/db.php');
 ?>

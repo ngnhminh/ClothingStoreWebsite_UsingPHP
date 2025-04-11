@@ -7,7 +7,7 @@ include(__DIR__ . "/../../config/db.php");
 function getOrders() {
     global $conn;
     $sql = "SELECT hoadon.* FROM hoadon 
-            ORDER BY hoadon.ngay_dat DESC";
+            ORDER BY hoadon.ngay DESC";
     $result = $conn->query($sql);
     return $result;
 }

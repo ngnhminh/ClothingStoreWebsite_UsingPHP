@@ -132,8 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $allowedFunctions = ["createCustomer", "updateCustomer", "deleteCustomer", "getCustomers"];
 
         if (in_array($functionName, $allowedFunctions) && function_exists($functionName)) {
-            $result = call_user_func($functionName, $params);
-            echo json_encode($result);
+            call_user_func($functionName, $params);
         } else {
             echo json_encode(["status" => "error", "message" => "Hàm không tồn tại hoặc không được phép!"]);
         }

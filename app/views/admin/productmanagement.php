@@ -7,13 +7,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin</title>
-        <link rel="stylesheet" href="/public/assets/css/admin/productmanagement.css">
+        <link rel="stylesheet" href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/admin/productmanagement.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     </head>
     <body>
         <aside class="sidebar">
-            <img id="logo_img" src="http://localhost/ClothingStore/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
+            <img id="logo_img" src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
             <ul class="menu-admin">
                 <a href="dashboard.php"><li>📊 Dashboard</li></a>
                 <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
@@ -82,7 +82,7 @@
                                 </div>
                                 <button class="save-addbtn">Lưu</button> -->
                             </div>
-                            <div id="product-add-colornpic" style="display: none">
+                            <div id="product-change-colornpic" style="display: none">
                                 <div class="color-section">
                                     <button class="btn btn-change" id="btn-change">Thêm màu</button>
                                     <input type="color" id="colorPicker" style="display: none;">
@@ -105,49 +105,38 @@
                             <div id="product-type">
                                 <span>Loại:</span>
                                 <select name="product-type" id="product-type-selected">
-                                    <option value="ao">Áo</option>
-                                    <option value="quan">Quần</option>
-                                    <option value="kinh">Kính</option>
-                                    <option value="giay">Giày</option>
+                                    <option value="ao" data-type="0">Áo</option>
+                                    <option value="quan" data-type="1">Quần</option>
+                                    <option value="kinh" data-type="3">Kính</option>
+                                    <option value="giay" data-type="2">Giày</option>
                                 </select>
                             </div>
                             <div class="product-image">
-                                <img src="http://localhost/ClothingStore/public/assets/images/vector.svg" alt="Sản phẩm" class="addproduct">
+                            <div id="first-image">
+                                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/vector.svg" 
+                                    alt="Sản phẩm" id="main-product-image" class="addproduct" style="cursor: pointer;">
+                                </div>
+                                <input type="file" id="main-image-input" accept="image/*" style="display: none;">
                                 <input type="text" id="nameofpeoduct" placeholder="Nhập tên sản phẩm" required>
                                 <div class="price">
                                     <label for="cost">Giá</label>
                                     <input type="number" id="cost" name="price" placeholder="Nhập giá" min="0" step="1000" required>
                                     <span>VNĐ</span>                                
                                 </div>
-                                <button class="save-addbtn">Lưu</button>
+                                <button class="save-addbtn" id="save-addbtn">Lưu</button>
                             </div>
-                            <div id="product-add-colornpic" >
+                            <div id="product-add-colornpic" style="display: none">
                                 <div class="color-section">
-                                    <button class="btn">Thêm màu</button>
-                                    <span class="divider">:</span>
-                                    <div class="color-options">
-                                        <span class="color black"></span>
-                                        <span class="color beige"></span>
-                                        <span class="color brown"></span>
+                                    <button class="btn" id="btn-add" style="display: none">Thêm màu</button>
+                                    <input type="color" id="colorPickerAdd" style="display: none;">
+                                    <div id="colorDisplay" style="display:none">Giá trị màu: <span id="colorValueAdd">#000000</span></div>
+                                    <div class="color-options color-options-add" id="color-options-add">
                                     </div>
-                                    <input type="checkbox" class="checkbox">
                                 </div>
 
-                                <button class="btn">Thêm hình ảnh màu</button>
-                                <div class="image-box">
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                </div>
-
-                                <button class="btn">Hình ảnh</button>
-                                <div class="image-box">
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                    <p>D:/abc.xyz.img <span class="remove">—</span></p>
-                                </div>
+                                <button class="btn" id="btn-image-add" style="display: none;">Thêm hình ảnh màu</button>
+                                <input type="file" id="fileInputAdd" accept="image/*" style="display: none;">
+                                <div class="image-box" id="image-box-add"></div>
                             </div>
                         </div>
 
@@ -157,92 +146,10 @@
                             </div>
                         </div>
 
-                        <div class="column2 addproduct" id ="column2changeproduct">
-                            <div class="sizes">
-                                <span>Số lượng</span>
-                                <div class="size-option addproduct-ao" >
-                                    <div>S</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-ao">
-                                    <div>M</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-ao">
-                                    <div>L</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-ao">
-                                    <div>XL</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-ao">
-                                    <div>XXL</div>
-                                    <input type="number" value="5">
-                                </div>
-
-                                <!-- Size Quần -->
-                                <div class="size-option addproduct-quan">
-                                    <div>26</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-quan">
-                                    <div>28</div>
-                                    <input type="number addproduct-quan" value="5">
-                                </div>
-                                <div class="size-option addproduct-quan">
-                                    <div>30</div>
-                                    <input type="number addproduct-quan" value="5">
-                                </div>
-                                <div class="size-option addproduct-quan">
-                                    <div>32</div>
-                                    <input type="number addproduct-quan" value="5">
-                                </div>
-                                <div class="size-option addproduct-quan">
-                                    <div>34</div>
-                                    <input type="number" value="5">
-                                </div>
-
-                                <!-- Size Giày -->
-                                <div class="size-option addproduct-giay">
-                                    <div>40</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-giay">
-                                    <div>41</div>
-                                    <input type="number addproduct-giay" value="5">
-                                </div>
-                                <div class="size-option addproduct-giay">
-                                    <div>42</div>
-                                    <input type="number addproduct-giay" value="5">
-                                </div>
-                                <div class="size-option addproduct-giay">
-                                    <div>43</div>
-                                    <input type="number addproduct-giay" value="5">
-                                </div>
-                                <div class="size-option addproduct-giay">
-                                    <div>44</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-giay">
-                                    <div>45</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-giay">
-                                    <div>46</div>
-                                    <input type="number" value="5">
-                                </div>
-                                <div class="size-option addproduct-giay">
-                                    <div>47</div>
-                                    <input type="number" value="5">
-                                </div>
-
-                                <!-- Size kính -->
-                                <div class="size-option addproduct-kinh">
-                                    <div>FS</div>
-                                    <input type="number" value="5">
-                                </div>
-                            </div>
+                        <div class="column2 addproduct">
+                            <div class="sizes" id ="addproductsize-container">
+                                <span>Số lượng</s>
+                                <!-- Size Áo -->
                         </div>
                     </div>              
 
@@ -260,6 +167,6 @@
         <div id="loading-indicator" class="spinner-container">
             <div class="spinner"></div>
         </div>
-        <script src="http://localhost/ClothingStore/public/assets/js/admin/productmanagement.js"></script>
+        <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/admin/productmanagement.js"></script>
     </body>
 </html>

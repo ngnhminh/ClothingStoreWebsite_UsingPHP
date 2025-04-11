@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
         passwordField.style.border = "none";
     });
 
-    createBtn.addEventListener(cancelIdleCallback, createCustomer())
+    createBtn.addEventListener("click", createCustomer);
 
     // ✅ Hàm tạo khách hàng
     async function createCustomer() {
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function sendRequest(funcName, paramsObj) {
         try {
-            let response = await fetch("http://localhost/ClothingStore/app/controllers/customer.controller.php", {
+            let response = await fetch("http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/customer.controller.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ function: funcName, params: paramsObj }),

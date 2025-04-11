@@ -1,27 +1,19 @@
-<?php
-     
-     require_once __DIR__ . "/../../controllers/detailproductforFE.php";
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"  href="/public/assets/css/productdetailshirt.css">
+    <link rel="stylesheet"  href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/productdetailshirt.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Product Detail</title>
 </head>
 <body>
-   
     <header>
         <?php require 'header.php'; ?>
     </header>
     <main>
     <div class="product-container">
-        <div class="product-image">
+        <div class="product-image" id="product-image">
             <img src="/public/assets/images/shirt.png" alt="Product Image">
         </div>
         <div class="product-details">
@@ -138,11 +130,10 @@
              </div>
         </div>
         </main>
-        <script src="/public/assets/js/productdetailshirt.js"></script>
     <footer>
         <?php require 'footer.php'; ?>
     </footer>
-
-   
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/productdetailshirt.js"></script>
 </body>
 </html>

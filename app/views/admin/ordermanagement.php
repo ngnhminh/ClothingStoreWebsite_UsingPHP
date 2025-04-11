@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin</title>
-        <link rel="stylesheet" type="text/css" href="http://localhost/ClothingStore/public/assets/css/admin/ordermanagement.css">
+        <link rel="stylesheet" type="text/css" href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/admin/ordermanagement.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
         <style>
@@ -19,7 +19,7 @@
     </head>
     <body>
         <aside class="sidebar">
-            <img id="logo_img" src="http://localhost/ClothingStore/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
+            <img id="logo_img" src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
             <ul class="menu-admin">
                 <a href="dashboard.php"><li>📊 Dashboard</li></a>
                 <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
@@ -82,7 +82,7 @@
                     <div class="item-row">
                         <div class="product-info">
                             <div class="item-detail">
-                                <img src="http://localhost/ClothingStore/public/assets/images/anh/ao/den/OUG (1).jpg" alt="ao" class="product-img">
+                                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/anh/ao/den/OUG (1).jpg" alt="ao" class="product-img">
                                 <div class="item-name">haha</div>
                                 <div class="item-sizes">Size:  &nbsp; Sl: </div>
                             </div>
@@ -141,6 +141,6 @@
             </div> <!-- Đóng div của invoice-items -->
         </div> <!-- Đóng div của invoice -->
 
-    <script src="http://localhost/ClothingStore/public/assets/js/admin/ordermanagement.js"></script>
+    <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/admin/ordermanagement.js"></script>
     </body>
 </html>

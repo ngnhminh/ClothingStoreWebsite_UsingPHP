@@ -3,11 +3,78 @@ var product = document.getElementsByClassName("product");
 var change_modal = document.getElementsByClassName("change-modal");
 var btnadd = document.getElementById("add-product-btn");
 const size_option = document.querySelectorAll(".size-option");
+const product_change_colornpic = document.getElementById("product-change-colornpic");
 const product_add_colornpic = document.getElementById("product-add-colornpic");
 let producttypestatus = "";
 let presentpage = "All";
 let maspglobal = "";
 let hexcodeglobal ="";
+let colorCode;
+
+//Tạo sự kiện thay đổi khi nhấp vào loại
+const type = document.getElementById("product-type-selected");
+const addproduct_quan = document.querySelectorAll(".size-option.addproduct-quan");
+const addproduct_giay = document.querySelectorAll(".size-option.addproduct-giay");
+const addproduct_kinh = document.querySelectorAll(".size-option.addproduct-kinh");
+const addproduct_ao = document.querySelectorAll(".size-option.addproduct-ao");
+
+type.addEventListener("change", async function(){
+    if(type.value === "ao"){
+        size_option.forEach(function (item) {
+            item.style.display = "none";
+        }); 
+        addproduct_ao.forEach(function (item) {
+            item.style.display = "flex";
+        });
+        btn_add.style.display = "none"
+        colorCode = null;
+        var selectedOption = type.options[type.selectedIndex];
+        var dataType = selectedOption.getAttribute("data-type")
+        await GetFunctionWithAttribute("getSizeOfProductByMaloai", { maloai: dataType });
+        product_add_colornpic.style.display = "none";
+    }
+
+    if(type.value === "quan"){
+        size_option.forEach(function (item) {
+            item.style.display = "none";
+        });
+        addproduct_quan.forEach(function (item) {
+            item.style.display = "flex";
+        });
+        btn_add.style.display = "none";
+        colorCode = null;
+        product_add_colornpic.style.display = "none";
+        var selectedOption = type.options[type.selectedIndex];
+        var dataType = selectedOption.getAttribute("data-type")
+        await GetFunctionWithAttribute("getSizeOfProductByMaloai", { maloai: dataType });
+    } else if(type.value === "giay"){
+        size_option.forEach(function (item) {
+            item.style.display = "none";
+        });
+        addproduct_giay.forEach(function (item) {
+            item.style.display = "flex";
+            product_change_colornpic.style.display = "block";
+        });
+        btn_add.style.display = "block";
+        product_add_colornpic.style.display = "block";
+    } else if(type.value === "kinh"){
+        size_option.forEach(function (item) {
+            item.style.display = "none";
+        });
+        addproduct_kinh.forEach(function (item) {
+            item.style.display = "flex";
+            product_change_colornpic.style.display = "block";
+        });
+        btn_add.style.display = "none";
+        colorCode = null;
+        var selectedOption = type.options[type.selectedIndex];
+        var dataType = selectedOption.getAttribute("data-type")
+        await GetFunctionWithAttribute("getSizeOfProductByMaloai", { maloai: dataType });
+        product_add_colornpic.style.display = "none";
+    }
+    console.log("YES");
+});
+
 function normalizeString(str) {``
     // Loại bỏ dấu và chuyển đổi thành chữ thường
     return str.normalize("NFD") // Tách ký tự và dấu
@@ -68,12 +135,17 @@ document.getElementById("remove-textarea-btn").addEventListener("click", functio
 
 
 //Chọn bảng màu
+const colorPicker = document.getElementById("colorPicker");
+const colorPickerAdd = document.getElementById("colorPicker");
+
+ // Khai báo trước
 var btn_change = document.getElementById("btn-change");
+var btn_add = document.getElementById("btn-add");
+
 btn_change.addEventListener("click", () => {
-    colorPicker.click(); 
+    colorPicker.click(); // Sử dụng sau khi đã khai báo
 });
 
-const colorPicker = document.getElementById("color-picker"); // Định nghĩa đúng ID
 if (colorPicker) {
     colorPicker.addEventListener("change", () => {
         colorValue.textContent = colorPicker.value;
@@ -81,6 +153,15 @@ if (colorPicker) {
 } else {
     console.warn("Không tìm thấy colorPicker!");
 }
+
+btn_add.addEventListener("click", () => {
+    colorPickerAdd.click(); // Sử dụng sau khi đã khai báo
+});
+
+colorPickerAdd.addEventListener("input", () => {
+    const selectedColor = colorPickerAdd.value;
+    addNewColorAdd(colorPickerAdd.value);
+});
 
 
 function addNewColor(color, masp){
@@ -103,10 +184,73 @@ function addNewColor(color, masp){
         colorContainer.appendChild(span);
 }
 
+//đặt biến màu ra giá trị toàn cục
+function addNewColorAdd(color){
+    let colorContainer = document.getElementById("color-options-add");
+    let btnImageAdd = document.getElementById("btn-image-add");
+    let span = document.createElement("span");
+        span.classList.add("newColor");
+        span.classList.add("color");
+        span.style.backgroundColor = color;
+        span.setAttribute("data-colorcode", removeHash(color));
+
+        // Gán sự kiện click ngay khi tạo span
+        span.addEventListener("click", async function () {
+            let hexcode = this.getAttribute("data-colorcode");
+            console.log("Clicked color:", hexcode);
+            btnImageAdd.style.display = "block";
+            colorCode = hexcode;
+            onColorChange(hexcode);
+            var selectedOption = type.options[type.selectedIndex];
+            var dataType = selectedOption.getAttribute("data-type");
+            console.log(dataType);
+            await GetFunctionWithAttribute("getSizeOfProductByMaloai", { maloai: dataType });
+        });
+        colorContainer.appendChild(span);
+}
+
 // Bảng hình ảnh
 const btnImageChange = document.getElementById("btn-image-change");
+const btnImageAdd = document.getElementById("btn-image-add");
+
 const fileInput = document.getElementById("fileInput");
+const fileInputAdd = document.getElementById("fileInputAdd");
+
 const imageBox = document.getElementById("image-box-change");
+const imageBoxAdd = document.getElementById("image-box-add");
+
+const mainImage = document.querySelector("#first-image img");
+const firstImage = document.getElementById("main-product-image");
+const fileInputAvatar = document.getElementById("main-image-input");
+
+firstImage.addEventListener("click", () => {
+    fileInput.click(); // Mở hộp thoại chọn file
+});
+
+fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    let formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        let response = await fetch("http://localhost/ClothingStoreWebsite_UsingPHP/public/upload.php", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+        if (result.success) {
+            let fullImageUrl = `http://localhost/ClothingStoreWebsite_UsingPHP/public${result.path}`;
+            mainImage.src = fullImageUrl + "?t=" + new Date().getTime(); // 👈 Gán lại ảnh
+        } else {
+            console.error("Lỗi khi tải ảnh lên:", result.message);
+        }
+    } catch (error) {
+        console.error("Lỗi upload ảnh:", error);
+    }
+});
 
 btnImageChange.addEventListener("click", () => {
     fileInput.click(); // Mở cửa sổ chọn tệp
@@ -120,7 +264,7 @@ fileInput.addEventListener("change", async () => {
     let formData = new FormData();
     formData.append("file", file);
     try {
-        let response = await fetch("http://localhost/ClothingStore/public/upload.php", { // Cập nhật URL API PHP
+        let response = await fetch("http://localhost/ClothingStoreWebsite_UsingPHP/public/upload.php", { // Cập nhật URL API PHP
             method: "POST",
             body: formData
         });
@@ -130,7 +274,7 @@ fileInput.addEventListener("change", async () => {
             let relativePath = result.path; // Nhận đường dẫn từ server (Sửa từ filePath -> path)
 
             // Tạo URL đầy đủ để hiển thị ảnh
-            let fullImageUrl = `http://localhost/ClothingStore/public${relativePath}`;
+            let fullImageUrl = `http://localhost/ClothingStoreWebsite_UsingPHP/public${relativePath}`;
 
             // Thêm ảnh vào danh sách hiển thị
             const imageItem = document.createElement("div");
@@ -158,6 +302,81 @@ fileInput.addEventListener("change", async () => {
 });
 
 
+// Gọi khi chọn màu mới
+function onColorChange(hexcode) {
+    colorcode = hexcode;
+
+    // Ẩn tất cả nhóm ảnh
+    document.querySelectorAll('.image-group').forEach(group => {
+        group.style.display = 'none';
+    });
+
+    // Nếu đã có nhóm ảnh cho hexcode → hiện lại
+    let group = document.querySelector(`.image-group[data-colorcode="${hexcode}"]`);
+    if (group) {
+        group.style.display = 'flex';
+    } else {
+        // Nếu chưa có thì tạo mới
+        const newGroup = document.createElement("div");
+        newGroup.classList.add("image-group");
+        newGroup.dataset.colorcode = hexcode;
+        newGroup.style.display = "flex";
+        imageBoxAdd.appendChild(newGroup);
+    }
+}
+
+// Upload ảnh
+btnImageAdd.addEventListener("click", () => {
+    if (!colorCode) {
+        alert("Vui lòng chọn màu trước khi thêm ảnh.");
+        return;
+    }
+    fileInputAdd.click();
+});
+
+fileInputAdd.addEventListener("change", async () => {
+    const file = fileInputAdd.files[0];
+    if (!file || !colorCode) return;
+
+    let formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        let response = await fetch("http://localhost/ClothingStoreWebsite_UsingPHP/public/upload.php", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+        if (result.success) {
+            let fullImageUrl = `http://localhost/ClothingStoreWebsite_UsingPHP/public${result.path}`;
+
+            const group = document.querySelector(`.image-group[data-colorcode="${colorCode}"]`);
+
+            const imageItem = document.createElement("div");
+            imageItem.classList.add("image-item", "new-image-item");
+
+            const img = document.createElement("img");
+            img.src = fullImageUrl;
+            img.alt = "Uploaded Image";
+
+            const removeButton = document.createElement("button");
+            removeButton.textContent = "-";
+            removeButton.addEventListener("click", () => {
+                group.removeChild(imageItem);
+            });
+
+            imageItem.appendChild(img);
+            imageItem.appendChild(removeButton);
+            group.appendChild(imageItem);
+        } else {
+            console.error("Lỗi khi tải ảnh lên:", result.message);
+        }
+    } catch (error) {
+        console.error("Lỗi upload ảnh:", error);
+    }
+});
+
 // Tác vụ nút đóng
 var closebtn = document.getElementsByClassName("close-btn");
 closebtn[0].addEventListener("click", function(){
@@ -182,7 +401,8 @@ btnadd.addEventListener("click", function(){
     size_option.forEach(function (item) {
         item.style.display = "none";
     });
-    product_add_colornpic.style.display = "none";
+    product_change_colornpic.style.display = "none";
+    product_add_colornpic.style.display = "block";
     // changeproductclass[0].style.display = "none";
     // addproductclass[0].style.display = "flex";
     for(let i=0;i<changeproductclass.length;i++){
@@ -191,6 +411,7 @@ btnadd.addEventListener("click", function(){
     for(let i=0;i<addproductclass.length;i++){
         addproductclass[i].style.display = "flex";
     }
+    cleanAddInput();
 });
 
 openModalChangeProduct();
@@ -225,52 +446,6 @@ function openModalChangeProduct(){
         });
     });
 }
-
-//Tạo sự kiện thay đổi khi nhấp vào loại
-const type = document.getElementById("product-type-selected");
-const addproduct_quan = document.querySelectorAll(".size-option.addproduct-quan");
-const addproduct_giay = document.querySelectorAll(".size-option.addproduct-giay");
-const addproduct_kinh = document.querySelectorAll(".size-option.addproduct-kinh");
-const addproduct_ao = document.querySelectorAll(".size-option.addproduct-ao");
-
-type.addEventListener("change", function(){
-    if(type.value === "ao"){
-        size_option.forEach(function (item) {
-            item.style.display = "none";
-        });
-        addproduct_ao.forEach(function (item) {
-            item.style.display = "flex";
-        });
-    }
-
-    if(type.value === "quan"){
-        size_option.forEach(function (item) {
-            item.style.display = "none";
-        });
-        addproduct_quan.forEach(function (item) {
-            item.style.display = "flex";
-            
-        });
-    } else if(type.value === "giay"){
-        size_option.forEach(function (item) {
-            item.style.display = "none";
-        });
-        addproduct_giay.forEach(function (item) {
-            item.style.display = "flex";
-            product_add_colornpic.style.display = "block";
-        });
-    } else if(type.value === "kinh"){
-        size_option.forEach(function (item) {
-            item.style.display = "none";
-        });
-        addproduct_kinh.forEach(function (item) {
-            item.style.display = "flex";
-            product_add_colornpic.style.display = "block";
-
-        });
-    }
-    console.log("YES");
-});
 
 //Thêm sản phẩm vào web
 //Gán sự kiện cho nút (Sử dụng ajax)
@@ -350,13 +525,57 @@ function displaySizeNewProducts(sizes) {
         let sizeHTML = `
             <div class="size-option new-size">
                 <label id="new-size-${index}">${size.tenkichco}</label>
-                <input type="number" id="new-size-${index} name="new-size-name" value="0">
+                <input type="number" id="new-size-${index}" name="new-size-name" value="0">
             </div>
         `;
         sizeContainer.innerHTML += sizeHTML;
-    });
-    
+    }); 
 }
+
+function displaySizeNewProductsForRest(sizes) {
+    let sizeContainer = document.getElementById("addproductsize-container");
+    sizeContainer.innerHTML = ""; // Xóa nội dung cũ
+    sizes.forEach((size, index) => {
+        let sizeHTML = `
+            <div class="size-option new-size ao-quan-size">
+                <label id="new-size-${index}">${size.tenkichco}</label>
+                <input type="number" id="new-size-${index}" name="new-size-name" value="0">
+            </div>
+        `;
+        sizeContainer.innerHTML += sizeHTML;
+    }); 
+}
+
+function displaySizeNewProductsAdd(sizes, hexcode) {
+    const sizeContainer = document.getElementById("addproductsize-container");
+
+    // Ẩn tất cả các size hiện tại
+    sizeContainer.querySelectorAll('.new-size').forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // Kiểm tra xem nhóm size với hexcode này đã được tạo chưa
+    const existingGroup = sizeContainer.querySelector(`.new-size[data-colorcode="${hexcode}"]`);
+
+    if (existingGroup) {
+        // Nếu đã có → chỉ cần hiển thị lại nhóm đó
+        sizeContainer.querySelectorAll(`.new-size[data-colorcode="${hexcode}"]`).forEach(el => {
+            el.style.display = 'flex';
+        });
+    } else {
+        // Nếu chưa có → render mới với value = 0
+        sizes.forEach((size, index) => {
+            const sizeHTML = `
+                <div class="size-option new-size" data-colorcode="${hexcode}" style="display: flex;">
+                    <label for="new-size-${hexcode}-${index}">${size.tenkichco}</label>
+                    <input type="number" id="new-size-${hexcode}-${index}" name="new-size-name" value="0" min="0">
+                </div>
+            `;
+            sizeContainer.insertAdjacentHTML('beforeend', sizeHTML);
+        });
+    }
+}
+
 
 //View thông tin sản phẩm
 function displayInfoProducts(data) {
@@ -370,7 +589,7 @@ function displayInfoProducts(data) {
         //biến
         var productvalue = normalizeString(product.tenloai);
         var pricetvalue = formatCurrencyVND(product.gia);
-        var product_add_colornpic = document.querySelector('.changeproduct #product-add-colornpic');
+        var product_change_colornpic = document.querySelector('.changeproduct #product-change-colornpic');
 
         let infoHTML = `
             <img src="${product.duongdananh}" alt="Sản phẩm">
@@ -565,13 +784,224 @@ function displayInfoProducts(data) {
 
         // Hiển thị hoặc ẩn phần màu sắc & ảnh
         if (productvalue === "giay" || productvalue === "kinh") {
-            product_add_colornpic.style.display = "block";
+            product_change_colornpic.style.display = "block";
         } else {
-            product_add_colornpic.style.display = "none";
+            product_change_colornpic.style.display = "none";
         }
 
     });
 }
+
+var save_addbtn = document.getElementById("save-addbtn");
+save_addbtn.addEventListener("click", async function () {
+    let loadingIndicator = document.getElementById("loading-indicator");
+    let price = document.getElementById("cost").value;
+    let nameofpeoduct = document.getElementById("nameofpeoduct").value;
+    let description = document.getElementById("description-box").value;
+    var selectedOption = type.options[type.selectedIndex];
+    var dataType = selectedOption.getAttribute("data-type")
+    var sizeContainer = document.getElementById("addproductsize-container");
+    var sizeOptions = sizeContainer.querySelectorAll(".size-option");
+
+    // Hiện hiệu ứng loading
+    loadingIndicator.style.display = "block";
+
+    try {
+        console.log("Giá:", price);
+        console.log("Mô tả:", description);
+        var masp = null;
+        var imgSrc = document.getElementById("main-product-image").src;
+
+        // Thêm sản phẩm là áo
+        if (type.value === "ao" || type.value === "quan" || type.value === "kinh") {
+            let addResult = await GetFunctionWithAttribute("addProduct", {
+                tensp: nameofpeoduct,
+                gia: price,
+                mota: description,
+                maloai_id: dataType,
+                duongdananh: imgSrc
+            });
+            masp = addResult.newmasp;
+            for (const option of sizeOptions) {
+                const label = option.querySelector("label");
+                const input = option.querySelector("input");
+        
+                await GetFunctionWithAttribute("addSizeOfProduct", {
+                    tenkichco: label.innerHTML.trim(),
+                    soluong: input.value,
+                    mau_sanpham_id: addResult.mamausanpham
+                });
+            }
+        }else{
+            const imageBox = document.getElementById("image-box-add");
+            const groups = imageBox.querySelectorAll(".image-group");
+            let addResult = await GetFunctionWithAttribute("addProduct", {
+                tensp: nameofpeoduct,
+                gia: price,
+                mota: description,
+                maloai_id: dataType,
+                duongdananh: imgSrc
+            });
+            masp = addResult.newmasp;
+            if (!addResult || !addResult.newmasp) {
+                console.error("Thêm sản phẩm thất bại hoặc không có mã sản phẩm trả về:", addResult);
+                alertCustom("Lỗi khi thêm sản phẩm!", "#f44336");
+                return; // Dừng xử lý tiếp nếu lỗi
+            }
+            for (const group of groups) {
+                const colorCode = group.getAttribute("data-colorcode");
+                const imageItems = group.querySelectorAll("img");
+            
+                const images = Array.from(imageItems).map(img => img.src);
+            
+                let addColorResult = await GetFunctionWithAttribute("addColorOfProduct", {
+                    mamau: colorCode,
+                    masp_id: addResult.newmasp
+                });
+            
+                for (const src of images) {
+                    await GetFunctionWithAttribute("addImageOfProduct", {
+                        duongdananh: src,
+                        mau_sanpham_id: addColorResult.mau_san_pham_id
+                    });
+                }
+            }
+            const sizeElements = document.querySelectorAll('.size-option.new-size');
+            const sizesByColor = {}; // Kết quả gom theo màu
+
+            sizeElements.forEach(sizeEl => {
+                const colorCode = sizeEl.getAttribute('data-colorcode');
+                const label = sizeEl.querySelector('label')?.innerText.trim();
+                const quantity = sizeEl.querySelector('input')?.value;
+
+                if (!sizesByColor[colorCode]) {
+                    sizesByColor[colorCode] = [];
+                }
+
+                sizesByColor[colorCode].push({
+                    size: label,
+                    quantity: Number(quantity)
+                });
+            });
+            //Duyeenjt qya sizecolor để lấy thông tin
+            for (const color in sizesByColor) {
+                const result = await GetFunctionWithAttribute("getMauSanPhamId", {
+                    masp_id: addResult.newmasp,
+                    mamau: color // dùng trực tiếp mã màu
+                });
+            
+                const mamausanphamId = result?.[0]?.id;
+                if (!mamausanphamId) {
+                    console.error("Không tìm thấy ID màu sản phẩm cho mã màu:", color);
+                    continue;
+                }
+            
+                for (const item of sizesByColor[color]) {
+                    await GetFunctionWithAttribute("addSizeOfProduct", {
+                        tenkichco: item.size,
+                        soluong: item.quantity,
+                        mau_sanpham_id: mamausanphamId
+                    });
+                }
+            }
+        }
+        
+        if (addResult) {
+            alertCustom("Sản phẩm đã được thêm thành công", "#4CAF50");
+            change_modal[0].style.display = "none";
+        } else {
+            alertCustom("Lỗi khi thêm sản phẩm!");
+        }
+
+        // Thêm chi tiết sản phẩm mới (nếu có)
+        let container = document.querySelectorAll("#detail-container-change .extra-textarea");
+        let updatePromises = [];
+        container.forEach(textarea => {
+            if (textarea.value.trim() !== "") {
+                updatePromises.push(
+                    GetFunctionWithAttribute("updateProductDetail", {
+                        masp: product.id,
+                        chitiet: textarea.value
+                    })
+                );
+            }
+        });
+
+        await Promise.all(updatePromises); // Chờ cập nhật xong
+
+        // Xóa chi tiết sản phẩm cũ nếu trống
+        let oldcontainer = document.querySelectorAll("#detail-container-change textarea");
+        let deletePromises = [];
+        oldcontainer.forEach(textarea => {
+            if (textarea.value.trim() === "") {
+                let detailId = textarea.getAttribute("data-id");
+                if (detailId) {
+                    deletePromises.push(
+                        GetFunctionWithAttribute("deleteProductDetail", { id: detailId })
+                    );
+                }
+            }
+        });
+
+        await Promise.all(deletePromises); // Chờ xóa xong
+
+        let colorContainer = document.querySelector("#color-options-change .newColor");
+
+        if (colorContainer) { // Kiểm tra nếu tìm thấy phần tử
+            let color = colorContainer.getAttribute("data-colorcode");
+            let masanpham = colorContainer.getAttribute("data-masp_id");
+
+            if (!color || !masanpham || isNaN(masanpham)) {
+                console.error("Lỗi: Dữ liệu không hợp lệ", { color, masanpham });
+                return;
+            }
+
+            try {
+                let response = await GetFunctionWithAttribute("addColorOfProduct", { mamau: color, masp_id: masanpham });
+                if (response?.success && response?.new_mau_id) { // Kiểm tra phản hồi hợp lệ
+                    await addSizeFunction(response); // Gọi hàm thêm size sau khi màu được thêm thành công
+                } else {
+                    console.error("Lỗi khi thêm màu, không thể thêm size!", response);
+                }
+            } catch (error) {
+                console.error("Lỗi khi gọi API addColorOfProduct:", error);
+            }
+        } else {
+            console.warn("Không có màu mới để thêm!");
+        }
+
+
+        const imageBox = document.querySelectorAll(".new-image-item");
+
+        if (imageBox.length > 0) {
+            var data = await GetFunctionWithAttribute("getMauSanPhamId", {masp_id: maspglobal, mamau: hexcodeglobal})
+            var mausanphamid = "";
+            data.forEach(element => {
+                mausanphamid= element.id;
+            });
+            imageBox.forEach(image => {
+                const imgElement = image.querySelector("img");
+                if (imgElement) {
+                    const imageUrl = imgElement.src;
+                    console.log(imageUrl);
+                    console.log(mausanphamid);
+                    GetFunctionWithAttribute("addImageOfProduct", { duongdananh: imageUrl, mau_sanpham_id: mausanphamid });
+                }
+            });
+        } else {
+            console.warn("Không có ảnh mới để thêm!");
+        }
+
+        // Xóa nội dung trong `#detail-container-change`
+        document.getElementById("detail-container-change").innerHTML = "";
+
+    } catch (error) {
+        console.error("Lỗi khi xử lý:", error);
+    } finally {
+        // Ẩn hiệu ứng loading
+        loadingIndicator.style.display = "none";
+    }
+});
 
 function displayInfoProductsDetail(data) {
     let detailContainer = document.getElementById("detail-container-change");
@@ -608,7 +1038,6 @@ function displayColorProducts(colors) {
         span.style.backgroundColor = "#"+color.mamau;
         span.setAttribute("data-colorcode", color.mamau);
         span.setAttribute("data-masp_id", color.masp_id);
-
         // Gán sự kiện click ngay khi tạo span
         span.addEventListener("click", async function () {
             let masp = this.getAttribute("data-masp_id");
@@ -685,12 +1114,43 @@ function displayLinkImageOfColor(data) {
     });
 }
 
+function cleanAddInput(){
+    // Reset tất cả các input
+    document.getElementById("nameofpeoduct").value = "";
+    document.getElementById("cost").value = "";
+    document.getElementById("description-box").value = "";
+
+    // Reset ảnh về ảnh mặc định
+    document.getElementById("main-product-image").src = "http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/vector.svg";
+
+    // Reset select về mặc định (Áo)
+    document.getElementById("product-type-selected").selectedIndex = 0;
+
+    // Reset size về 0
+    sizeOptions.forEach(option => {
+        const input = option.querySelector("input");
+        input.value = 0;
+    });
+
+    // Ẩn phần màu & ảnh màu nếu có bật
+    document.getElementById("product-add-colornpic").style.display = "none";
+    document.getElementById("btn-add").style.display = "none";
+    document.getElementById("colorPickerAdd").style.display = "none";
+    document.getElementById("colorDisplay").style.display = "none";
+    document.getElementById("btn-image-add").style.display = "none";
+
+    // Xoá các màu và hình ảnh đã thêm (nếu có)
+    document.getElementById("color-options-add").innerHTML = "";
+    document.getElementById("image-box-add").innerHTML = "";
+
+}
+
 //vì fetch bất đồng bộ phải sử dụng thêm async function
 async function GetFunctionWithAttribute(funcName, paramsObj) {
     console.log("Hàm gọi:", funcName);
     console.log("Dữ liệu gửi đi:", paramsObj);
 
-    let url = "http://localhost/ClothingStore/app/controllers/productmanagementcontroller.php";
+    let url = "http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/productmanagementcontroller.php";
 
     try {
         let response = await fetch(url, {
@@ -787,6 +1247,16 @@ async function GetFunctionWithAttribute(funcName, paramsObj) {
                 break;
             case "getSanPhamByName":
                 displayProducts(data);
+                break;
+            case "getSizeOfProductByMaloai":
+                if(colorCode != null){
+                    displaySizeNewProductsAdd(data, colorcode);
+                }else{
+                    displaySizeNewProductsForRest(data);
+                }
+                break;
+            case "addProduct":
+                change_modal[0].style.display = "none";
                 break;
             default:
                 console.warn("Hàm không được xử lý:", funcName);

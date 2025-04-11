@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
+include __DIR__ . '/../config/db.php';
 
 
 
@@ -8,7 +8,7 @@ $result = mysqli_query($conn, $sql);
 echo "Kết Nối Thành Công";
 
 while ($row = mysqli_fetch_assoc($result)) {
-    echo "Tên sản phẩm: " . $row['ten_sanpham'] . "<br>";
+    echo "Tên sản phẩm: " . $row['tensp'] . "<br>";
   
 }
 ?>

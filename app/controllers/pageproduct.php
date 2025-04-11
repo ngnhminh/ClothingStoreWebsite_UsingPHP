@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/ClothingStore/config/db.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/ClothingStoreWebsite_UsingPHP/config/db.php';
 
 
 
@@ -51,20 +51,28 @@ INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id";
 function getProductsByFilter($order = 'DESC', $maloai_id = null) {
     global $conn;
 
-    // Câu lệnh SQL có điều kiện lọc theo loại nếu có
-    $query = "SELECT s.id, s.tensp, s.gia, h.duongdananh 
-              FROM sanpham s
-              INNER JOIN mausanpham m ON s.id = m.masp_id
-              INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id";
+    $query = "SELECT * 
+        FROM hinhanh h1
+        JOIN (
+            SELECT sanpham.tensp, sanpham.id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, 
+                MIN(hinhanh.mahinhanh) AS min_id
+            FROM hinhanh 
+            INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
+            INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
+            INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
+            WHERE sanpham.matinhtrang = 1";
 
+    // Thêm điều kiện lọc loại sản phẩm
     if ($maloai_id) {
-        $query .= " WHERE s.maloai_id = ?";
+        $query .= " AND sanpham.maloai_id = ?";
     }
 
-    $query .= " ORDER BY s.gia $order";
+    $query .= " GROUP BY sanpham.id, sanpham.maloai_id
+        ) h2 ON h1.mahinhanh = h2.min_id
+        ORDER BY h2.gia $order";
 
-    // Sử dụng Prepared Statement để tránh SQL Injection
     $stmt = $conn->prepare($query);
+
     if ($maloai_id) {
         $stmt->bind_param("i", $maloai_id);
     }
@@ -79,5 +87,6 @@ function getProductsByFilter($order = 'DESC', $maloai_id = null) {
 
     return $products;
 }
+
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/config/db.php';
+require_once __DIR__ . "/../../../config/db.php";
 
 $masp = $_POST["masp"];  // Lấy ID sản phẩm từ form
 $giamgia = $_POST["giamgia"]; // Lấy % giảm giá
@@ -45,6 +45,7 @@ if ($stmt->execute()) {
 
 // Đóng kết nối
 $conn->close();
-header("Location: /app/views/admin/khuyenmaipage.php"); 
+header("Location: /ClothingStoreWebsite_UsingPHP/app/views/admin/khuyenmaipage.php");
 exit();
+
 ?>

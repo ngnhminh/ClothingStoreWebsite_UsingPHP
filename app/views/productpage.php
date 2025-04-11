@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/public/assets/css/productpage.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/productpage.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Trang hàng</title>
 </head>
@@ -30,24 +30,29 @@
             </button>
             <select id="category-filter">
                 <option value="">Tất cả loại</option>
-                <option value="1" <?= $maloai_id == 1 ? 'selected' : '' ?>>Áo</option>
-                <option value="2" <?= $maloai_id == 2 ? 'selected' : '' ?>>Quần</option>
-                <option value="3" <?= $maloai_id == 3 ? 'selected' : '' ?>>Kính</option>
-                <option value="4" <?= $maloai_id == 4 ? 'selected' : '' ?>>Giày</option>
+                <option value="0" <?= $maloai_id == 0 ? 'selected' : '' ?>>Áo</option>
+                <option value="1" <?= $maloai_id == 1 ? 'selected' : '' ?>>Quần</option>
+                <option value="2" <?= $maloai_id == 2 ? 'selected' : '' ?>>Kính</option>
+                <option value="3" <?= $maloai_id == 3 ? 'selected' : '' ?>>Giày</option>
             </select>
           
         </div>
 
         <div class="product-grid_page">
             <?php foreach ($products as $product) { ?>
-                <div class="product-card">
-                    <img src="<?php echo $product['duongdananh']; ?>" alt="<?php echo $product['tensp']; ?>">
+                <div class="product-card" data-masp="<?php echo htmlspecialchars($product['id']); ?>" data-loai="<?php echo htmlspecialchars($product['maloai_id']); ?>">
+                    <div class="product-thumbnail">
+                            <div class="product-thumbnail_wrapper">
+                            <img src="<?php echo $product['duongdananh']; ?>" alt="<?php echo $product['tensp']; ?>">
+                            </div>
+                        </div>
                     <p class="product-name"><?php echo $product['tensp']; ?></p>
                     <p class="product-price"><strong><?php echo number_format($product['gia'], 0, ',', '.'); ?>đ</strong></p>
                 </div>
             <?php } ?>
         </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <footer>
         <?php require 'footer.php'; ?>
     </footer>
@@ -76,8 +81,25 @@
 
             window.location.search = urlParams.toString();
         });
+
+        // Hiệu ứng click vào sản phẩm (nếu có trang chi tiết thì chuyển trang)
+        document.querySelectorAll(".product-card").forEach(card => {
+            card.addEventListener("mousedown", function () {
+                card.style.transform = "translateY(2px)";
+                card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+            });
+            card.addEventListener("mouseup", function () {
+                card.style.transform = "translateY(0)";
+                card.style.boxShadow = "";
+            });
+            const id = card.getAttribute("data-masp");
+            const maloai = card.getAttribute("data-maloai");
+            if(maloai != 2){
+                window.location.href = 'productdetailshirt.php?id=' + id;
+            }else{
+                window.location.href = 'productdetailshoes.php?id=' + id;
+            }
+        });
     </script>
-
-
 </body>
 </html>

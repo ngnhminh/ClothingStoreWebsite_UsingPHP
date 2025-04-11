@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/public/assets/css/productdetailshoes.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/productdetailshoes.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
             <img src="/public/assets/images/shoes5.png" alt="Hình 4">
         </div>
         <div class="product-main-image">
-            <img src="/public/assets/images/shoes5.png" alt="Sản phẩm chính">
+            <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/shoes5.png" alt="Sản phẩm chính">
         </div>
         <div class="product-details-shoes">
             <h2>Nike Pegasus Plus</h2>
@@ -37,7 +37,7 @@
             <div id="sizenlike">
                 <span id="numberofsize">Size:</span><p class="sold-out">SẮP HẾT HÀNG</p>
                 <button id="likebtn">
-                    <img src="/public/assets/images/love.svg" id="loveicon">Yêu thích
+                    <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/love.svg" id="loveicon">Yêu thích
                 </button>
             </div>
             <h3>Size</h3>
@@ -88,7 +88,7 @@
 </div>
 </div>
 </main>
-<script src="/public/assets/js/productdetailshirt.js"></script>
+<script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/productdetailshirt.js"></script>
 
 <footer>
     <?php require 'footer.php'; ?>

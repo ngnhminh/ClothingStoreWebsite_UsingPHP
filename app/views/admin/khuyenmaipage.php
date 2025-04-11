@@ -1,7 +1,6 @@
 
 <?php
-     
-     require_once __DIR__ . "/../../controllers/khuyenmaimanagement.php";
+    require_once __DIR__ . "/../../../config/db.php";
 // get san pham 
 $sql = "SELECT id, tensp, gia, giamgia FROM sanpham";
 $result = $conn->query($sql);
@@ -13,7 +12,7 @@ INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
 INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id  
 INNER JOIN mau ON mau.id = mausanpham.mau_id  
 
-GROUP BY loaisanpham.tenloai  
+GROUP BY loaisanpham.tenloai    
 ORDER BY loaisanpham.tenloai ASC  
 LIMIT 0, 1000";
 $result2 = $conn->query($sql2);
@@ -33,9 +32,18 @@ if (isset($_POST['query'])) {
 }
 
 // Truy vấn lấy sản phẩm theo tên
-$sql4 = "SELECT id, tensp, gia, giamgia FROM sanpham 
-        WHERE tensp LIKE '%$search%'";
-
+$sql4 = "SELECT * 
+            FROM hinhanh h1
+            JOIN (
+                SELECT sanpham.tensp, sanpham.id, sanpham.maloai_id, loaisanpham.tenloai, sanpham.gia, sanpham.giamgia, 
+                    MIN(hinhanh.mahinhanh) AS min_id
+                FROM hinhanh 
+                INNER JOIN mausanpham ON hinhanh.mau_sanpham_id = mausanpham.id
+                INNER JOIN sanpham ON sanpham.id = mausanpham.masp_id
+                INNER JOIN loaisanpham ON loaisanpham.maloai = sanpham.maloai_id
+                WHERE tensp LIKE '%$search%'
+                GROUP BY sanpham.id, sanpham.maloai_id
+            ) h2 ON h1.mahinhanh = h2.min_id;";
 $result4 = $conn->query($sql4);
 
 $conn->close();
@@ -47,13 +55,13 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"  href="/public/assets/css/admin/khuyenmaipage.css">
+    <link rel="stylesheet"  href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/admin/khuyenmaipage.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Voucher</title>
 </head>
 <body>
     <aside class="sidebar">
-        <img id="logo_img" src="/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
+        <img id="logo_img" src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
         <ul class="menu-admin">
             <a href="dashboard.php"><li>📊 Dashboard</li></a>
             <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
@@ -85,24 +93,26 @@ $conn->close();
 
 
 <div class="product-list"  id="product-list">
-        <?php if ($result4->num_rows > 0): ?>
-            <?php while ($row = $result4->fetch_assoc()): ?>
-                <div class="product">
-                    <div class="product-thumbnail">
-                        <img src="/public/assets/images/shirt.png" alt="<?php echo htmlspecialchars($row['tensp']); ?>">
+    <?php if ($result4->num_rows > 0): ?>
+        <?php while ($row = $result4->fetch_assoc()): ?>
+            <div class="product" data-id="<?php echo $row['id']; ?>">
+                <div class="product-thumbnail">
+                    <div class="product-thumbnail_wrapper">
+                        <img class="product-thumbnail__image" src="<?php echo htmlspecialchars($row['duongdananh']); ?>" alt="<?php echo htmlspecialchars($row['tensp']); ?>">
                     </div>
-                    <p><?php echo htmlspecialchars($row['tensp']); ?></p>
-                    <span>
-                        <del><?php echo number_format($row['gia']); ?>đ</del>
-                        <span id="percent_discount">-<?php echo $row['giamgia']; ?>%</span>
-                    </span>
-                    <span><?php echo number_format($row['gia'] * (1 - $row['giamgia'] / 100)); ?>đ</span>
                 </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>Không tìm thấy sản phẩm</p>
-        <?php endif; ?>
-    </div>
+                <p><?php echo htmlspecialchars($row['tensp']); ?></p>
+                <span>
+                    <del><?php echo number_format($row['gia']); ?>đ</del>
+                    <span id="percent_discount">-<?php echo $row['giamgia']; ?>%</span>
+                </span>
+                <span><?php echo number_format($row['gia'] * (1 - $row['giamgia'] / 100)); ?>đ</span>
+            </div>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <p>Không tìm thấy sản phẩm</p>
+    <?php endif; ?>
+</div>
 
 <!-- Form nhập khuyến mãi -->
 <div class="discount-modal"><?php require 'khuyenmaiadd.php'; ?></div>
@@ -142,78 +152,78 @@ $conn->close();
 </div>
  
     <div class="discount-modal"><?php require 'voucheradd.php'; ?></div>
-    <script src="/public/assets/js/admin/khuyenmaipage.js"></script>
+    <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/admin/khuyenmaipage.js"></script>
     <script>
-        
         async function addVoucher() {
-  
-    let voucherName = document.getElementById("voucher_name")?.value.trim() || "";
-    let voucherCode = document.getElementById("voucher_code")?.value.trim() || "";
-    let quantity = document.getElementById("quantity")?.value.trim() || "";
+        let voucherName = document.getElementById("voucher_name")?.value.trim() || "";
+        let voucherCode = document.getElementById("voucher_code")?.value.trim() || "";
+        let quantity = document.getElementById("quantity")?.value.trim() || "";
 
-    if (!discount && !voucherName && !voucherCode && !quantity) {
-        alert("Vui lòng nhập đầy đủ thông tin.");
-        return;
-    }
-
-    let formData = new FormData();
- 
-    formData.append("voucher_name", voucherName);
-    formData.append("voucher_code", voucherCode);
-    formData.append("quantity", quantity);
-
-    try {
-        let response = await fetch("khuyenmai.php", {
-            method: "POST",
-            body: formData
-        });
-
-        let textResponse = await response.text();
-        console.log("Response từ PHP:", textResponse);
-
-        if (textResponse.includes("Thêm voucher thành công")) {
-            alert("Thêm voucher thành công!");
-
-            // ✅ Cập nhật bảng hiển thị voucher
-            let status = (parseInt(quantity) > 0) ? "Còn" : "Hết";
-            let voucherList = document.querySelector(".voucher-table tbody");
-            let newVoucher = document.createElement("tr");
-            newVoucher.innerHTML = `
-                <td>${voucherCode}</td>
-                <td>${voucherName}</td>
-                <td>${quantity}</td>
-                <td>${status}</td>
-            `;
-            voucherList.appendChild(newVoucher);
-
-            // ✅ Xóa dữ liệu trong form
-         
-            document.getElementById("voucher_name").value = "";
-            document.getElementById("voucher_code").value = "";
-            document.getElementById("quantity").value = "";
-
-            // ✅ Đóng modal (nếu có)
-            if (typeof closeModal === "function") closeModal();
-        } else {
-            alert("Có lỗi xảy ra: " + textResponse);
+        if (!voucherName || !voucherCode || !quantity || parseInt(quantity) <= 0) {
+            alert("Vui lòng nhập đầy đủ thông tin hợp lệ.");
+            return;
         }
-    } catch (error) {
-        console.error("Fetch error:", error);
-        alert("Lỗi khi gửi dữ liệu: " + error.message);
+
+        let formData = new FormData();
+        formData.append("voucher_name", voucherName);
+        formData.append("voucher_code", voucherCode);
+        formData.append("quantity", quantity);
+
+        try {
+            let response = await fetch("khuyenmai.php", {
+                method: "POST",
+                body: formData
+            });
+
+            let textResponse = await response.text();
+            console.log("Response từ PHP:", textResponse);
+
+            if (textResponse.includes("Thêm voucher thành công")) {
+                alert("Thêm voucher thành công!");
+
+                // ✅ Xóa dòng "Không có voucher nào" nếu có
+                let voucherList = document.querySelector(".voucher-table tbody");
+                let emptyRow = voucherList.querySelector("td[colspan='4']");
+                if (emptyRow) {
+                    voucherList.innerHTML = "";
+                }
+
+                // ✅ Thêm dòng mới
+                let status = (parseInt(quantity) > 0) ? "Còn" : "Hết";
+                let newVoucher = document.createElement("tr");
+                newVoucher.innerHTML = `
+                    <td>${voucherCode}</td>
+                    <td>${voucherName}</td>
+                    <td>${quantity}</td>
+                    <td>${status}</td>
+                `;
+                voucherList.appendChild(newVoucher);
+
+                // ✅ Reset form
+                document.getElementById("voucher_name").value = "";
+                document.getElementById("voucher_code").value = "";
+                document.getElementById("quantity").value = "";
+
+                if (typeof closeModal === "function") closeModal();
+            } else {
+                alert("Có lỗi xảy ra: " + textResponse);
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+            alert("Lỗi khi gửi dữ liệu: " + error.message);
+        }
     }
-}
 
 
 
-document.querySelectorAll('.product').forEach(product => {
-    product.addEventListener('click', function () {
-        let productId = this.id.replace('product-', ''); // Lấy ID thật của sản phẩm
-        document.getElementById('product-id').value = productId; // Gán vào input ẩn
-        console.log("Sản phẩm đã chọn có ID:", productId);
-    });
-});
 
-
+        document.querySelectorAll('.product').forEach(product => {
+            product.addEventListener('click', function () {
+                let productId = this.dataset.id;    
+                document.getElementById('product-id').value = productId; // Gán vào input ẩn
+                console.log("Sản phẩm đã chọn có ID:", productId);
+            });
+        });
     </script>
 
     

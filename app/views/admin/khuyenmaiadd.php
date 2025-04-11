@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"  href="/public/assets/css/admin/khuyenmaipage.css">
+    <link rel="stylesheet"  href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/admin/khuyenmaipage.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Khuyến mãi</title>
@@ -32,7 +32,6 @@
         <input type="text" id="voucher-code" title="Mã voucher" placeholder="Sau giảm">
 -->
 
-       
     <div class="modal-footer-voucher">
         <button class="btn btn-cancel-voucher" onclick="closeModal()">Hủy</button>
         <button class="btn btn-save-voucher">Lưu</button>

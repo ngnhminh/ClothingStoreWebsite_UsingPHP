@@ -8,7 +8,7 @@ require_once '../../config/db.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="/public/assets/css/index.css">
+    <link rel="stylesheet" type="text/css" href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Trang chủ</title>
 </head>
@@ -19,15 +19,15 @@ require_once '../../config/db.php';
     <main>
         <div class="slideshow-container">
             <div class="mySlides fade">
-                <img src="/public/assets/images/img_nature_wide.jpg" style="width:100%" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/img_nature_wide.jpg" style="width:100%" alt="Lỗi hiển thị">
             </div>
 
             <div class="mySlides fade">
-                <img src="/public/assets/images/img_lights_wide.jpg" style="width:100%" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/img_lights_wide.jpg" style="width:100%" alt="Lỗi hiển thị">
             </div>
 
             <div class="mySlides fade">
-                <img src="/public/assets/images/img_nature_wide.jpg" style="width:100%" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/img_nature_wide.jpg" style="width:100%" alt="Lỗi hiển thị">
             </div>
 
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
@@ -49,61 +49,61 @@ require_once '../../config/db.php';
             </div>
             <div class="product_grid">
                 <div class="product">
-                    <img src="/public/assets/images/image3.png" alt="Lỗi hiển thị">
+                    <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/image3.png" alt="Lỗi hiển thị">
                 </div>
                 <div class="product">
-                    <img src="/public/assets/images/image3.png" alt="Lỗi hiển thị">
+                    <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/image3.png" alt="Lỗi hiển thị">
                 </div>
                 <div class="product">
-                    <img src="/public/assets/images/image3.png" alt="Lỗi hiển thị">
+                    <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/image3.png" alt="Lỗi hiển thị">
                 </div>
                 <div class="product">
-                    <img src="/public/assets/images/image3.png" alt="Lỗi hiển thị">
+                    <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/image3.png" alt="Lỗi hiển thị">
                 </div>
             </div>
         </div>
 
         <div class="banner_pic">
             <div>
-                <img src="/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
             </div>
         </div>
 
         <!-- lưới menu hình ảnh -->
         <div class="image-grid">
             <div class="image-item">
-                <img src="/public/assets/images/shirts.png" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/shirts.png" alt="Lỗi hiển thị">
                 <p>Shirts</p>
             </div>
             <div class="image-item">
-                <img src="/public/assets/images/glasses.png" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/glasses.png" alt="Lỗi hiển thị">
                 <p>Glasses</p>
             </div>
             <div class="image-item">
-                <img src="/public/assets/images/shoes.png" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/shoes.png" alt="Lỗi hiển thị">
                 <p>Shoes</p>
             </div>
             <div class="image-item">
-                <img src="/public/assets/images/pants.png" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/pants.png" alt="Lỗi hiển thị">
                 <p>Pants</p>
             </div>
         </div>
 
         <div class="banner_pic">
             <div>
-                <img src="/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
             </div>
         </div>
 
         <div class="banner_pic">
             <div>
-                <img src="/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
             </div>
         </div>
     </main>
     <footer>
         <?php require 'footer.php'; ?>
     </footer>
-    <script src="/public/assets/js/index.js"></script>
+    <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/index.js"></script>
 </body>
 </html>

@@ -28,3 +28,18 @@ const likebtn = document.getElementById("likebtn");
 likebtn.addEventListener("click", function () {
     likebtn.classList.toggle("active");
 });
+
+const params = new URLSearchParams(window.location.search);
+const masp = params.get("id");
+
+//Hàm gọi đến controlelr
+axios.get('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/productdetailshirtController.php', {
+    params: { id: masp }
+}).then(res => {
+    if (res.data.success) {
+        const productImage = document.getElementById("product-image");
+        productImage.innerHTML = `
+            <img src="${res.data.product.duongdananh}" alt="Sản phẩm" />
+        `;
+    }
+})
