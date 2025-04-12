@@ -41,7 +41,7 @@ require_once '../../config/db.php';
             <span class="dot" onclick="currentSlide(3)"></span>
         </div>
 
-        <div class="newproduct_container">
+        <!-- <div class="newproduct_container">
             <div class="text-section">
                 <h2>New products</h2>
                 <p>Pick your own trendiest styles</p>
@@ -59,6 +59,179 @@ require_once '../../config/db.php';
                 </div>
                 <div class="product">
                     <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/image3.png" alt="Lỗi hiển thị">
+                </div>
+            </div>
+        </div> -->
+
+        <div class="section-arrival">
+            <div class="container-fluid">
+                <div class="section-head">
+                    <h2 class="section-title-container">
+                        <a class="section-title">Sản phẩm mới nhất</a>
+                    </h2>
+                </div>
+                <div class="section-content">
+                    <div class="content-product-lists">
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <a class="image-resize">
+                                        <img class="image-loop" src="https://product.hstatic.net/200000037048/product/3bae9d3051bae1e4b8ab_d0127535fc2b4159adb98f51124fe081.jpg" />
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name">Đầm 8 mảnh zipper tím nhạt</h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span>1,199,000đ</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="section-more">
+                        <a class="more-button">Xem tất cả</a>
+                    </div>
                 </div>
             </div>
         </div>

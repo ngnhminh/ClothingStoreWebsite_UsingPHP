@@ -40,7 +40,7 @@ body {
 #dangkivadangnhap {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
 }
 
 .button {
@@ -59,9 +59,29 @@ body {
     color: white;
 }
 
+#dropdown_icon {
+    font-size: 13px;
+    margin-left: 5px;
+}
+
 #cart_icon {
+    position: relative;
     font-size: 20px;
     color: #333;
     cursor: pointer;
-    margin-left: 10px;
+}
+
+.cart_number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    font-size: 13px;
+    color: #333;
+    background-color: #FFDAB0;
+    top: 25px;
+    right: 20px;
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
 }

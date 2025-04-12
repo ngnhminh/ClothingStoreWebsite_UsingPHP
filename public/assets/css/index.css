@@ -5,8 +5,7 @@
   max-width: 1000px;
   position: relative;
   margin: auto;
-  height:20%;
-  margin-top: 40px;
+  height: 20%;
 }
 
 /* Hide the images by default */
@@ -73,21 +72,25 @@
     gap: 20px;
     margin-top: 3%;
 }
+
 .text-section {
     max-width: 200px;
     font-family: 'Baloo 2', cursive;
     text-align: left;
     margin-left:17%;
 }
+
 .text-section h2 {
     margin: 0;
     font-size: 18px;
 }
+
 .text-section p {
     margin: 5px 0;
     color: #666;
     font-size: 14px;
 }
+
 #watchmore_button{
     display: inline-block;
     padding: 8px 12px;
@@ -121,15 +124,12 @@
     height: auto;
 }
 
-
 .image-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   max-width: 600px;
   font-family: 'Baloo 2', cursive;
-  /* align-items: center; 
-  justify-content: center; */
   margin:auto;
 }
 
@@ -149,8 +149,83 @@
 
 .banner_pic{
   display: flex;
-  justify-content: center; /* Căn giữa theo chiều ngang */
-  align-items: center; /* Căn giữa theo chiều dọc (nếu cần) */
+  justify-content: center;
+  align-items: center;
   margin-top: 50px;
   margin-bottom: 50px;
+}
+
+/* Long's CSS */
+.section-arrival {
+  padding-top: 80px;
+}
+
+.container-fluid {
+  padding: 0 53px;
+}
+
+.section-head {
+  margin-bottom: 40px;
+}
+
+.section-title-container {
+  text-align: center;
+}
+
+.section-title {
+  font-weight: 400;
+  font-size: 48px;
+}
+
+.content-product-lists {
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.product-block-container {
+  margin-bottom: 30px;
+  padding-right: 15px;
+  padding-left: 15px;
+  width: 25%;
+}
+
+.image-loop {
+  height: 415px;
+  width: 312px;
+  vertical-align: middle;
+}
+
+.product-detail {
+  padding-top: 15px;
+}
+
+.product-name {
+  margin-bottom: 10px;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: calc(29 / 24);
+  color: #292929;
+}
+
+.product-price {
+  font-size: 18px;
+}
+
+.section-more {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.more-button {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: calc(29 / 24);
+  padding: 10px 25px;
+  border: 1px solid #FF7A7E;
+  color: #FF7A7E;
+  text-transform: uppercase;
+  -webkit-transition: all 0.3s ease-in-out;
+  cursor: pointer;
 }

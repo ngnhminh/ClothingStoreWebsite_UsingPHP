@@ -15,8 +15,12 @@
         <!--Ô chứa menu-->
         <nav class="menu">
             <a href="index.php">Trang chủ</a>
-            <a href="productpage.php">Sản phẩm</a>
-            <a href="/pages/services.php">Về chúng tôi</a>
+            <a href="productpage.php">Thời trang<i id="dropdown_icon" class="fa-solid fa-angle-down"></i></a>
+            <a href="productpage.php">Áo<i id="dropdown_icon" class="fa-solid fa-angle-down"></i></a>
+            <a href="productpage.php">Quần<i id="dropdown_icon" class="fa-solid fa-angle-down"></i></a>
+            <a href="productpage.php">Giày<i id="dropdown_icon" class="fa-solid fa-angle-down"></i></a>
+            <a href="productpage.php">Kính<i id="dropdown_icon" class="fa-solid fa-angle-down"></i></a>
+            <a href="/pages/services.php">Giới thiệu</a>
             <a href="/pages/contact.php">Liên hệ</a>
         </nav>
 
@@ -26,11 +30,16 @@
                 <span>Xin chào,</span><span id="welcome-text"></span>
                 <button class="button" onclick="logout()">Đăng xuất</button>
             </div>
-            <div id="auth-buttons">
+            <!-- <div id="auth-buttons">
                 <button class="button" onclick="window.location.href='register.php'">Đăng kí</button>
                 <button class="button" onclick="window.location.href='login.php'">Đăng nhập</button>
-            </div>
-            <a href="cart.php"><i id="cart_icon" class="fa-solid fa-cart-shopping"></i></a>
+            </div> -->
+            <a href="#"><i id="cart_icon" class="fa-solid fa-magnifying-glass"></i></a>
+            <a href="#"><i id="cart_icon" class="fa-solid fa-user"></i></a>
+            <a href="cart.php">
+                <i id="cart_icon" class="fa-solid fa-bag-shopping"></i>
+                <span class="cart_number">0</span>
+            </a>
         </div>
     </div>
 </body>
