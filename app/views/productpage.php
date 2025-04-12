@@ -43,7 +43,7 @@
                 <div class="product-card" data-masp="<?php echo htmlspecialchars($product['id']); ?>" data-loai="<?php echo htmlspecialchars($product['maloai_id']); ?>">
                     <div class="product-thumbnail">
                             <div class="product-thumbnail_wrapper">
-                            <img src="<?php echo $product['duongdananh']; ?>" alt="<?php echo $product['tensp']; ?>">
+                                <img class="product-thumbnail__image" src="<?php echo $product['duongdananh']; ?>" alt="<?php echo $product['tensp']; ?>">
                             </div>
                         </div>
                     <p class="product-name"><?php echo $product['tensp']; ?></p>
@@ -84,22 +84,25 @@
 
         // Hiệu ứng click vào sản phẩm (nếu có trang chi tiết thì chuyển trang)
         document.querySelectorAll(".product-card").forEach(card => {
-            card.addEventListener("mousedown", function () {
-                card.style.transform = "translateY(2px)";
-                card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-            });
-            card.addEventListener("mouseup", function () {
-                card.style.transform = "translateY(0)";
-                card.style.boxShadow = "";
-            });
+        card.addEventListener("mousedown", function () {
+            card.style.transform = "translateY(2px)";
+            card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+        });
+
+        card.addEventListener("mouseup", function () {
+            card.style.transform = "translateY(0)";
+            card.style.boxShadow = "";
+
             const id = card.getAttribute("data-masp");
-            const maloai = card.getAttribute("data-maloai");
-            if(maloai != 2){
+            const maloai = card.getAttribute("data-loai");
+
+            if (maloai != 2) {
                 window.location.href = 'productdetailshirt.php?id=' + id;
-            }else{
+            } else {
                 window.location.href = 'productdetailshoes.php?id=' + id;
             }
         });
+    });
     </script>
 </body>
 </html>
