@@ -428,47 +428,10 @@ require_once '../../config/db.php';
             </div>
         </div>
 
-        <div class="banner_pic">
-            <div>
-                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
-            </div>
-        </div>
-
-        <!-- lưới menu hình ảnh -->
-        <div class="image-grid">
-            <div class="image-item">
-                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/shirts.png" alt="Lỗi hiển thị">
-                <p>Shirts</p>
-            </div>
-            <div class="image-item">
-                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/glasses.png" alt="Lỗi hiển thị">
-                <p>Glasses</p>
-            </div>
-            <div class="image-item">
-                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/shoes.png" alt="Lỗi hiển thị">
-                <p>Shoes</p>
-            </div>
-            <div class="image-item">
-                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/pants.png" alt="Lỗi hiển thị">
-                <p>Pants</p>
-            </div>
-        </div>
-
-        <div class="banner_pic">
-            <div>
-                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
-            </div>
-        </div>
-
-        <div class="banner_pic">
-            <div>
-                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/signup_panel.jpg" alt="Lỗi hiển thị">
-            </div>
-        </div>
     </main>
-    <footer>
-        <?php require 'footer.php'; ?>
-    </footer>
+
+    <?php require 'footer.php'; ?>
+    
     <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/index.js"></script>
 </body>
 </html>
