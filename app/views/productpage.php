@@ -56,8 +56,16 @@
     <footer>
         <?php require 'footer.php'; ?>
     </footer>
-
+        
     <script>
+        function goToUserPage() {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user) {
+                window.location.href = "userpage.php";
+            } else {
+                alert("Vui lòng đăng nhập");
+            }
+        }
         document.getElementById("filter-btn").addEventListener("click", function () {
             let currentOrder = this.getAttribute("data-order"); // Lấy trạng thái hiện tại
             let newOrder = currentOrder === "DESC" ? "ASC" : "DESC"; // Đảo trạng thái
@@ -97,9 +105,9 @@
             const maloai = card.getAttribute("data-loai");
 
             if (maloai != 2) {
-                window.location.href = 'productdetailshirt.php?id=' + id;
+                window.location.href = 'productdetailshirt.php?id=' + id + '&maloai=' + maloai;
             } else {
-                window.location.href = 'productdetailshoes.php?id=' + id;
+                window.location.href = 'productdetailshoes.php?id=' + id + '&maloai=' + maloai;
             }
         });
     });

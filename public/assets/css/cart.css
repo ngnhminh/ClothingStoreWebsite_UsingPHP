@@ -103,16 +103,13 @@ table {
     font-weight: bolder;
 }
 
-#total-money-in-cart {
+.cart-total {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: space-between; 
-}
-
-#total-money-in-cart h3,
-#total-money-in-cart p {
-    margin: 0; 
-    padding: 0;
+    padding: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .checkout-btn{
@@ -137,4 +134,29 @@ table {
     color: white;
     background-color: black;
     transition: all 0.3s ease-in-out;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-right: 5px;
+    font-weight: lighter;
+}
+
+.discount {
+    display: inline-block;
+    background-color: green;
+    color: white;
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    margin-right: 3px;
+}
+
+.new-price{
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 3px;
 }

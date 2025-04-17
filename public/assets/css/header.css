@@ -65,3 +65,15 @@ body {
     cursor: pointer;
     margin-left: 10px;
 }
+
+#welcome-text{
+    margin-right: 30px;
+}
+
+#user-info{
+    display: inline-block;
+}
+
+#in4-container{
+    cursor: pointer;
+}

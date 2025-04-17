@@ -17,6 +17,14 @@ body {
 .product-image img {
     width: 450px;
     height: auto;
+    border-radius: 8px;  
+}
+
+.product-image {
+    background-color: #f5f5f5; 
+    padding: 16px;            
+    display: inline-block;    
+    border-radius: 12px;  
 }
 
 .product-details {
@@ -27,12 +35,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.product-details h2 {
-    font-size: 22px;
-    text-align: center;
-}
-
-.sold-out {
+#almost-sold-out {
     color: #ff6a00;
     font-weight: bold;
     padding: 5px 10px;
@@ -42,13 +45,24 @@ body {
     font-size: 10px;
 }
 
-/* Nút chọn size */
-.size-options button {
-    padding: 8px 12px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    cursor: pointer;
+#sold-out {
+    color: #FF0000;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #FDDCD3;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 10px;
+}
+
+#instock {
+    color: #019A01;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #E0F8E0;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 10px;
 }
 
 /* Bảng kích thước */
@@ -84,27 +98,53 @@ body {
 
 /* Phần sản phẩm liên quan */
 .related--products {
-    text-align: center;
-    margin-top: 50px;
+    max-width: 1200px;       /* hoặc bất kỳ kích thước nào bạn muốn */
+    margin: 0 auto;           /* Căn giữa khối theo chiều ngang */
+    padding: 20px;            /* Cho đẹp hơn */
 }
+
 
 .related-products {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 20px ;
+    flex-wrap: wrap;
 }
 
 .product-item {
-    width: 150px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
     text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-item img {
     width: 100%;
-    border-radius: 5px;
+    height: auto;
+    max-height: 60%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 8px;
 }
+
+.product-item .short {
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.product-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
 
 /* Nút điều hướng sản phẩm liên quan */
 .related-button {
@@ -133,6 +173,7 @@ body {
     border-width: 2px;
     box-shadow:  0px 3px 3px rgba(0, 0, 0, 0.2);
     transition: transform 0.1s ease, box-shadow 0.1s ease;
+    margin: 5px; /* <-- khoảng trống giữa các nút */
 }
 
 button:active {
@@ -142,10 +183,19 @@ button:active {
     color: white;
 }
 
-.product-inform{
-    margin-left: 35px;
-    width: 100%;
+#product-inform {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 15px;
 }
+
+#product-inform li {
+    min-width: 150px; /* chiều dài tối thiểu */
+    max-width: 100%; /* không vượt quá chiều rộng cha */
+    word-wrap: break-word; /* tự xuống dòng nếu quá dài */
+    padding: 3px;
+}
+
 
 #sizenlike {
     display: flex; 
@@ -188,3 +238,49 @@ button:active {
     color: white;
     background: grey;
 }
+
+#product-name {
+    padding: 0 16px; /* khoảng cách bên trái và phải */
+    margin: 9px 0;  /* khoảng cách trên và dưới */
+}
+
+#product-name h2 {
+    margin: 0; /* xoá margin mặc định của h2 nếu muốn */
+}
+
+#almost-sold-out, #sold-out, #instock, #size-chart-shirts, #size-chart-pants{
+    display: none;
+}
+
+
+.old-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-right: 5px;
+}
+
+.discount {
+    display: inline-block;
+    background-color: green;
+    color: white;
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    margin-right: 3px;
+}
+
+.new-price{
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 3px;
+}
+
+.related-products-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+  

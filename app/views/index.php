@@ -105,5 +105,16 @@ require_once '../../config/db.php';
         <?php require 'footer.php'; ?>
     </footer>
     <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/index.js"></script>
+    <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/header.js"></script>
 </body>
+<script>
+    function goToUserPage() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            window.location.href = "userpage.php";
+        } else {
+            alert("Vui lÃ²ng Ä‘Äƒng nháº­p!");
+        }
+    }
+</script>
 </html>

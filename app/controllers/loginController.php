@@ -33,7 +33,8 @@ if (!empty($users)) {
 function getUserByEmailAndPassword($username, $password) {
     global $conn; 
     $sql = "SELECT * 
-            FROM taikhoan
+            FROM taikhoan 
+            INNER JOIN khachhang ON taikhoan.makh = khachhang.makh
             WHERE tentaikhoan = ? AND matkhau = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
