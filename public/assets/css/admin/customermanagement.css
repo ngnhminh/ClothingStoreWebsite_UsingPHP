@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 body {
     display: flex;
     margin: 0;
@@ -5,46 +9,12 @@ body {
     background: #f4f4f4;
 }
 
-.sidebar {
-    width: 250px;
-    background: #7a7a7a;
-    color: white;
-    padding: 20px;
-    height: 100vh;
-    justify-items: center;
-}
-
-#logo_img{
-    height: 78px;
-    width: 106px;
-    cursor:pointer
-}
-
-.menu-admin a{
-    text-decoration: none;
-    color: white;
-}
-
-.menu-admin a:hover{
-    color: black;
-}
-
-.menu-admin{
-    margin-right: 30px;
-    height: auto;
-}
-
-.menu-admin li {
-    list-style: none;
-    padding: 15px;
-    cursor: pointer;
-    border-bottom: 1px solid #888;
-    width: 200px;
+input:focus {
+  outline: none;
 }
 
 .customermanagement-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
     background: #ddd;
     padding: 20px;
     border-radius: 8px;
@@ -143,7 +113,7 @@ table {
   width: 90%;
   max-width: 600px;
   border-radius: 8px;
-  padding: 20px;
+  padding: 30px;
   position: relative;
   animation: fadeInDown 0.3s ease;
   gap:10px;
@@ -268,7 +238,7 @@ table {
 .information {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 10px;
 }
 
@@ -276,6 +246,13 @@ table {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
+}
+
+.create-btn {
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
 }
 
   /* Responsive cho modal-content nếu cần */

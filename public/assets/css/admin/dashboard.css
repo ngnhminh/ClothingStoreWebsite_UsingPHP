@@ -1,3 +1,8 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     display: flex;
     margin: 0;
@@ -5,56 +10,39 @@ body {
     background: #f4f4f4;
 }
 
-.sidebar {
-    width: 250px;
-    background: #7a7a7a;
-    color: white;
-    padding: 20px;
-    height: 100vh;
-    justify-items: center;
+section {
+    margin-right: 24px;
+    margin-left: 24px;
 }
 
-.logo {
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
+select, input {
+    border-radius: 6px;
 }
 
-.menu-admin li {
-    list-style: none;
-    padding: 15px;
+button {
+    border-radius: 50%;
     cursor: pointer;
-    border-bottom: 1px solid #888;
-    width: 200px;
 }
 
-.menu-admin{
-    margin-right: 30px;
-    height: auto;
-}
 .content {
     flex: 1;
-    padding: 20px;
+    background: #f4f4f4;
 }
 
 .topbar {
     display: flex;
     justify-content: space-between;
-    background: #3e3e3e;
-    padding: 10px;
+    align-items: center;
+    /* background: #1b2433; */
+    background: #232f42;
+    padding: 16px 24px;
     color: white;
-    border-radius: 5px;
+    border-bottom: 2px solid #1d2939;
 }
 
 .filter input, .filter select, .filter button {
     margin-left: 5px;
-    padding: 5px;
-}
-
-.profile img {
-    width: 40px;
-    border-radius: 50%;
+    padding: 8px;
 }
 
 .stats {
@@ -128,8 +116,10 @@ body {
 }
 
 .summary-box {
+    /* color: #fff;
+    background-color: color-mix(in oklab, #fff 3%, transparent); */
+    background: #fff;
     flex: 1;
-    background: white;
     padding: 20px;
     text-align: center;
     border-radius: 5px;
@@ -156,19 +146,3 @@ body {
     border-radius: 5px;
     box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
 }
-
-#logo_img{
-    height: 78px;
-    width: 106px;
-    cursor:pointer
-}
-
-.menu-admin a{
-    text-decoration: none;
-    color: white;
-}
-
-.menu-admin a:hover{
-    color: black;
-}
-

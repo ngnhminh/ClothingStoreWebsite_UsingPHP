@@ -18,27 +18,21 @@
     </style>
     </head>
     <body>
-        <aside class="sidebar">
-            <img id="logo_img" src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
-            <ul class="menu-admin">
-                <a href="dashboard.php"><li>📊 Dashboard</li></a>
-                <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
-                <a href="ordermanagement.php"><li>📜 Quản lý đơn hàng</li></a>
-                <a href="customermanagement.php"><li>👥 Quản lý khách hàng</li></a>
-                <a href="khuyenmaipage.php"><li>🎟️ Quản lý khuyến mãi</li></a>
-                <a href="historypage.php"><li>📈 Lịch sử</li></a>
-            </ul>
-        </aside>
+        <?php include 'sidebar.php'; ?>
     
         <div class="ordermanagement-container">
             <div class="header">Quản lý đơn hàng</div>
             <div class="filter-bar">
-                <button class="status-btn">Đã xử lý (5)</button>
-                <button class="status-btn">Chưa xử lý (5)</button>
-                <button class="status-btn">Đã hủy (5)</button>
-                <input  class="date-start" type="date">
-                <input class="date-end" type="date">
-                <button class="search-btn">🔍</button>
+                <div class="filter-bar-left">
+                    <button class="status-btn">Đã xử lý</button>
+                    <button class="status-btn">Chưa xử lý</button>
+                    <button class="status-btn">Đã hủy</button>
+                </div>
+                <div class="filter-bar-right">
+                    <input  class="date-start" type="date">
+                    <input class="date-end" type="date">
+                    <button class="search-btn">🔍</button>
+                </div>
             </div>
             <div class="order-table">
                 <table>

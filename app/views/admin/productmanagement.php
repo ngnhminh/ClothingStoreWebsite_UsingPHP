@@ -2,6 +2,7 @@
      require_once __DIR__ . "/../../controllers/productmanagementcontroller.php";
 ?>
 
+<!DOCTYPE html>
 <html lang="vi">
     <head>
         <meta charset="UTF-8">
@@ -12,17 +13,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     </head>
     <body>
-        <aside class="sidebar">
-            <img id="logo_img" src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
-            <ul class="menu-admin">
-                <a href="dashboard.php"><li>📊 Dashboard</li></a>
-                <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
-                <a href="ordermanagement.php"><li>📜 Quản lý đơn hàng</li></a>
-                <a href="customermanagement.php"><li>👥 Quản lý khách hàng</li></a>
-                <a href="khuyenmaipage.php"><li>🎟️ Quản lý khuyến mãi</li></a>
-                <a href="historypage.php"><li>📈 Lịch sử</li></a>
-            </ul>
-        </aside>
+        <?php include 'sidebar.php'; ?>
+
         <div class="productmanager-container">
             <div class="header">
                 <h2>Quản lý sản phẩm</h2>
@@ -30,12 +22,12 @@
             </div>
             
             <div class="filter-bar">
-                <button id="za" value="Áo">Áo (25)</button>
-                <button value="Quần">Quần (25)</button>
-                <button value="Kính">Kính (25)</button>
-                <button value="Giày">Giày (25)</button>
+                <button id="za" value="Áo">Áo</button>
+                <button value="Quần">Quần</button>
+                <button value="Kính">Kính</button>
+                <button value="Giày">Giày</button>
                 <button value="All">Tất cả</button>
-                <button value="Block">Đồ khóa (25)</button>
+                <button value="Block">Đồ khóa</button>
                 <input type="text" placeholder="Nhập tên sản phẩm" id="search">
             </div>
 

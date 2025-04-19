@@ -1,3 +1,7 @@
+html, body {
+    height: 104%;
+}
+
 body {
     display: flex;
     margin: 0;
@@ -5,51 +9,10 @@ body {
     background: #f4f4f4;
 }
 
-.sidebar {
-    width: 250px;
-    background: #7a7a7a;
-    color: white;
-    padding: 20px;
-    height: 100vh;
-    justify-items: center;
-}
-
-#logo_img{
-    height: 78px;
-    width: 106px;
-    cursor:pointer
-}
-
-.menu-admin a{
-    text-decoration: none;
-    color: white;
-}
-
-.menu-admin a:hover{
-    color: black;
-}
-
-
-.menu-admin li {
-    list-style: none;
-    padding: 15px;
+button {
+    border: 1px solid #ccc;
+    border-radius: 4px;
     cursor: pointer;
-    border-bottom: 1px solid #888;
-    width: 200px;
-}
-
-.menu-admin a{
-    text-decoration: none;
-    color: white;
-}
-
-.menu-admin a:hover{
-    color: black;
-}
-
-.menu-admin{
-    margin-right: 30px;
-    height: auto;
 }
 
 .productmanager-container {
@@ -101,12 +64,28 @@ button.btn-add:active {
     gap: 10px;
     margin: 20px 0;
 }
+
 .filter-bar input {
+    border: 1px solid #ccc;
+    border-radius: 10px;
     padding: 5px;
 }
 
-.filter-bar button{
+.filter-bar input:focus {
+    outline: none;
+}
+
+.filter-bar button {
     font-family: 'Baloo 2', cursive;
+}
+
+.filter-bar button:hover {
+    background: #ccc;
+}
+
+.filter-bar-left, .filter-bar-right {
+    display: flex;
+    gap: 10px;
 }
 
 .product-list {
@@ -142,6 +121,7 @@ button.btn-add:active {
 
 .product {
     display: flex;
+    border-radius: 6px;
     flex-direction: column;
     align-items: center; /* Căn giữa theo chiều ngang */
 }
@@ -211,7 +191,7 @@ button.btn-add:active {
 .modal-content {
     background: #f5f5f5;
     width: 480px;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
     position: relative;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -265,6 +245,8 @@ button.save-btn:active {
 
 #product-type {
     display: flex;
+    border-radius: 6px;
+    padding: 8px;
     align-items: center; /* Căn giữa theo chiều dọc */
     justify-content: center; /* Căn giữa theo chiều ngang */
     gap: 10px; /* Khoảng cách giữa các phần tử */
@@ -283,7 +265,8 @@ button.save-btn:active {
     font-weight: bolder;
 }
 
-#product-type select{
+#product-type select {
+    padding: 5px;
     width: 80px;
 }
 
@@ -296,6 +279,7 @@ button.save-btn:active {
 
 .product-image img {
     width: 150px;
+    height: 150px;
     border-radius: 5px;
 }
 
@@ -365,6 +349,7 @@ button.save-btn:active {
 /* Mô tả */
 .description {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     margin-top: 10px;
     margin-left: 25px;
@@ -372,8 +357,7 @@ button.save-btn:active {
 
 .description textarea {
     display:flex;
-    width: 44%;
-    height: 80px;
+    margin-bottom: 5px;
     padding: 5px;
     border: 1px solid #000;
     border-radius: 5px;
@@ -383,8 +367,6 @@ button.save-btn:active {
 
 #detail-container-change textarea{
     display:flex;
-    width: 100%;
-    height: 50px;
     padding: 5px;
     border: 1px solid #000;
     border-radius: 5px;
@@ -395,9 +377,16 @@ button.save-btn:active {
 #detail-container-change{
     display: flex;
     justify-content: space-between;
-    gap: 10px;
     flex-direction: column;
-    /* margin-right: 35px; */
+}
+
+#add-textarea-btn {
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+#remove-textarea-btn {
+    padding: 5px;
 }
 
 .product-config {
@@ -543,13 +532,14 @@ button.save-addbtn:active {
 
 #cost{
     width: 110px;
+    padding: 5px;
     border-radius: 10px;
-    height: 20px;
 }
 
-#nameofpeoduct{
+#nameofpeoduct {
+    padding: 5px;
+    margin-top: 5px;
     border-radius: 10px;
-    height: 20px;
 }
 
 .custom-alert {

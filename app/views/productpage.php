@@ -1,11 +1,8 @@
 <?php
- require_once __DIR__ . "/../controllers/pageproduct.php";
-
-
+    require_once __DIR__ . "/../controllers/pageproduct.php";
 
     $order = isset($_GET['order']) && $_GET['order'] === 'ASC' ? 'ASC' : 'DESC';
     $maloai_id = isset($_GET['maloai_id']) ? (int)$_GET['maloai_id'] : null;
-   
    
     $products = getProductsByFilter($order, $maloai_id);
 ?>
@@ -24,38 +21,57 @@
         <?php require 'header.php'; ?>
     </header>
     <main>
-        <div class="filter-bar">
-            <button id="filter-btn" data-order="<?= $order ?>">
-                Lọc giá <?= $order === 'DESC' ? '⇩ ' : '⇧ ' ?>
-            </button>
-            <select id="category-filter">
-                <option value="">Tất cả loại</option>
-                <option value="0" <?= $maloai_id == 0 ? 'selected' : '' ?>>Áo</option>
-                <option value="1" <?= $maloai_id == 1 ? 'selected' : '' ?>>Quần</option>
-                <option value="2" <?= $maloai_id == 2 ? 'selected' : '' ?>>Kính</option>
-                <option value="3" <?= $maloai_id == 3 ? 'selected' : '' ?>>Giày</option>
-            </select>
-          
-        </div>
-
-        <div class="product-grid_page">
-            <?php foreach ($products as $product) { ?>
-                <div class="product-card" data-masp="<?php echo htmlspecialchars($product['id']); ?>" data-loai="<?php echo htmlspecialchars($product['maloai_id']); ?>">
-                    <div class="product-thumbnail">
-                            <div class="product-thumbnail_wrapper">
-                                <img class="product-thumbnail__image" src="<?php echo $product['duongdananh']; ?>" alt="<?php echo $product['tensp']; ?>">
+        <div class="section-arrival">
+            <div class="container-fluid">
+                <div class="section-head">
+                    <h2 class="section-title-container">
+                        <a class="section-title">Tất cả sản phẩm</a>
+                    </h2>
+                </div>
+                <div class="filter-bar">
+                    <button id="filter-btn" data-order="<?= $order ?>">
+                        Lọc giá <?= $order === 'DESC' ? '⇩ ' : '⇧ ' ?>
+                    </button>
+                    <select id="category-filter">
+                        <option value="">Tất cả loại</option>
+                        <option value="0" <?= $maloai_id == 0 ? 'selected' : '' ?>>Áo</option>
+                        <option value="1" <?= $maloai_id == 1 ? 'selected' : '' ?>>Quần</option>
+                        <option value="2" <?= $maloai_id == 2 ? 'selected' : '' ?>>Kính</option>
+                        <option value="3" <?= $maloai_id == 3 ? 'selected' : '' ?>>Giày</option>
+                    </select>
+                </div>
+                <div class="section-content">
+                    <div class="content-product-lists">
+                        <?php foreach ($products as $product) { ?>
+                        <div class="product-block-container">
+                            <div class="product-block">
+                                <div class="product-img">
+                                    <div class="product-new">New</div>
+                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
+                                    <a class="image-resize" href="#">
+                                        <img class="image-loop" src="<?php echo htmlspecialchars($product['duongdananh']); ?>" alt="<?php echo htmlspecialchars($product['tensp']); ?>">
+                                    </a>
+                                </div>
+                                <div class="product-detail">
+                                    <div class="box-product-detail">
+                                        <h3 class="product-name"><?php echo htmlspecialchars($product['tensp']); ?></h3>
+                                        <div class="box-product-prices">
+                                            <p class="product-price">
+                                                <span><?php echo number_format($product['gia'], 0, ',', '.'); ?>₫</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    <p class="product-name"><?php echo $product['tensp']; ?></p>
-                    <p class="product-price"><strong><?php echo number_format($product['gia'], 0, ',', '.'); ?>đ</strong></p>
+                    <?php } ?>
+                    </div>
                 </div>
-            <?php } ?>
+            </div>
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <footer>
-        <?php require 'footer.php'; ?>
-    </footer>
+    <?php require 'footer.php'; ?>
 
     <script>
         document.getElementById("filter-btn").addEventListener("click", function () {

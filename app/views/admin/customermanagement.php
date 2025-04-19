@@ -10,17 +10,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     </head>
     <body>
-        <aside class="sidebar">
-            <img id="logo_img" src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/logo.png" alt="Lỗi hình ảnh không thể hiển thị"></a>
-            <ul class="menu-admin">
-                <a href="dashboard.php"><li>📊 Dashboard</li></a>
-                <a href="productmanagement.php"><li>📦 Quản lý sản phẩm</li></a>
-                <a href="ordermanagement.php"><li>📜 Quản lý đơn hàng</li></a>
-                <a href="customermanagement.php"><li>👥 Quản lý khách hàng</li></a>
-                <a href="khuyenmaipage.php"><li>🎟️ Quản lý khuyến mãi</li></a>
-                <a href="historypage.php"><li>📈 Lịch sử</li></a>
-            </ul>
-        </aside>
+        <?php include 'sidebar.php'; ?>
     
         <div class="create-kh">
             <div class="create-content">
@@ -67,8 +57,8 @@
                 </div>
 
                 <div>
-                    <span>Lọc:</span>
-                    <select>
+                    <span style="margin-right: 5px;">Lọc:</span>
+                    <select style="padding: 4px;">
                         <option value="ngaymuagannhat">Tất cả</option>
                         <option value="tongtientuthaptoicao">Bậc kim cương</option>
                         <option value="diemtichluytuthaptoicao">Bậc vàng</option>
