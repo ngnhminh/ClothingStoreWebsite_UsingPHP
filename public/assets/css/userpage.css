@@ -243,6 +243,16 @@ hr {
     font-weight: bold;
 }
 
+#daxuly{
+    color: green;
+    font-weight: bold;
+}
+
+#chuaxuly {
+    color: red;
+    font-weight: bold;
+}
+
 .total {
     margin-top: 15px;
     font-size: 18px;

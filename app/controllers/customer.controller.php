@@ -8,9 +8,11 @@ header("Content-Type: application/json");
  */
 function getCustomers() {
     global $conn;
-    $sql = "SELECT khachhang.*, tk.diemtichluy FROM khachhang 
-            JOIN taikhoan tk ON khachhang.makh = tk.makh
-            ORDER BY khachhang.makh ASC";
+    $sql = "SELECT khachhang.*, tk.diemtichluy 
+    FROM khachhang 
+    LEFT JOIN taikhoan tk ON khachhang.makh = tk.makh
+    ORDER BY khachhang.makh ASC;
+    ";
     $result = $conn->query($sql);
 
     $customers = [];
@@ -21,42 +23,179 @@ function getCustomers() {
     echo json_encode(["status" => "success", "data" => $customers]);
 }
 
+function getInvoicesByCustomer($params) {
+    global $conn;
+    $makh = $params['makh'];
+    $sql = "SELECT *
+            FROM hoadon
+            WHERE hoadon.makh = ?
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $makh);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $hoadons = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $hoadons[] = $row;
+    }
+
+    echo json_encode(["status" => "success", "data" => $hoadons]);
+}
+
+function getInvoiceDetail($params) {
+    global $conn;
+    $mahd = $params['mahd'];
+    $sql = " SELECT sanpham.tensp, chitiethoadon.gia, chitiethoadon.soluong, chitiethoadon.size, chitiethoadon.mau
+            FROM chitiethoadon INNER JOIN sanpham
+            ON chitiethoadon.masp = sanpham.id
+            WHERE chitiethoadon.mahoadon = ?
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $mahd);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $chitiethoadons = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $chitiethoadons[] = $row;
+    }
+
+    echo json_encode(["status" => "success", "data" => $chitiethoadons]);
+}
+
+function getCustomerById($params) {
+    global $conn;
+    $makh = $params['makh'];
+
+    $sql = "SELECT *
+            FROM khachhang 
+            LEFT JOIN taikhoan tk ON khachhang.makh = tk.makh
+            WHERE khachhang.makh = ?
+            ORDER BY khachhang.makh ASC";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $makh);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $customers = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $customers[] = $row;
+    }
+
+    echo json_encode(["status" => "success", "data" => $customers[0] ?? null]);
+}
+
+function getCustomerByName($params) {
+    global $conn;
+    $tenkhachhang = $params['tenkhachhang'];
+
+    // Thêm dấu '%' vào từ khóa để tìm kiếm gần đúng
+    $searchTerm = '%' . $tenkhachhang . '%';
+
+    $sql = "SELECT *
+            FROM khachhang 
+            LEFT JOIN taikhoan tk ON khachhang.makh = tk.makh
+            WHERE khachhang.hoten LIKE ?
+            ORDER BY khachhang.makh ASC";
+
+    // Chuẩn bị câu lệnh SQL
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $searchTerm);  // Truyền tham số với kiểu "s" cho chuỗi
+    $stmt->execute();
+
+    // Lấy kết quả
+    $result = $stmt->get_result();
+    $customers = [];
+
+    // Duyệt qua kết quả và thêm vào mảng
+    while ($row = $result->fetch_assoc()) {
+        $customers[] = $row;
+    }
+
+    // Trả về dữ liệu dưới dạng JSON
+    echo json_encode(["status" => "success", "data" => $customers ?: null]);
+}
+
+function getUserByUsername($param) {
+    global $conn;
+    $tentaikhoan = $param['tennguoidung'];
+    $sql = "SELECT * FROM taikhoan WHERE tentaikhoan = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param( "s", $tentaikhoan);
+    $stmt->execute();
+    // Lấy kết quả
+    $result = $stmt->get_result();
+    $usernames = [];
+
+    // Duyệt qua kết quả và thêm vào mảng
+    while ($row = $result->fetch_assoc()) {
+        $usernames[] = $row;
+    }
+
+    // Trả về dữ liệu dưới dạng JSON
+    echo json_encode(["status" => "success", "data" => $usernames[0] ?: null]);
+}
+
+function getUserByEmail($param) {
+    global $conn;
+    $email = $param['email'];
+    $sql = "SELECT * from khachhang where email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param( "s", $email);
+    $stmt->execute();
+    // Lấy kết quả
+    $result = $stmt->get_result();
+    $usernames = [];
+
+    // Duyệt qua kết quả và thêm vào mảng
+    while ($row = $result->fetch_assoc()) {
+        $usernames[] = $row;
+    }
+
+    // Trả về dữ liệu dưới dạng JSON
+    echo json_encode(["status" => "success", "data" => $usernames[0] ?: null]);
+}
+
 /**
  * Thêm khách hàng mới
  */
-function createCustomer($data) {
+
+function createUserAndCustomer($data) {
     global $conn;
+    
     $username = $data["username"] ?? "";
     $password = $data["password"] ?? "";
     $hoten = $data["hoten"] ?? "";
     $sdt = $data["sdt"] ?? "";
     $email = $data["email"] ?? "";
-    $address = $data["address"] ?? "";
 
-    if (empty($username) || empty($password) || empty($hoten) || empty($sdt)) {
-        echo json_encode(["status" => "error", "message" => "Vui lòng nhập đầy đủ thông tin!"]);
-        return;
-    }
+    // Bước 1: Thêm khách hàng vào bảng khachhang
+    $sql_kh = "INSERT INTO khachhang (hoten, sdt, email) VALUES (?, ?, ?)";
+    $stmt_kh = mysqli_prepare($conn, $sql_kh);
+    if (!$stmt_kh) return false;
 
-    $sql_khachhang = "INSERT INTO khachhang (hoten, sdt, email, diachi) VALUES (?, ?, ?, ?)";
-    $stmt_khachhang = $conn->prepare($sql_khachhang);
-    $stmt_khachhang->bind_param("ssss", $hoten, $sdt, $email, $address);
+    mysqli_stmt_bind_param($stmt_kh, "sss",  $hoten, $sdt, $email);
+    $success_kh = mysqli_stmt_execute($stmt_kh);
+    if (!$success_kh) return false;
 
-    if ($stmt_khachhang->execute()) {
-        $khachhang_id = $conn->insert_id;
+    $makh = mysqli_insert_id($conn); // Lấy mã khách hàng vừa tạo
+    mysqli_stmt_close($stmt_kh);
 
-        $sql_taikhoan = "INSERT INTO taikhoan (makh, tentaikhoan, matkhau) VALUES (?, ?, ?)";
-        $stmt_taikhoan = $conn->prepare($sql_taikhoan);
-        $stmt_taikhoan->bind_param("iss", $khachhang_id, $username, $password);
+    // Bước 2: Thêm tài khoản vào bảng taikhoan
+    $sql_tk = "INSERT INTO taikhoan (tentaikhoan, matkhau, diemtichluy, makh) VALUES (?, ?, 0, ?)";
+    $stmt_tk = mysqli_prepare($conn, $sql_tk);
+    if (!$stmt_tk) return false;
 
-        if ($stmt_taikhoan->execute()) {
-            echo json_encode(["status" => "success", "message" => "Thêm khách hàng thành công!"]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Lỗi khi thêm tài khoản: " . $stmt_taikhoan->error]);
-        }
-    } else {
-        echo json_encode(["status" => "error", "message" => "Lỗi khi thêm khách hàng: " . $stmt_khachhang->error]);
-    }
+    mysqli_stmt_bind_param($stmt_tk, "ssi", $username, $password, $makh);
+    $success_tk = mysqli_stmt_execute($stmt_tk);
+    mysqli_stmt_close($stmt_tk);
+
+    return $success_tk;
 }
 
 /**
@@ -129,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params = $data['params'];
 
         // Các hàm được phép gọi từ API
-        $allowedFunctions = ["createCustomer", "updateCustomer", "deleteCustomer", "getCustomers"];
+        $allowedFunctions = ["createCustomer", "updateCustomer", "deleteCustomer", "getCustomers", "getCustomerById", "getInvoicesByCustomer", "getInvoiceDetail", "getCustomerByName", "createUserAndCustomer", "getUserByUsername", "getUserByEmail"];
 
         if (in_array($functionName, $allowedFunctions) && function_exists($functionName)) {
             call_user_func($functionName, $params);

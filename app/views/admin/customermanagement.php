@@ -8,6 +8,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
         <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     </head>
     <body>
         <aside class="sidebar">
@@ -46,13 +48,8 @@
                         <span>Email:</span>
                         <input class="email" type="text">
                     </div>  
-                    <div class="info-row">
-                        <span>Địa chỉ:</span>
-                        <input class="address" type="text">
-                    </div>
                 </div>
                 <button class="create-btn"> Tạo </button>
-
             </div>
         </div>
         <div class="customermanagement-container">
@@ -60,22 +57,22 @@
             <div class="filter-bar">
                 <div class="header-bar">
                     <div>
-                        <input type="text" placeholder="Nhập tên/sđt/email">
+                        <input type="text" placeholder="Nhập tên/sđt/email" id="searchUser">
                         <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
                     <button onclick="openCreate()"><i class="fa-solid fa-plus"></i> Tạo </button>
                 </div>
 
-                <div>
+                <!-- <div>
                     <span>Lọc:</span>
-                    <select>
-                        <option value="ngaymuagannhat">Tất cả</option>
-                        <option value="tongtientuthaptoicao">Bậc kim cương</option>
-                        <option value="diemtichluytuthaptoicao">Bậc vàng</option>
-                        <option value="tongtientucaothoithap">Bậc bạc</option>
-                        <option value="diemtichluytucaotoithap">Bậc đồng</option>
+                    <select id="userRank">
+                        <option value="all">Tất cả</option>
+                        <option value="diamond">Bậc kim cương</option>
+                        <option value="gold">Bậc vàng</option>
+                        <option value="silver">Bậc bạc</option>
+                        <option value="bronze">Bậc đồng</option>
                     </select>
-                </div>
+                </div> -->
             </div>
             <div class="customer-table">
                 <table>
@@ -90,11 +87,11 @@
                         </tr>
                     </thead>
                     <tbody id="customers-container">
-
+                        <!-- Dữ liệu sẽ được chèn ở đây -->
                     </tbody>
                 </table>
             </div>
-        </div>
+
     <div class="modal" id="customerModal">
         <div class="modal-content">
             <!-- Nút đóng -->
@@ -103,11 +100,7 @@
             <div class="private-if">
             <div class="info-row">
                     <span>Tên tài khoản:</span>
-                    <span>duongminh</span>
-                </div>
-                <div class="info-row">
-                    <span>Mật khẩu</span>
-                    <span>123456</span>
+                    <span id="username">duongminh</span>
                 </div>
             </div>
             <div class="divider"></div>
@@ -115,28 +108,68 @@
             <div class="information">
                 <div class="info-row">
                     <span>Tên KH:</span>
-                    <span>Dương Văn Minh</span>
+                    <span id="fullname">Dương Văn Minh</span>
                 </div>
                 <div class="info-row">
                     <span>Số điện thoại:</span>
-                    <span>0868633931</span>
+                    <span id="sdt">0868633931</span>
                 </div>
                 <div class="info-row">
                     <span>email:</span>
-                    <span>abc@gmail.com</span>
-                </div>
-                <div class="info-row">
-                    <span>Địa chỉ:</span>
-                    <span>Đối diện Dinh Độc Lập</span>
+                    <span id="email">abc@gmail.com</span>
                 </div>
                 <div class="info-row">
                     <span>Đơn hàng đã mua</span>
-                    <span><a href="#">Lịch sử đơn hàng</a></span>
+                    <span><a href="#" id="history-btn">Lịch sử đơn hàng</a></span>
                 </div>
             </div>  
-            <div class="handle-btn">
+            <!-- <div class="handle-btn">
                 <button class="fix-btn">Sửa</button>
                 <button class="save-btn">Lưu</button>
+            </div> -->
+        </div>
+    </div>
+    <!-- Modal danh sách hóa đơn -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeInvoiceModal()">&times;</button>
+            <h3>🧾 Danh sách hóa đơn</h3>
+            <div class="scroll-wrapper">
+                <table class="scroll-table">
+                    <thead>
+                        <tr>
+                            <th>Mã hóa đơn</th>
+                            <th>Ngày mua</th>
+                            <th>Tổng tiền</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoice-list-body">
+                        <!-- JS sẽ đổ dữ liệu vào đây -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal chi tiết hóa đơn -->
+    <div class="modal" id="invoiceDetailModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeInvoiceDetailModal()">&times;</button>
+            <h3>📋 Chi tiết hóa đơn</h3>
+            <div class="scroll-wrapper">
+                <table class="scroll-table">
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoice-detail-body">
+                        <!-- JS sẽ đổ dữ liệu vào đây -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

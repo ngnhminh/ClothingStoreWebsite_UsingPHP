@@ -1,8 +1,6 @@
 <?php
 include(__DIR__ . "/../../config/db.php");
 
-
-
 // Hàm Lấy Danh Sách Đơn Hàng
 function getOrders() {
     global $conn;
@@ -17,21 +15,12 @@ function getOrderDetails($order_id) {
     global $conn;
 
     $sql = "
-        SELECT 
-            hd.id,
-            kh.hoten AS customer_name,
-            sp.tensp AS product_name,
-            sp.gia AS product_price,
-            chitiet_hd.soluong,
-            chitiet_hd.size,
-            (sp.gia * chitiet_hd.soluong) AS total_price,
-            chitiet_hd.phuongthucthanhtoan,
-            hd.order_status
-        FROM chitiethoadon chitiet_hd
-        JOIN hoadon hd ON chitiet_hd.id_hoadon = hd.id
-        JOIN khachhang kh ON hd.id_khachhang = kh.makh
-        JOIN sanpham sp ON chitiet_hd.id_sanpham = sp.id
-        WHERE hd.id = ?
+        SELECT *
+        FROM chitiethoadon
+        INNER JOIN hoadon ON chitiethoadon.mahoadon = hoadon.id
+        INNER JOIN khachhang ON khachhang.makh = hoadon.makh
+        INNER JOIN sanpham ON sanpham.id = chitiethoadon.masp
+        WHERE chitiethoadon.mahoadon = ?
     ";
 
     $stmt = $conn->prepare($sql);
@@ -53,21 +42,32 @@ if (isset($_GET['order_id'])) {
     
     // Truy vấn lấy thông tin chi tiết đơn hàng
     $sql = "
-        SELECT 
-            hd.id,
-            kh.hoten AS customer_name,
-            sp.tensp AS product_name,
-            sp.gia AS product_price,
-            chitiet_hd.soluong,
-            chitiet_hd.size,
-            (sp.gia * chitiet_hd.soluong) AS total_price,
-            chitiet_hd.phuongthucthanhtoan,
-            hd.status
-        FROM chitiethoadon chitiet_hd
-        JOIN hoadon hd ON chitiet_hd.id_hoadon = hd.id
-        JOIN khachhang kh ON hd.id_khachhang = kh.makh
-        JOIN sanpham sp ON chitiet_hd.id_sanpham = sp.id
-        WHERE hd.id = ?
+            SELECT 
+            chitiethoadon.soluong,
+            chitiethoadon.size,
+            chitiethoadon.masp,
+            chitiethoadon.mahoadon,
+            chitiethoadon.mau,
+            chitiethoadon.gia,
+            hoadon.tongtien,
+            hoadon.makh,
+            chitiethoadon.masp,
+            hoadon.ngay,
+            hoadon.diachi,
+            hoadon.ghichu,
+            hoadon.trangthai,
+            hoadon.soluong,
+            hoadon.giamgia,
+            hoadon.diemdasudung,
+            khachhang.hoten,
+            khachhang.sdt,
+            hoadon.tamtinh,
+            sanpham.tensp
+        FROM chitiethoadon
+        INNER JOIN hoadon ON chitiethoadon.mahoadon = hoadon.id
+        INNER JOIN khachhang ON khachhang.makh = hoadon.makh
+        INNER JOIN sanpham ON sanpham.id = chitiethoadon.masp
+        WHERE chitiethoadon.mahoadon = ?;
     ";
 
     $stmt = $conn->prepare($sql);

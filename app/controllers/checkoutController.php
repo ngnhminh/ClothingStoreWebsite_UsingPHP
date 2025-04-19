@@ -43,9 +43,76 @@ switch ($action) {
         $diachi = $data['diachi'] ?? null;
         $ghichu = $data['ghichu'] ?? null;
         $soluong = $data['soluong'] ?? null;
-        $createOrder = createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong);
+        $giamgia = $data['giamgia'] ?? null;
+        $diemdasudung = $data['diemdasudung'] ?? null;
+        $tamtinh = $data['tamtinh'] ?? null;
+        $createOrder = createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh);
         echo json_encode([
             'success' => $createOrder
+        ]);
+        break;
+    
+    case 'updatePoint':
+        $matk = $data["matk"] ?? null;
+        $point = $data['point'] ?? null;
+        $updatePoint = updatePoint($matk, $point);
+        echo json_encode([
+            'success' => $updatePoint
+        ]);
+        break;
+    
+    case 'getUser':
+        $matk = $data["matk"] ?? null;
+        $getUser = getUser($matk);
+        echo json_encode([
+            'success' => !empty($getUser),
+            'getUser' => $getUser[0] ?? null
+        ]);
+        break;
+
+    case 'getProductSizeInform':
+        $masp = $data["masp"] ?? null;
+        $tenkichco = $data["tenkichco"] ?? null;
+        $getProductSizeInform = getProductSizeInform($masp, $tenkichco);
+        echo json_encode([
+            'success' => !empty($getProductSizeInform),
+            'getProductSizeInform' => $getProductSizeInform[0] ?? []
+        ]);
+        break;
+
+    case 'getProductSizeInformShoes':
+        $masp = $_GET["masp"] ?? null;
+        $tenkichco = $_GET["tenkichco"] ?? null;
+        $mamau = $_GET["mamau"] ?? null;
+        $getProductSizeInformShoes = getProductSizeInformShoes($masp, $tenkichco, $mamau);
+        echo json_encode([
+            'success' => !empty($getProductSizeInformShoes),
+            'getProductSizeInformShoes' => $getProductSizeInformShoes[0] ?? []
+        ]);
+        break;
+
+    case 'updateProductSizeInform':
+        $masp = $data["masp"] ?? null;
+        $tenkichco = $data['tenkichco'] ?? null;
+        $quantity = $data['quantity'] ?? null;
+        $totalQuantity = $data['totalQuantity'] ?? null;
+        $newQuantity = $totalQuantity - $quantity;
+        $success = updateProductSizeInform($masp, $tenkichco, $newQuantity);
+        echo json_encode([
+            'success' => $success
+        ]);
+        break;
+    
+    case 'updateProductSizeInformShoes':
+        $masp = $data["masp"] ?? null;
+        $tenkichco = $data['tenkichco'] ?? null;
+        $quantity = $data['quantity'] ?? null;
+        $totalQuantity = $data['totalQuantity'] ?? null;
+        $mamau = $data['mamau'] ?? null;
+        $newQuantity = $totalQuantity - $quantity;
+        $success = updateProductSizeInformShoes($masp, $tenkichco, $newQuantity, $mamau);
+        echo json_encode([
+            'success' => $success
         ]);
         break;
 
@@ -100,12 +167,12 @@ function createCustomer($fullname, $phone, $email) {
     return false;
 }
 
-function createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong) {
+function createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh) {
     global $conn;
-    $sql_hd = "INSERT INTO hoadon (ngay, tongtien, makh, diachi, ghichu, soluong) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql_hd = "INSERT INTO hoadon (ngay, tongtien, makh, diachi, ghichu, soluong, giamgia, diemdasudung, tamtinh, trangthai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
     $stmt_hd = mysqli_prepare($conn, $sql_hd);
     if (!$stmt_hd) return false;
-    mysqli_stmt_bind_param($stmt_hd, "siissi", $ngay, $tongtien, $makh, $diachi, $ghichu, $soluong);
+    mysqli_stmt_bind_param($stmt_hd, "siissiiii", $ngay, $tongtien, $makh, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh);
     if (!mysqli_stmt_execute($stmt_hd)) {
         mysqli_stmt_close($stmt_hd);
         return false;
@@ -128,3 +195,120 @@ function createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi,
     }
     return true;
 }
+
+function updatePoint($matk, $point) {
+    global $conn;
+    $sql_kh = "UPDATE taikhoan
+               SET diemtichluy = ?
+               WHERE matk = ?";
+    $stmt_kh = mysqli_prepare($conn, $sql_kh);
+    if ($stmt_kh) {
+        mysqli_stmt_bind_param($stmt_kh, "ii", $point, $matk);
+        if (mysqli_stmt_execute($stmt_kh)) {
+            mysqli_stmt_close($stmt_kh);
+            return true;
+        }
+        mysqli_stmt_close($stmt_kh);
+    }
+    return false;
+}
+
+function getUser($matk){
+    global $conn; 
+    $sql = "SELECT * 
+            FROM taikhoan 
+            INNER JOIN khachhang ON taikhoan.makh = khachhang.makh
+            WHERE taikhoan.matk = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "i", $matk);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function getProductSizeInform($masp, $tenkichco){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * FROM sanpham 
+            INNER JOIN mausanpham ON sanpham.id = mausanpham.masp_id
+            INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
+            WHERE sanpham.id= ? AND kichco.tenkichco = ?
+            ORDER BY kichco.kichco_id ASC";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "is", $masp, $tenkichco);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function getProductSizeInformShoes($masp, $mamau, $tenkichco){
+    global $conn; // Sử dụng kết nối MySQLi
+    $sql = "SELECT * FROM sanpham 
+            INNER JOIN mausanpham ON sanpham.id = mausanpham.masp_id
+            INNER JOIN kichco ON kichco.mau_sanpham_id = mausanpham.id
+            INNER JOIN mau ON mau.id = mausanpham.mau_id
+            WHERE sanpham.id = ? AND mau.mamau = ? AND kichco.tenkichco = ?
+            ORDER BY kichco.kichco_id ASC";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "iss", $masp, $mamau, $tenkichco);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function updateProductSizeInform($masp, $tenkichco, $newsoluong) {
+    global $conn;
+    $sql = "UPDATE kichco 
+            INNER JOIN mausanpham ON kichco.mau_sanpham_id = mausanpham.id
+            INNER JOIN sanpham ON mausanpham.masp_id = sanpham.id
+            SET kichco.soluong = ?
+            WHERE sanpham.id = ? AND kichco.tenkichco = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+    mysqli_stmt_bind_param($stmt, "iis", $newsoluong, $masp, $tenkichco);
+    mysqli_stmt_execute($stmt);
+    $affected = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+    return $affected > 0;
+}
+
+
+function updateProductSizeInformShoes($masp, $tenkichco, $newsoluong, $mamau) {
+    global $conn;
+    $sql = "UPDATE kichco
+            INNER JOIN mausanpham ON kichco.mau_sanpham_id = mausanpham.id
+            INNER JOIN sanpham ON mausanpham.masp_id = sanpham.id
+            INNER JOIN mau ON mau.id = mausanpham.mau_id
+            SET kichco.soluong = ?
+            WHERE sanpham.id = ? AND kichco.tenkichco = ? AND mau.mamau = ?";
+    
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    }
+
+    mysqli_stmt_bind_param($stmt, "iiss", $newsoluong, $masp, $tenkichco, $mamau);
+    mysqli_stmt_execute($stmt);
+    $affected = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+
+    return $affected > 0;
+}
+
+?>

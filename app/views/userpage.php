@@ -227,11 +227,11 @@
 
                     <hr>
 
-                    <div class="summary">
-                        <p>Giảm giá: <span>500.000đ</span></p>
+                    <div class="summary" id="summary">
                         <p>Tạm tính: <span>500.000đ</span></p>
-                        <p>Phí vận chuyển: <span>500.000đ</span></p>
-                        <p>Phương thức thanh toán: <span>Chuyển khoản</span></p>
+                        <p>Giảm giá: <span>500.000đ</span></p>
+                        <p>Phí vận chuyển: <span>-30.000đ</span></p>
+                        <p>Phương thức thanh toán: <span>Ship COD</span></p>
                         <p>Trạng thái: <span class="processed">Đã xử lý</span></p>
                     </div>
 
@@ -267,7 +267,12 @@
                 document.getElementById("order-detail-modal").style.display = "none";
             }
 
-            const user = JSON.parse(localStorage.getItem("user"));
+            let user = JSON.parse(localStorage.getItem("user"));
+            window.addEventListener('userUpdated', function() {
+                let userUpdated = JSON.parse(localStorage.getItem("user"));
+                console.log("Thông tin người dùng đã được cập nhật:", userUpdated);
+                user = userUpdated; // Cập nhật lại biến user toàn cục với dữ liệu mới
+            });
             function togglePasswordVisibility() {
                 const pwSpan = document.getElementById("user-password");
                 const toggleBtn = document.getElementById("toggle-password");
@@ -408,6 +413,8 @@
                             const detailOrderBtn = tr.querySelector(".detailOrderBtn");
                             detailOrderBtn.addEventListener("click", () => {
                                 console.log("clicked", order.id);
+                                const productlist = document.getElementById("product-list");
+                                productlist.innerHTML = ``;
                                 axios.get('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/userPageController.php', {
                                     params: {
                                         action: 'getChiTietHoaDonByMaHoaDon',
@@ -416,7 +423,6 @@
                                 }).then(res => {
                                     if (res.data.success) {
                                         if (res.data.getChiTietHoaDonByMaHoaDon) {
-                                            const productlist = document.getElementById("product-list");
                                             res.data.getChiTietHoaDonByMaHoaDon.forEach(item => {
                                                 const productDiv = document.createElement("div");
                                                 productDiv.className = "product";
@@ -480,6 +486,17 @@
                                             total.innerHTML = `
                                                 <p>Tổng tiền: <span>${formatToVND(order.tongtien)}</span></p>
                                             `;
+                                            const summary = document.getElementById("summary");
+                                            summary.innerHTML = `
+                                                <p>Tạm tính: <span>${formatToVND(order.tamtinh)}</span></p>
+                                                <p>Giảm giá: <span>${formatToVND(order.giamgia)}</span></p>
+                                                <p>Điểm tích lũy đã sử dụng: <span>${order.diemdasudung}</span></p>
+                                                <p>Phí vận chuyển: <span>${formatToVND(30000)}</span></p>
+                                                <p>Phương thức thanh toán: <span>Ship COD</span></p>
+                                                ${order.trangthai === 0 ? `<p>Trạng thái: <span class="processed" id="chuaxuly">Chưa xử lý</span></p>` : `<p>Trạng thái: <span class="processed" id="daxuly">Đã xử lý</span></p>`}
+                                                
+                                            `;
+
                                             document.getElementById("overlay").style.display = "block";
                                             document.getElementById("order-detail-modal").style.display = "block";
                                         } else {

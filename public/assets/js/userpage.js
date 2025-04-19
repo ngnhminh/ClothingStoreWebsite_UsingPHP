@@ -63,7 +63,12 @@ function formatToVND(price) {
 }
 
 window.onload = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    let user = JSON.parse(localStorage.getItem("user"));
+    window.addEventListener('userUpdated', function() {
+        let userUpdated = JSON.parse(localStorage.getItem("user"));
+        console.log("Thông tin người dùng đã được cập nhật:", userUpdated);
+        user = userUpdated; // Cập nhật lại biến user toàn cục với dữ liệu mới
+    });
     const authButton = document.getElementById("auth-buttons");
     const userInfo = document.getElementById("user-info");
     const welcomeText = document.getElementById("welcome-text");
@@ -150,7 +155,12 @@ function closeModal() {
 }
 
 function togglePasswordVisibility() {
-    const user = JSON.parse(localStorage.getItem("user"));
+    let user = JSON.parse(localStorage.getItem("user"));
+    window.addEventListener('userUpdated', function() {
+        let userUpdated = JSON.parse(localStorage.getItem("user"));
+        console.log("Thông tin người dùng đã được cập nhật:", userUpdated);
+        user = userUpdated; // Cập nhật lại biến user toàn cục với dữ liệu mới
+    });
     const pwSpan = document.getElementById("user-password");
     const toggleBtn = document.getElementById("toggle-password");
 

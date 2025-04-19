@@ -59,7 +59,12 @@
         
     <script>
         function goToUserPage() {
-            const user = JSON.parse(localStorage.getItem("user"));
+            let user = JSON.parse(localStorage.getItem("user"));
+            window.addEventListener('userUpdated', function() {
+                let userUpdated = JSON.parse(localStorage.getItem("user"));
+                console.log("Thông tin người dùng đã được cập nhật:", userUpdated);
+                user = userUpdated; // Cập nhật lại biến user toàn cục với dữ liệu mới
+            });
             if (user) {
                 window.location.href = "userpage.php";
             } else {

@@ -468,3 +468,11 @@ th, td {
     border-right: none;
 }
 
+.status.red {
+  color: red;
+  font-weight: bold;
+}
+.status.green {
+  color: green;
+  font-weight: bold;
+}

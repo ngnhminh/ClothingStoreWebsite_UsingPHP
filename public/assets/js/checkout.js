@@ -7,7 +7,26 @@ function showAlert(words) {
     });
 }
 
-const user = JSON.parse(localStorage.getItem("user"));
+let user = JSON.parse(localStorage.getItem("user"));
+
+if(user.matk != null){
+    axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+        action: "getUser",
+        matk: user.matk,
+    }).then(res => {
+        console.log(res); 
+        if (res.data.success) {
+            localStorage.removeItem("user");
+            localStorage.setItem("user", JSON.stringify(res.data.getUser)); 
+            user = res.data.getUser;
+            window.dispatchEvent(new Event('userUpdated'));
+            console.log("Đã cập nhật thông tin người dùng.");
+        } else {
+            console.error("Không thể cập nhật thông tin người dùng.");
+        }
+    });
+}
+
 const loyalty = document.getElementById("loyalty");
 var diemtichluy = document.getElementById("diemtichluy");
 
@@ -225,6 +244,8 @@ window.onload = () => {
     const checkoutPriceDiscount = document.getElementById("checkout-price-discount");
     const checkoutPriceFinal = document.getElementById("checkout-price-final");
     const diemtichluyconlai = document.getElementById("diemtichluyconlai");
+    
+    diemtichluyconlai.dataset.diemtichluyconlai = user.diemtichluy;
 
     checkoutPriceDiscount.dataset.discountedPrice = 0;
     checkoutPricePoint.dataset.point = 0;
@@ -261,29 +282,37 @@ window.onload = () => {
 
     const checkbox = document.querySelector("#loyalty input[type='checkbox']");
     checkbox.addEventListener("change", () => {
-        if(checkbox.checked){
+        if (!tinhThanhSelect.value.trim() || !quanHuyenSelect.value.trim()) {
+            showAlert("Vui lòng điền đầy đủ thông tin");
+            // Reset lại trạng thái checkbox về trạng thái trước đó
+            checkbox.checked = !checkbox.checked;
+            return;
+        }
+    
+        if (checkbox.checked) {
             var data = calculateFinalPrice(
                 parseInt(checkoutPrice.dataset.checkoutPrice),
                 parseInt(checkoutPriceDiscount.dataset.discountedPrice),
                 parseInt(diemtichluy.dataset.diemtichluy),
                 parseInt(checkoutPriceTransportFee.dataset.fee)
-            )
+            );
+    
             checkoutPricePoint.innerText = data.usedPoint;
             checkoutPricePoint.dataset.point = data.usedPoint;
-
+    
             diemtichluyconlai.innerText = data.remainingPoint;
             diemtichluyconlai.dataset.diemtichluyconlai = data.remainingPoint;
-
+    
             checkoutPriceFinal.innerText = formatToVND(data.total);
             checkoutPriceFinal.dataset.finalPrice = data.total;
-
-        }else{
+        } else {
             checkoutPricePoint.dataset.point = 0;
             checkoutPricePoint.innerText = 0;
             diemtichluyconlai.innerText = diemtichluy.dataset.diemtichluy;
             diemtichluyconlai.dataset.diemtichluyconlai = diemtichluy.dataset.diemtichluy;
         }
     });
+    
 
     const input = document.getElementById('coupon-input');
     const button = document.getElementById('apply-btn');
@@ -324,110 +353,160 @@ window.onload = () => {
     const orderbtn = document.getElementById("order-btn");
     const ghichu = document.getElementById("ghichu");
 
-    orderbtn.addEventListener("click", () => {
+    orderbtn.addEventListener("click", async () => {
         if (
             !emailinput.value.trim() ||
             !hoteninput.value.trim() ||
             !sdtinput.value.trim() ||
             !diachiinput.value.trim() ||
-            !phuongxainput.value.trim()||
-            !tinhThanhSelect.value.trim()||
+            !phuongxainput.value.trim() ||
+            !tinhThanhSelect.value.trim() ||
             !quanHuyenSelect.value.trim()
         ) {
             showAlert("Vui lòng điền đầy đủ thông tin trước khi đặt hàng.");
             return;
         }
+    
         const diaChiDayDu = `${diachiinput.value}, ${phuongxainput.value}, ${quanDuocChon}, ${tinhDuocChon}`;
-
-        if(user.makh != null){
-            console.log(mysqlDate);
-            axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
-                action: "createOrder",
-                ngay: mysqlDate,
-                tongtien: checkoutPriceFinal.dataset.finalPrice,
-                makh: user.makh,
-                dssanpham: groupedProducts,
-                diachi: diaChiDayDu,
-                ghichu: ghichu.value,
-                soluong: tongsoluong
-            }).then(res => {
-                if (res.data.success) {
-                    showAlert("Thêm sản phẩm thành công"); // toast đẹp
-                    clearLocalStorageExceptUser();
-            
-                    // Chờ 2 giây sau khi show toast rồi mới chuyển trang
-                    setTimeout(() => {
-                        window.location.href = "index.php";
-                    }, 2000); // hoặc 3000ms tùy thời gian toast hiển thị
-                }
-            });            
-        }else{
-            axios.get('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
-                params: { 
-                    action: 'getEmail',
-                    email: emailinput.value
-                }
-            }).then(res => {
-                if(res.data.success){
-                    if(res.data.getEmail){
-                        axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
-                            action: "createOrder",
-                            ngay: mysqlDate,
-                            tongtien: checkoutPriceFinal.dataset.finalPrice,
-                            makh: res.data.getEmail.makh,
-                            dssanpham: groupedProducts,
-                            diachi: diaChiDayDu,
-                            ghichu: ghichu.value,
-                            soluong: tongsoluong
-                        })
-                        .then(res => {
-                            if (res.data.success) {
-                                showAlert("Thêm sản phẩm thành công"); // toast đẹp
-                                clearLocalStorageExceptUser();
-                        
-                                // Chờ 2 giây sau khi show toast rồi mới chuyển trang
-                                setTimeout(() => {
-                                    window.location.href = "index.php";
-                                }, 2000); // hoặc 3000ms tùy thời gian toast hiển thị
-                            }
-                        })
+    
+        try {
+            let makh = null;
+    
+            if (user.makh != null) {
+                makh = user.makh;
+            } else {
+                const getEmailRes = await axios.get('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                    params: {
+                        action: 'getEmail',
+                        email: emailinput.value
                     }
-                }else{
-                    axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                });
+    
+                if (getEmailRes.data.success && getEmailRes.data.getEmail) {
+                    makh = getEmailRes.data.getEmail.makh;
+                } else {
+                    const createCusRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
                         action: "createCustomer",
                         hoten: hoteninput.value,
                         sdt: sdtinput.value,
                         email: emailinput.value
-                    })
-                    .then(response => {
-                        axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
-                            action: "createOrder",
-                            ngay: mysqlDate,
-                            tongtien: checkoutPriceFinal.dataset.finalPrice,
-                            makh: response.data.newCustomerId,
-                            dssanpham: groupedProducts,
-                            diachi: diaChiDayDu,
-                            ghichu: ghichu.value,
-                            soluong: tongsoluong
-                        })
-                        .then(response => {
-                            if (response.data.success) {
-                                console.log(response.data.createOrderAndOrderDetail);
-                                showAlert("Thêm sản phẩm thành công"); // toast đẹp
-                                clearLocalStorageExceptUser();
-                        
-                                // Chờ 2 giây sau khi show toast rồi mới chuyển trang
-                                setTimeout(() => {
-                                    window.location.href = "index.php";
-                                }, 2000); // hoặc 3000ms tùy thời gian toast hiển thị
-                            }
-                        })
-                    })
+                    });
+                    makh = createCusRes.data.newCustomerId;
                 }
+            }
+    
+            const createOrderRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                action: "createOrder",
+                ngay: mysqlDate,
+                tongtien: checkoutPriceFinal.dataset.finalPrice,
+                makh,
+                dssanpham: groupedProducts,
+                diachi: diaChiDayDu,
+                ghichu: ghichu.value,
+                soluong: tongsoluong,
+                giamgia: checkoutPriceDiscount.dataset.discountedPrice,
+                diemdasudung: checkoutPricePoint.dataset.point,
+                tamtinh: checkoutPrice.dataset.checkoutPrice
             });
+    
+            if (createOrderRes.data.success) {
+                if (user.matk) {
+                    const diem = parseInt(diemtichluyconlai.dataset.diemtichluyconlai) + 1;
+                    const updatePointRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                        action: "updatePoint",
+                        matk: user.matk,
+                        point: diem
+                    });
+                    if (updatePointRes.data.success) {
+                        console.log("Cập nhật điểm thành công");
+                    }
+                }
+                for (const [key, product] of Object.entries(groupedProducts)) {
+                    try {
+                        await updateProductQuantity(product);
+                        console.log(`Cập nhật số lượng thành công cho sản phẩm ${product.id}, size ${product.size}`);
+                    } catch (updateErr) {
+                        console.error(`Lỗi khi cập nhật số lượng sản phẩm ${product.id}:`, updateErr);
+                    }
+                }   
+                showAlert("Thêm sản phẩm thành công");
+
+                // setTimeout(() => {
+                //     window.location.href = "index.php";
+                // }, 2000);
+            }
+            // clearLocalStorageExceptUser();
+        } catch (error) {
+            console.error("Lỗi khi đặt hàng:", error);
+            showAlert("Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại.");
         }
     });
 };
+
+async function updateProductQuantity(product) {
+    try {
+        if (product.maloai_id != 2) {
+            const res = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                action: "getProductSizeInform",
+                masp: product.id,
+                tenkichco: product.size
+            });
+            console.log("id" + product.id);
+            console.log("kichco" + res.data.success);
+            console.log("Product size info response:", res.data);
+            
+            if (res.data.success && res.data.getProductSizeInform) {
+                const updateRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                    action: "updateProductSizeInform",
+                    masp: product.id,
+                    tenkichco: product.size,
+                    quantity: product.quantity,
+                    totalQuantity: res.data.getProductSizeInform.soluong
+                });
+                
+                console.log("Update response:", updateRes.data);
+                if (updateRes.data.success) {
+                    console.log(`Cập nhật thành công sản phẩm ${product.id}, size ${product.size}`);
+                } else {
+                    console.error(`Cập nhật thất bại sản phẩm ${product.id}, size ${product.size}`);
+                }
+            } else {
+                console.error("Không tìm thấy thông tin kích cỡ sản phẩm");
+            }
+        } else {
+            const res = await axios.get('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                action: "getProductSizeInformShoes",
+                masp: product.id,
+                tenkichco: product.size,
+                mamau: product.mamau
+            });
+            
+            console.log("Shoes size info response:", res.data);
+            
+            if (res.data.success && res.data.getProductSizeInformShoes) {
+                const updateRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                    action: "updateProductSizeInformShoes",
+                    masp: product.id,
+                    tenkichco: product.size,
+                    quantity: product.quantity,
+                    totalQuantity: res.data.getProductSizeInformShoes.soluong,
+                    mamau: product.mamau
+                });
+                
+                console.log("Update shoes response:", updateRes.data);
+                if (updateRes.data.success) {
+                    console.log(`Cập nhật thành công giày ${product.id}, size ${product.size}, màu ${product.mamau}`);
+                } else {
+                    console.error(`Cập nhật thất bại giày ${product.id}, size ${product.size}, màu ${product.mamau}`);
+                }
+            } else {
+                console.error("Không tìm thấy thông tin kích cỡ giày");
+            }
+        }
+    } catch (error) {
+        console.error("Lỗi trong hàm updateProductQuantity:", error.response ? error.response.data : error.message);
+    }
+}
 
 function calculateTotalPrice(groupedProducts) {
     let total = 0;

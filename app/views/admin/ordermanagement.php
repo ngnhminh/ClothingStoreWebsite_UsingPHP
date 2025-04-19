@@ -33,9 +33,9 @@
         <div class="ordermanagement-container">
             <div class="header">Quản lý đơn hàng</div>
             <div class="filter-bar">
-                <button class="status-btn">Đã xử lý (5)</button>
-                <button class="status-btn">Chưa xử lý (5)</button>
-                <button class="status-btn">Đã hủy (5)</button>
+                <button class="status-btn" id="inprocessing">Đã xử lý (5)</button>
+                <button class="status-btn" id="done">Chưa xử lý (5)</button>
+                <button class="status-btn" id="all">Tất cả</button>
                 <input  class="date-start" type="date">
                 <input class="date-end" type="date">
                 <button class="search-btn">🔍</button>
@@ -55,16 +55,22 @@
                     <?php
                     $orders = getOrders();
                     while ($row = $orders->fetch_assoc()) {
+                        $ngay = date("Y-m-d", strtotime($row['ngay']));
+
+                        $isPending = $row['trangthai'] == 0;
+                        $trangthai = $isPending ? "Chưa xử lý" : "Đã xử lý";
+                        $colorClass = $isPending ? "red" : "green";
+
                         echo "
-                            <tr> 
+                            <tr data-trangthai={$row['trangthai']} data-date='$ngay'> 
                                 <td>{$row['id']}</td>
-                                <td>{$row['id_khachhang']}</td>
-                                <td>" . date("d/m/Y H:i", strtotime($row['ngay_dat'])) . "</td>
-                                <td class='status'>{$row['status']}</td>
-                                <td onclick='openModal(this.parentElement)'><a href='#'>Thông tin đơn</a></td>
+                                <td>{$row['makh']}</td>
+                                <td>$ngay</td>
+                                <td class='status' style='color: {$colorClass}'>{$trangthai}</td>
+                                <td><a href='#'>Thông tin đơn</a></td>
                             </tr>
                         ";
-                    }
+                    }                    
                     ?>
                     </tbody>
                 </table>
@@ -74,9 +80,9 @@
 
         <!-- Modal chi tiết đơn hàng -->
         <div class="modal" id="orderModal">
-            <div class="modal-content">
+            <div class="modal-content" id="print-content">
                 <!-- Nút đóng -->
-                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <button class="close-btn">&times;</button>
                 <!-- Danh sách sản phẩm -->
                 <div class="modal-items">
                     <div class="item-row">
@@ -84,7 +90,7 @@
                             <div class="item-detail">
                                 <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/anh/ao/den/OUG (1).jpg" alt="ao" class="product-img">
                                 <div class="item-name">haha</div>
-                                <div class="item-sizes">Size:  &nbsp; Sl: </div>
+                                <div class="item-sizes"><S></S>Size:  &nbsp; Sl: </div>
                             </div>
                         </div>
                         <div class="item-discount">-50%</div>
@@ -102,7 +108,7 @@
                     <div class="summary-row"><span>Tên KH:</span> <span id="customer-name"></span></div>
                     <div class="summary-row"><span>Giảm giá:</span> <span id="discount"></span></div>
                     <div class="summary-row"><span>Tạm tính:</span> <span id="subtotal"></span></div>
-                    <div class="summary-row"><span>Phí vận chuyển:</span> <span id="shipping-fee"> 10</span></div>
+                    <div class="summary-row"><span>Phí vận chuyển:</span> <span id="shipping-fee"></span></div>
                     <div class="summary-row"><span>Phương thức thanh toán:</span> <span id="payment-method"></span></div>
                     <div class="summary-row">
                         <span>Trạng thái:</span>
@@ -120,12 +126,6 @@
                 <div>
                     <!-- Nút in đơn -->
                     <div class="handle-btn">
-                        <!-- Nút bên trái -->
-                        <div class="left-buttons">
-                            <button class="restore-btn">Khôi phục</button>
-                            <button class="cancel-btn">Hủy</button>
-                        </div>
-
                         <!-- Nút bên phải -->
                         <div class="right-buttons">
                             <button class="save-btn">Lưu</button>
@@ -142,5 +142,6 @@
         </div> <!-- Đóng div của invoice -->
 
     <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/admin/ordermanagement.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     </body>
 </html>
