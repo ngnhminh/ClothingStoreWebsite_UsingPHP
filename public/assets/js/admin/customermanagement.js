@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${invoice.id}</td>
                     <td>${invoice.ngay}</td>
                     <td>${formatCurrencyVND(invoice.tongtien)}</td>
+                    <td>${invoice.diachi}</td>
                     <td><button onclick="showInvoiceDetail(${invoice.id})">Xem</button></td>
                 `;
                 listContainer.appendChild(row);
@@ -287,7 +288,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${row.diemtichluy}</td>
                     <td>${rank}</td>
                     <td><a href="#" onclick="openModal(${row.makh})">Thông tin đơn</a></td>
-                    <td><button onclick="deleteCustomer(${row.makh})">X</button></td>
                 </tr>
             `;
         });

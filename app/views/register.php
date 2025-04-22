@@ -44,9 +44,7 @@
             </div>
         </div>
     </main>
-    <footer>
         <?php require 'footer.php'; ?>
-    </footer>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

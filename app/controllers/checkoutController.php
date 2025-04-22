@@ -46,7 +46,9 @@ switch ($action) {
         $giamgia = $data['giamgia'] ?? null;
         $diemdasudung = $data['diemdasudung'] ?? null;
         $tamtinh = $data['tamtinh'] ?? null;
-        $createOrder = createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh);
+        $tenmagiamgia = $data['tenmagiamgia'] ?? null;
+        $magiamgiaId = $data['magiamgiaId'] ?? null;
+        $createOrder = createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh, $tenmagiamgia, $magiamgiaId);
         echo json_encode([
             'success' => $createOrder
         ]);
@@ -116,6 +118,24 @@ switch ($action) {
         ]);
         break;
 
+    case 'getCodeGiamGiaById':
+        $id = $data["id"] ?? null;
+        $magiamgia = getCodeGiamGiaById($id);
+        echo json_encode([
+            'success' => !empty($magiamgia),
+            'getCodeGiamGiaById' => $magiamgia[0] ?? []
+        ]);
+        break;
+
+    case 'updateCodeGiamGia':
+        $id = $data["id"] ?? null;
+        $soluong = $data["soluong"] ?? null;
+        $updateCodeGiamGia = updateCodeGiamGia($id, $soluong);
+        echo json_encode([
+            'success' => $updateCodeGiamGia
+        ]);
+        break;
+
     default:
         echo json_encode([
             'success' => false,
@@ -131,6 +151,36 @@ function getCodeGiamGia($magiamgia){
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
     mysqli_stmt_bind_param($stmt, "s", $magiamgia);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+function updateCodeGiamGia($id, $soluong){
+    global $conn;
+    $sql_kh = "UPDATE magiamgia
+               SET soluong = ?
+               WHERE id = ?";
+    $stmt_kh = mysqli_prepare($conn, $sql_kh);
+    if ($stmt_kh) {
+        mysqli_stmt_bind_param($stmt_kh, "ii",$soluong, $id);
+        if (mysqli_stmt_execute($stmt_kh)) {
+            mysqli_stmt_close($stmt_kh);
+            return true;
+        }
+        mysqli_stmt_close($stmt_kh);
+    }
+    return false;
+}
+
+function getCodeGiamGiaById($id){
+    global $conn;
+    $sql = "SELECT * from magiamgia WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) die("Lỗi chuẩn bị truy vấn: " . mysqli_error($conn));
+    mysqli_stmt_bind_param($stmt, "i", $id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -167,12 +217,12 @@ function createCustomer($fullname, $phone, $email) {
     return false;
 }
 
-function createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh) {
+function createOrderAndOrderDetail($ngay, $tongtien, $makh, $dssanpham, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh, $tenmagiamgia, $magiamgiaId) {
     global $conn;
-    $sql_hd = "INSERT INTO hoadon (ngay, tongtien, makh, diachi, ghichu, soluong, giamgia, diemdasudung, tamtinh, trangthai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+    $sql_hd = "INSERT INTO hoadon (ngay, tongtien, makh, diachi, ghichu, soluong, giamgia, diemdasudung, tamtinh, trangthai, tenmagiamgia, magiamgiaId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
     $stmt_hd = mysqli_prepare($conn, $sql_hd);
     if (!$stmt_hd) return false;
-    mysqli_stmt_bind_param($stmt_hd, "siissiiii", $ngay, $tongtien, $makh, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh);
+    mysqli_stmt_bind_param($stmt_hd, "siissiiiisi", $ngay, $tongtien, $makh, $diachi, $ghichu, $soluong, $giamgia, $diemdasudung, $tamtinh, $tenmagiamgia, $magiamgiaId);
     if (!mysqli_stmt_execute($stmt_hd)) {
         mysqli_stmt_close($stmt_hd);
         return false;

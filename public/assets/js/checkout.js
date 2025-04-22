@@ -7,9 +7,21 @@ function showAlert(words) {
     });
 }
 
+function isValidPhone(phone) {
+    // Số điện thoại Việt Nam: 10 chữ số, bắt đầu bằng 0
+    const regex = /^0\d{9}$/;
+    return regex.test(phone);
+}
+
+function isValidEmail(email) {
+    // Email đúng định dạng cơ bản
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
 let user = JSON.parse(localStorage.getItem("user"));
 
-if(user.matk != null){
+if(user !== null){
     axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
         action: "getUser",
         matk: user.matk,
@@ -31,14 +43,29 @@ const loyalty = document.getElementById("loyalty");
 var diemtichluy = document.getElementById("diemtichluy");
 
 const emailinput = document.getElementById("email-input");
+emailinput.addEventListener("change", () => {
+    if(!isValidEmail(emailinput.value)){
+        showAlert("Email không hợp lệ");
+        emailinput.value = "";
+        return;
+    } 
+});
 const hoteninput = document.getElementById("hoten-input");
 const sdtinput = document.getElementById("sdt-input");
+sdtinput.addEventListener("change", () => {
+    if(!isValidPhone(sdtinput.value)){
+        showAlert("Số điện thoại không hợp lệ");
+        sdtinput.value = "";
+        return;
+    } 
+});
+
 const diachiinput = document.getElementById("diachi-input");
 const phuongxainput = document.getElementById("phuong-input");
 var checkoutpricetransportfee = document.getElementById("checkout-price-transport-fee");
 const checkoutPricePoint = document.getElementById("checkout-price-point");
 
-if(user != null){
+if(user !== null){
     loyalty.style.display = "block";
     diemtichluy.innerText = user.diemtichluy;
     diemtichluy.dataset.diemtichluy = user.diemtichluy;
@@ -125,7 +152,7 @@ var transport_fee = document.getElementById("transport-fee");
 var shipping_box = document.getElementsByClassName("shipping-box")[0];
 
 tinhThanhSelect.addEventListener("change", function() {
-    if(tinhThanhSelect.value != ""){
+    if(tinhThanhSelect.value !== ""){
         shipping_box.style.backgroundColor="white";
         shipping_box.style.color="black"
         annouce_box.style.display="none";
@@ -245,7 +272,11 @@ window.onload = () => {
     const checkoutPriceFinal = document.getElementById("checkout-price-final");
     const diemtichluyconlai = document.getElementById("diemtichluyconlai");
     
-    diemtichluyconlai.dataset.diemtichluyconlai = user.diemtichluy;
+    if(user !== null){
+        diemtichluyconlai.dataset.diemtichluyconlai = user.diemtichluy;
+    }else{
+        diemtichluyconlai.dataset.diemtichluyconlai = 0;
+    }
 
     checkoutPriceDiscount.dataset.discountedPrice = 0;
     checkoutPricePoint.dataset.point = 0;
@@ -328,6 +359,8 @@ window.onload = () => {
             if (res.data.success) {
                 if (res.data.getCodeGiamGia) {
                     checkoutPriceDiscount.dataset.discountedPrice = res.data.getCodeGiamGia.tiengiam;
+                    checkoutPriceDiscount.dataset.discountedName = res.data.getCodeGiamGia.codegiamgia;
+                    checkoutPriceDiscount.dataset.id = res.data.getCodeGiamGia.id;
                     checkoutPriceDiscount.innerHTML = `-${formatToVND(res.data.getCodeGiamGia.tiengiam)}`;
                 } else {
                     alert("Mã giảm không tồn tại");
@@ -352,6 +385,7 @@ window.onload = () => {
 
     const orderbtn = document.getElementById("order-btn");
     const ghichu = document.getElementById("ghichu");
+    const paymentRadio = document.querySelector('input[name="payment"]'); // Chọn radio button theo name
 
     orderbtn.addEventListener("click", async () => {
         if (
@@ -361,7 +395,8 @@ window.onload = () => {
             !diachiinput.value.trim() ||
             !phuongxainput.value.trim() ||
             !tinhThanhSelect.value.trim() ||
-            !quanHuyenSelect.value.trim()
+            !quanHuyenSelect.value.trim() || 
+            !paymentRadio.checked
         ) {
             showAlert("Vui lòng điền đầy đủ thông tin trước khi đặt hàng.");
             return;
@@ -372,7 +407,7 @@ window.onload = () => {
         try {
             let makh = null;
     
-            if (user.makh != null) {
+            if (user !== null) {
                 makh = user.makh;
             } else {
                 const getEmailRes = await axios.get('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
@@ -394,7 +429,7 @@ window.onload = () => {
                     makh = createCusRes.data.newCustomerId;
                 }
             }
-    
+            
             const createOrderRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
                 action: "createOrder",
                 ngay: mysqlDate,
@@ -406,11 +441,13 @@ window.onload = () => {
                 soluong: tongsoluong,
                 giamgia: checkoutPriceDiscount.dataset.discountedPrice,
                 diemdasudung: checkoutPricePoint.dataset.point,
-                tamtinh: checkoutPrice.dataset.checkoutPrice
+                tamtinh: checkoutPrice.dataset.checkoutPrice,
+                tenmagiamgia: checkoutPriceDiscount.dataset.discountedName,
+                magiamgiaId: checkoutPriceDiscount.dataset.id
             });
     
             if (createOrderRes.data.success) {
-                if (user.matk) {
+                if (user !== null) {
                     const diem = parseInt(diemtichluyconlai.dataset.diemtichluyconlai) + 1;
                     const updatePointRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
                         action: "updatePoint",
@@ -430,12 +467,18 @@ window.onload = () => {
                     }
                 }   
                 showAlert("Thêm sản phẩm thành công");
-
-                // setTimeout(() => {
-                //     window.location.href = "index.php";
-                // }, 2000);
+                if(checkoutPriceDiscount.dataset.id !== "" || checkoutPriceDiscount.dataset.id !== null || checkoutPriceDiscount.dataset.id === 0){
+                    await updateMagiamgiaQuantity(checkoutPriceDiscount.dataset.id);
+                }else{
+                    console.log("Không có mã giảm giá");
+                }
+                setTimeout(() => {
+                    window.location.href = "index.php";
+                }, 1000);
+            }else{
+                console.log("false");
             }
-            // clearLocalStorageExceptUser();
+            clearLocalStorageExceptUser();
         } catch (error) {
             console.error("Lỗi khi đặt hàng:", error);
             showAlert("Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại.");
@@ -443,9 +486,37 @@ window.onload = () => {
     });
 };
 
+async function updateMagiamgiaQuantity(id){
+    try {
+        const res = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+            action: "getCodeGiamGiaById",
+            id: id
+        });
+        console.log(res.data);
+        if (res.data.success && res.data.getCodeGiamGiaById) {
+            const updateRes = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
+                action: "updateCodeGiamGia",
+                id: id,
+                soluong: (res.data.getCodeGiamGiaById.soluong - 1)
+            });
+            
+            console.log("Update response:", updateRes.data);
+            if (updateRes.data.success) {
+                console.log(`Cập nhật thành công giảm giá ${id}`);
+            } else {
+                console.error(`Cập nhật thành công giảm giá ${id}`);
+            }
+        } else {
+            console.log("Không tìm thấy thông tin mã giảm");
+        }
+    } catch (error) {
+        console.error("updateMagiamgiaQuantity:", error.response ? error.response.data : error.message);
+    }
+}
+
 async function updateProductQuantity(product) {
     try {
-        if (product.maloai_id != 2) {
+        if (product.maloai_id !== 2) {
             const res = await axios.post('http://localhost/ClothingStoreWebsite_UsingPHP/app/controllers/checkoutController.php', {
                 action: "getProductSizeInform",
                 masp: product.id,

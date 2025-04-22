@@ -20,11 +20,11 @@
                 <div id="empty_cart">
                     <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/empty_cart.png" alt="Lỗi hiển thị">
                     <p>Chưa có sản phẩm trong giỏ hàng của bạn</p>
-                    <button>Tiếp tục mua sắm</button>
+                    <button class="continue-btn">Tiếp tục mua sắm</button>
                 </div>
             </div>
         </div>
-        <div class="cart-wrapper">
+        <div class="cart-wrapper" id="cart-wrapper">
             <!-- Ô chứa sản phẩm -->
             <div id="having-cart">
                 <!-- Nội dung giỏ hàng -->

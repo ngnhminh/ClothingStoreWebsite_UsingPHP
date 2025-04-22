@@ -20,7 +20,7 @@
                 <a href="ordermanagement.php"><li>📜 Quản lý đơn hàng</li></a>
                 <a href="customermanagement.php"><li>👥 Quản lý khách hàng</li></a>
                 <a href="khuyenmaipage.php"><li>🎟️ Quản lý khuyến mãi</li></a>
-                <a href="historypage.php"><li>📈 Lịch sử</li></a>
+                <!-- <a href="historypage.php"><li>📈 Lịch sử</li></a> -->
             </ul>
         </aside>
     
@@ -83,7 +83,6 @@
                             <th>Điểm tích lũy</th>
                             <th>Cấp bậc</th>
                             <th>Thông tin</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="customers-container">
@@ -141,6 +140,7 @@
                             <th>Mã hóa đơn</th>
                             <th>Ngày mua</th>
                             <th>Tổng tiền</th>
+                            <th>Địa chỉ</th>
                             <th>Chi tiết</th>
                         </tr>
                     </thead>

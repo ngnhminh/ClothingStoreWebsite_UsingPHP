@@ -169,9 +169,10 @@ table {
 .modal-content {
   background: #fff;
   width: 90%;
-  max-width: 600px;
+  max-width: 800px;
+  max-height: 800px;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   position: relative;
   animation: fadeInDown 0.3s ease;
   padding-top: 50px;
@@ -387,7 +388,7 @@ th, td {
 }
 
 .customer-table {
-  max-height: 400px;
+  max-height: 800px;
   overflow: hidden;
   position: relative;
 }
@@ -406,7 +407,7 @@ th, td {
 
 .customer-table tbody {
   display: block;
-  max-height: 300px;
+  max-height: 540px;
   overflow-y: auto;
 }
 
@@ -424,7 +425,7 @@ th, td {
 }
 
 .scroll-wrapper {
-  max-height: 300px;
+  max-height: 500px;
   overflow-y: auto;
   border: 1px solid #ccc;
 }

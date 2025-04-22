@@ -145,7 +145,7 @@
         </tr>
         <tr>
           <td>Mã giảm giá:</td>
-          <td class="checkout-price" id="checkout-price-discount" data-discountPrice = "0">0</td>
+          <td class="checkout-price" id="checkout-price-discount" data-discountPrice = "0" data-discountName = "" data-id = "0" >0</td>
         </tr>
         <tr>
           <td>Điểm tích lũy:</td>

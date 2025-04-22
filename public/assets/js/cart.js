@@ -57,10 +57,14 @@ function updateProductQuantity(productId, size, quantity, mamau = null) {
 window.onload = () => {
     const cartProducts = getAllProductsInCart();
     const cartItemList = document.getElementById("cart-item-list");
+
+    const cardwrapper = document.getElementById("cart-wrapper");
+    const emptycard = document.getElementById("empty-cart");
+
     cartItemList.innerHTML = "";
 
     const groupedProducts = {};
-
+    
     cartProducts.forEach(product => {
         const key = product.mamau
             ? `${product.id}-${product.size}-${product.mamau}`
@@ -72,6 +76,14 @@ window.onload = () => {
         groupedProducts[key].quantity += product.quantity;
     });
 
+    if(Object.keys(groupedProducts).length === 0){
+        cardwrapper.style.display = "none";
+        emptycard.style.display = "flex";
+    }else{
+        emptycard.style.display = "none";
+        cardwrapper.style.display = "flex";
+    }
+    
     Object.entries(groupedProducts).forEach(([key, product]) => {
         const discountedPrice = product.giamgia > 0
             ? product.gia - (product.gia * product.giamgia) / 100
@@ -149,7 +161,10 @@ checkoutbtn.addEventListener("click", () =>{
     window.location.href = "checkout.php";
 })
 
-const continuebtn = document.getElementById("continue-btn");
-continuebtn.addEventListener("click", () => {
-    window.location.href = "productpage.php";
+const continuebtns = Array.from(document.getElementsByClassName("continue-btn"));
+
+continuebtns.forEach(item => {
+    item.addEventListener("click", () => {
+        window.location.href = "productpage.php";
+    });
 });

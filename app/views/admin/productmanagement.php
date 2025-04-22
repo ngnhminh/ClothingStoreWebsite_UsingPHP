@@ -30,12 +30,12 @@
             </div>
             
             <div class="filter-bar">
-                <button id="za" value="Áo">Áo (25)</button>
-                <button value="Quần">Quần (25)</button>
-                <button value="Kính">Kính (25)</button>
-                <button value="Giày">Giày (25)</button>
+                <button id="za" value="Áo">Áo</button>
+                <button value="Quần">Quần</button>
+                <button value="Kính">Kính</button>
+                <button value="Giày">Giày</button>
                 <button value="All">Tất cả</button>
-                <button value="Block">Đồ khóa (25)</button>
+                <button value="Block">Đồ khóa</button>
                 <input type="text" placeholder="Nhập tên sản phẩm" id="search">
             </div>
 
@@ -105,6 +105,7 @@
                             <div id="product-type">
                                 <span>Loại:</span>
                                 <select name="product-type" id="product-type-selected">
+                                    <option selected value="">---</option>
                                     <option value="ao" data-type="0">Áo</option>
                                     <option value="quan" data-type="1">Quần</option>
                                     <option value="kinh" data-type="3">Kính</option>

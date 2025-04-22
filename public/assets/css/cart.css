@@ -1,15 +1,27 @@
-body{
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
     font-family: 'Baloo 2', cursive;
+
 }
 
-#empty_cart{
+
+#empty-cart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* hoặc 100vh nếu muốn chiếm toàn màn */
+}
+
+#empty_cart {
     font-family: 'Baloo 2', cursive;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 35px; /* Điều chỉnh khoảng cách giữa các phần tử */
-    margin-bottom: 70px;
+    gap: 35px;
 }
+
 
 #empty_cart p{
     font-size: 130%;

@@ -33,8 +33,8 @@
         <div class="ordermanagement-container">
             <div class="header">Quản lý đơn hàng</div>
             <div class="filter-bar">
-                <button class="status-btn" id="inprocessing">Đã xử lý (5)</button>
-                <button class="status-btn" id="done">Chưa xử lý (5)</button>
+                <button class="status-btn" id="inprocessing">Đã xử lý</button>
+                <button class="status-btn" id="done">Chưa xử lý</button>
                 <button class="status-btn" id="all">Tất cả</button>
                 <input  class="date-start" type="date">
                 <input class="date-end" type="date">
