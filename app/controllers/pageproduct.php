@@ -3,7 +3,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/ClothingStoreWebsite_UsingPHP/config/db.ph
 
 
 
- function getProducts() {
+function getProducts()
+{
     global $conn; // Sử dụng kết nối từ config.php
 
     $query = "SELECT 
@@ -29,7 +30,26 @@ INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id";
     return $products;
 }
 
- function getProductsbyprice($order = 'DESC') {
+function getProductsByDiscount()
+{
+    global $conn;
+    $query = "SELECT *
+            FROM sanpham
+            INNER JOIN mausanpham ON sanpham.id = mausanpham.id
+            INNER JOIN hinhanh ON mausanpham.mau_id = hinhanh.mau_sanpham_id
+            WHERE giamgia != 0;";
+
+    $result = $conn->query($query);
+    $products = [];
+    while ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
+
+    return $products;
+}
+
+function getProductsbyprice($order = 'DESC')
+{
     global $conn;
 
     $query = "SELECT s.id, s.tensp, s.gia, h.duongdananh 
@@ -48,7 +68,8 @@ INNER JOIN hinhanh h ON m.mau_id = h.mau_sanpham_id";
     return $products;
 }
 
-function getProductsByFilter($order = 'DESC', $maloai_id = null) {
+function getProductsByFilter($order = 'DESC', $maloai_id = null)
+{
     global $conn;
 
     $query = "SELECT * 
@@ -87,6 +108,3 @@ function getProductsByFilter($order = 'DESC', $maloai_id = null) {
 
     return $products;
 }
-
-
-?>

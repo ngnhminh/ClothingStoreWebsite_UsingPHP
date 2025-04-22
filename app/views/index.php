@@ -1,9 +1,16 @@
 <?php
+
 require_once '../../config/db.php';
+require_once __DIR__ . "/../controllers/pageproduct.php";
+
+$products = getProducts();
+$discountProducts = getProductsByDiscount();
+
 ?>
 
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +19,7 @@ require_once '../../config/db.php';
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Trang chủ</title>
 </head>
+
 <body>
     <header>
         <?php require 'header.php'; ?>
@@ -50,181 +58,32 @@ require_once '../../config/db.php';
                 </div>
                 <div class="section-content">
                     <div class="content-product-lists">
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-new">New</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
+                        <?php foreach ($products as $product) { ?>
+                            <div class="product-block-container">
+                                <div class="product-block">
+                                    <div class="product-img">
+                                        <div class="product-new">New</div>
+                                        <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
+                                        <a class="image-resize">
+                                            <img class="image-loop" src="<?php echo htmlspecialchars($product['duongdananh']); ?>" alt="<?php echo htmlspecialchars($product['tensp']); ?>" />
+                                        </a>
+                                    </div>
+                                    <div class="product-detail">
+                                        <div class="box-product-detail">
+                                            <h3 class="product-name"><?php echo htmlspecialchars($product['tensp']); ?></h3>
+                                            <div class="box-product-prices">
+                                                <p class="product-price">
+                                                    <span><?php echo number_format($product['gia'], 0, ',', '.'); ?>₫</span>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-new">New</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-new">New</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-new">New</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-new">New</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-new">New</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-new">New</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                <div class="product-new">New</div>
-                                <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>    
-                                <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image_den_1_ao-polo-nam-atelier-2401002_21f6daaabe864428b363e1acef40c447_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Polo Nam Atelier Ninomaxx 2401002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span>1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <?php } ?>
                     </div>
                     <div class="section-more">
-                        <a class="more-button">Xem tất cả</a>
+                        <a href="productpage.php" class="more-button">Xem tất cả</a>
                     </div>
                 </div>
             </div>
@@ -239,190 +98,34 @@ require_once '../../config/db.php';
                 </div>
                 <div class="section-content">
                     <div class="content-product-lists">
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
-                                        </div>
+                        <?php foreach ($discountProducts as $discountProduct) { ?>
+                            <div class="product-block-container">
+                                <div class="product-block">
+                                    <div class="product-img">
+                                        <div class="product-sale"><?php echo round((($discountProduct['gia'] - $discountProduct['giamgia']) / $discountProduct['gia']) * 100) ?>%</div>
+                                        <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
+                                        <a class="image-resize">
+                                            <img class="image-loop" src="<?php echo htmlspecialchars($discountProduct['duongdananh']); ?>" alt="<?php echo htmlspecialchars($discountProduct['tensp']); ?>" />
+                                        </a>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
+                                    <div class="product-detail">
+                                        <div class="box-product-detail">
+                                            <h3 class="product-name"><?php echo htmlspecialchars($discountProduct['tensp']); ?></h3>
+                                            <div class="box-product-prices">
+                                                <p class="product-price">
+                                                    <span class="discount-price"><?php echo number_format($discountProduct['giamgia'], 0, ',', '.'); ?>₫</span>
+                                                    <span class="origin-price"><?php echo number_format($discountProduct['gia'], 0, ',', '.'); ?>₫</span>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-block-container">
-                            <div class="product-block">
-                                <div class="product-img">
-                                    <div class="product-sale">-17%</div>
-                                    <button class="product-cart"><i class="fa-solid fa-cart-plus"></i></button>
-                                    <a class="image-resize">
-                                        <img class="image-loop" src="https://product.hstatic.net/200000525243/product/image-den-1-ao-so-mi-nam-n-m-2406002_05c85f00879843e3a3eea6bbbc565890_1024x1024.jpg" />
-                                    </a>
-                                </div>
-                                <div class="product-detail">
-                                    <div class="box-product-detail">
-                                        <h3 class="product-name">Áo Sơ Mi Nam N&M 2406002</h3>
-                                        <div class="box-product-prices">
-                                            <p class="product-price">
-                                                <span class="discount-price">1,000,000₫</span>
-                                                <span class="origin-price">1,199,000₫</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <?php } ?>
                     </div>
                     <div class="section-more">
-                        <a class="more-button">Xem tất cả</a>
+                        <a href="productpage.php" class="more-button">Xem tất cả</a>
                     </div>
                 </div>
             </div>
@@ -431,7 +134,8 @@ require_once '../../config/db.php';
     </main>
 
     <?php require 'footer.php'; ?>
-    
+
     <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/index.js"></script>
 </body>
+
 </html>
