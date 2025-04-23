@@ -77,6 +77,19 @@ $products = getProductsByFilter($order, $maloai_id);
     <?php require 'footer.php'; ?>
 
     <script>
+        function goToUserPage() {
+            let user = JSON.parse(localStorage.getItem("user"));
+            window.addEventListener('userUpdated', function() {
+                let userUpdated = JSON.parse(localStorage.getItem("user"));
+                console.log("Thông tin người dùng đã được cập nhật:", userUpdated);
+                user = userUpdated; // Cập nhật lại biến user toàn cục với dữ liệu mới
+            });
+            if (user) {
+                window.location.href = "userpage.php";
+            } else {
+                alert("Vui lòng đăng nhập");
+            }
+        }
         document.getElementById("filter-btn").addEventListener("click", function() {
             let currentOrder = this.getAttribute("data-order"); // Lấy trạng thái hiện tại
             let newOrder = currentOrder === "DESC" ? "ASC" : "DESC"; // Đảo trạng thái

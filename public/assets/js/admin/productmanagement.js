@@ -19,6 +19,11 @@ const addproduct_kinh = document.querySelectorAll(".size-option.addproduct-kinh"
 const addproduct_ao = document.querySelectorAll(".size-option.addproduct-ao");
 
 type.addEventListener("change", async function(){
+    if(type.value === ""){
+        const abc = document.getElementById("addproductsize-container");
+        abc.innerHTML = ``;
+    }
+
     if(type.value === "ao"){
         size_option.forEach(function (item) {
             item.style.display = "none";
@@ -1125,12 +1130,13 @@ function cleanAddInput(){
 
     // Reset select về mặc định (Áo)
     document.getElementById("product-type-selected").selectedIndex = 0;
-
+    let sizeContainer = document.querySelector("#changeproductsize-container");
+    let sizeOptions = sizeContainer.querySelectorAll(".size-option"); 
     // Reset size về 0
     sizeOptions.forEach(option => {
         const input = option.querySelector("input");
         input.value = 0;
-    });
+    }); 
 
     // Ẩn phần màu & ảnh màu nếu có bật
     document.getElementById("product-add-colornpic").style.display = "none";

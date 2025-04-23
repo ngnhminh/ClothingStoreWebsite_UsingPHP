@@ -93,3 +93,5 @@ function AutoSlideDot(){
     }
     y[dotnum-1].style.backgroundColor="grey";
 }
+
+

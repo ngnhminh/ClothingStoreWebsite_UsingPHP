@@ -2,6 +2,11 @@ body{
     font-family: 'Baloo 2', cursive;
 }
 
+.header {
+    top: 0;
+    left: 0;
+}
+
 .user-info {
     display: flex;
     align-items: center;
@@ -22,9 +27,12 @@ body{
 }
 
 .infoproduct_container {
+    margin-top: 150px;
+    padding: 30px;
+}
+
+.infoproduct-content {
     display: flex;
-    justify-content: space-between;
-    padding: 20px;
 }
 
 .wishlist {
@@ -34,6 +42,19 @@ body{
     border-radius: 5px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
     margin-right:15px;
+}
+
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 table {
@@ -86,6 +107,7 @@ td img {
 
 /* Thông tin người dùng */
 .user-info-box {
+    line-height: 30px;
     width: 28%;
     background: white;
     padding: 15px;
@@ -101,7 +123,7 @@ td img {
 .user-info-box button {
     display: block;
     width: 100%;
-    margin-top: 10px;
+    margin: 10px 0;
     padding: 10px;
     border: none;
     cursor: pointer;
@@ -109,12 +131,18 @@ td img {
 
 .change-password {
     background: #007bff;
+    border-radius: 4px;
     color: white;
     font-family: 'Baloo 2', cursive;
 }
 
+.change-password:hover {
+    background: #0569d6;
+}
+
 .order-history {
     background: #28a745;
+    border-radius: 4px;
     color: white;
     font-family: 'Baloo 2', cursive;
 }
@@ -140,4 +168,113 @@ td img {
 
 #history-product-navbar{
     display: none;
+}
+
+/* Canh giữa cột số lượng và giá tiền */
+.user-productlist-container td:nth-child(3),
+.user-productlist-container td:nth-child(4),
+thead tr th:nth-child(3),
+thead tr th:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.invoice {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+.product-list {
+    margin-bottom: 20px;
+}
+
+.product {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.product img {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-name {
+    font-weight: bold;
+    font-family: 'Baloo 2', cursive;
+}
+
+.product-details {
+    font-size: 12px;
+    color: gray;
+}
+
+.product-price {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-right: 5px;
+    font-weight: lighter;
+}
+
+.discount {
+    color: green;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.new-price {
+    font-weight: bold;
+}
+
+hr {
+    border: 0.5px solid #ddd;
+    margin: 15px 0;
+}
+
+.summary p {
+    display: flex;
+    justify-content: space-between;
+    color: gray;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.processed {
+    color: green;
+    font-weight: bold;
+}
+
+#daxuly{
+    color: green;
+    font-weight: bold;
+}
+
+#chuaxuly {
+    color: red;
+    font-weight: bold;
+}
+
+.total {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.total span {
+    color: #2a9dcc;
+    font-family: 'Baloo 2', cursive;
 }

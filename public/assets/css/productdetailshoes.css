@@ -16,12 +16,16 @@ body {
 
 .product-images-shoes {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: column; 
+    gap: 10px; 
+    align-items: center;
+    margin-right: 30px;
+    gap: 17px;
 }
 
+
 .product-images-shoes img {
-    width: 80px;
+    width: 90px;
     height: auto;
     cursor: pointer;
     border-radius: 5px;
@@ -29,8 +33,9 @@ body {
 }
 
 .product-main-image img {
-    width: 400px;
-    border-radius: 10px;
+    width: 450px;
+    height: auto;
+    border-radius: 8px;  
 }
 
 .product-details-shoes {
@@ -41,11 +46,6 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.product-details-shoes h2 {
-    font-size: 22px;
-    text-align: center;
-}
-
 .color-options img {
     width: 50px;
     margin-right: 5px;
@@ -53,7 +53,7 @@ body {
     border-radius: 5px;
 }
 
-.add-to-cart-shoes, .buy-now-shoes {
+.add-to-cart, .buy-now {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
@@ -62,40 +62,51 @@ body {
     border-radius: 5px;
 }
 
-.add-to-cart-shoes {
+.add-to-cart {
     background: black;
     color: white;
 }
 
-.add-to-cart-shoes:active, .buy-now-shoes button:active {
+.add-to-cart:active, .buy-now button:active {
     transform: translateY(1px);
     box-shadow: inset 0 2px grey;
     transition: all 0.1s ease-in-out; 
 }
 
-.related-products-container-shoes {
-    text-align: center;
-    padding: 20px;
-}
-
-.related-products-shoes {
+#related-products {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 20px ;
+    flex-wrap: wrap;
 }
 
-.product-item-shoes img {
-    width: 120px;
-    border-radius: 5px;
+.product-item {
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.related-button-shoes {
-    border: none;
-    background: transparent;
-    font-size: 24px;
-    cursor: pointer;
+.product-item img {
+    width: 100%;
+    height: auto;
+    max-height: 60%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 8px;
+}
+
+.product-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
 }
 
 #sizenlike {
@@ -129,6 +140,17 @@ body {
     width: 15px;
 }
 
+#likebtn {
+    color: black;
+    background: #f3f3f3;
+    transition: 0.3s;
+}
+
+#likebtn.active {
+    color: white;
+    background: grey;
+}
+
 #numberofsize{
     margin-right: 7px;
 }
@@ -158,16 +180,44 @@ button:active {
     color: white;
 }
 
-.product-inform{
-    margin-left: 35px;
-    width: 100%;
+#product-inform {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 15px;
 }
 
-.sold-out {
+#product-inform li {
+    min-width: 150px; /* chiều dài tối thiểu */
+    max-width: 100%; /* không vượt quá chiều rộng cha */
+    word-wrap: break-word; /* tự xuống dòng nếu quá dài */
+    padding: 3px;
+}
+
+#almost-sold-out {
     color: #ff6a00;
     font-weight: bold;
     padding: 5px 10px;
     background-color: #fff5e6;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 10px;
+}
+
+#sold-out {
+    color: #FF0000;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #FDDCD3;
+    display: inline-block;
+    border-radius: 5px;
+    font-size: 10px;
+}
+
+#instock {
+    color: #019A01;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #E0F8E0;
     display: inline-block;
     border-radius: 5px;
     font-size: 10px;
@@ -178,13 +228,86 @@ button:active {
     margin-top: 50px;
 }
 
-#likebtn {
-    color: black;
-    background: #f3f3f3;
-    transition: 0.3s;
+
+#product-name {
+    padding: 0 16px; /* khoảng cách bên trái và phải */
+    margin: 9px 0;  /* khoảng cách trên và dưới */
 }
 
-#likebtn.active {
+#product-name h2 {
+    margin: 0; /* xoá margin mặc định của h2 nếu muốn */
+}
+
+#almost-sold-out, #sold-out, #instock, #size-chart-shirts, #size-chart-pants{
+    display: none;
+}
+
+.color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.color-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: border 0.3s ease, transform 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.color-box.selected {
+    border: 2px solid #000;
+    transform: scale(1.1); /* Tăng kích thước khi chọn */
+}
+
+.color-box:hover {
+    transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: gray;
+    margin-right: 5px;
+}
+
+.discount {
+    display: inline-block;
+    background-color: green;
     color: white;
-    background: grey;
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    margin-right: 3px;
+}
+
+.new-price{
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 3px;
+}
+
+.related-products-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.related--products {
+    max-width: 1200px;       /* hoặc bất kỳ kích thước nào bạn muốn */
+    margin: 0 auto;           /* Căn giữa khối theo chiều ngang */
+    padding: 20px;            /* Cho đẹp hơn */
+}
+
+.related-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
 }

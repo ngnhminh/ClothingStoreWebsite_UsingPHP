@@ -1,13 +1,13 @@
-.pagetitle{
+.pagetitle {
     position: relative;
     font-family: 'Baloo 2', cursive;
     font-size:xx-large;
-    margin-top: 2%;
-    margin-left:15%;
-    font-weight:800;
+    margin-top: 150px;
+    margin-left: 135px;
+    font-weight: 800;
 }
 
-header{
+header {
     position:sticky;
     top:0;
     z-index: 1000;

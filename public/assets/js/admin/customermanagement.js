@@ -1,11 +1,14 @@
+function formatCurrencyVND(value) {
+    return value.toLocaleString('vi-VN') + 'đ';
+}
 document.addEventListener("DOMContentLoaded", function () {
     const searchBtn = document.querySelector(".search-btn");
     const searchInput = document.querySelector("input[type='text']");
     const customerTable = document.getElementById("customers-container");
     const customerModal = document.getElementById("customerModal");
     const closeModalBtn = document.querySelector(".close-btn");
-    const editBtn = document.querySelector(".fix-btn");
-    const saveBtn = document.querySelector(".save-btn");
+    // const editBtn = document.querySelector(".fix-btn");
+    // const saveBtn = document.querySelector(".save-btn");
     const createBtn = document.querySelector(".create-btn");
     const createModal = document.querySelector(".create-kh");
 
@@ -26,11 +29,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const customer = result.data;
     
                 // Hiển thị thông tin khách hàng trong modal
-                document.getElementById("modal-name").textContent = customer.hoten;
-                document.getElementById("modal-phone").textContent = customer.sdt;
-                document.getElementById("modal-email").textContent = customer.email;
-                document.getElementById("modal-address").textContent = customer.diachi;
-    
+                document.getElementById("username").textContent = customer.tentaikhoan;
+                document.getElementById("fullname").textContent = customer.hoten;
+                document.getElementById("sdt").textContent = customer.sdt;
+                document.getElementById("email").textContent = customer.email;
+
+                document.getElementById("history-btn").onclick = () => showInvoiceList(makh);
+
+                document.getElementById("customerModal").style.display = "flex";
                 // Hiển thị modal
                 customerModal.style.display = "flex";
             } else {
@@ -41,6 +47,73 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
+    // Đóng modal
+    window.closeModal = function () {
+        document.getElementById("customerModal").style.display = "none";
+    };
+
+    // Hiển thị danh sách hóa đơn
+    window.showInvoiceList = async function (makh) {
+        const result = await sendRequest("getInvoicesByCustomer", { makh });
+
+        const listContainer = document.getElementById("invoice-list-body");
+        listContainer.innerHTML = "";
+
+        if (result && result.status === "success" && result.data) {
+            result.data.forEach(invoice => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${invoice.id}</td>
+                    <td>${invoice.ngay}</td>
+                    <td>${formatCurrencyVND(invoice.tongtien)}</td>
+                    <td>${invoice.diachi}</td>
+                    <td><button onclick="showInvoiceDetail(${invoice.id})">Xem</button></td>
+                `;
+                listContainer.appendChild(row);
+            });
+        } else {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td colspan="4">Không có hóa đơn nào</td>`;
+            listContainer.appendChild(row);
+        }
+
+        document.getElementById("invoiceModal").style.display = "flex";
+    };
+
+    // Hiển thị chi tiết hóa đơn
+    window.showInvoiceDetail = async function (mahd) {
+        const result = await sendRequest("getInvoiceDetail", { mahd });
+
+        const detailContainer = document.getElementById("invoice-detail-body");
+        detailContainer.innerHTML = "";
+
+        if (result && result.status === "success" && result.data) {
+            result.data.forEach(item => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.tensp}</td>
+                    <td>${item.soluong}</td>
+                    <td>${formatCurrencyVND(item.gia)}</td>
+                `;
+                detailContainer.appendChild(row);
+            });
+        } else {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td colspan="3">Không có chi tiết hóa đơn</td>`;
+            detailContainer.appendChild(row);
+        }
+
+        document.getElementById("invoiceDetailModal").style.display = "flex";
+    };
+
+    // Đóng các modal phụ
+    window.closeInvoiceModal = function () {
+        document.getElementById("invoiceModal").style.display = "none";
+    };
+    window.closeInvoiceDetailModal = function () {
+        document.getElementById("invoiceDetailModal").style.display = "none";
+    };
+    
     window.openCreate = function () {
         createModal.style.display = "flex";
     };
@@ -61,40 +134,47 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Hàm tìm kiếm khách hàng
-    searchBtn.addEventListener("click", function () {
-        let filter = searchInput.value.toLowerCase();
-        let rows = customerTable.getElementsByTagName("tr");
+    const searchUser = document.getElementById("searchUser");
 
-        for (let i = 0; i < rows.length; i++) {
-            let cells = rows[i].getElementsByTagName("td");
-            let match = false;
-            for (let j = 0; j < cells.length; j++) {
-                if (cells[j].textContent.toLowerCase().includes(filter)) {
-                    match = true;
-                    break;
-                }
-            }
-            rows[i].style.display = match ? "table-row" : "none";
+    // Hàm tìm kiếm khách hàng
+    searchUser.addEventListener("input", async function () {
+        const tenkhachhang = searchUser.value.trim();
+        const result = await sendRequest("getCustomerByName", { tenkhachhang });
+        if (result && result.status === "success" && result.data) {
+            renderCustomers(result.data);
         }
     });
 
-
-
+    
     // Lưu thông tin khách hàng
-    saveBtn.addEventListener("click", function () {
-        nameField.contentEditable = false;
-        phoneField.contentEditable = false;
-        emailField.contentEditable = false;
-        addressField.contentEditable = false;
-        passwordField.contentEditable = false;
+    // saveBtn.addEventListener("click", function () {
+    //     nameField.contentEditable = false;
+    //     phoneField.contentEditable = false;
+    //     emailField.contentEditable = false;
+    //     addressField.contentEditable = false;
+    //     passwordField.contentEditable = false;
 
-        nameField.style.border = "none";
-        phoneField.style.border = "none";
-        emailField.style.border = "none";
-        addressField.style.border = "none";
-        passwordField.style.border = "none";
-    });
+    //     nameField.style.border = "none";
+    //     phoneField.style.border = "none";
+    //     emailField.style.border = "none";
+    //     addressField.style.border = "none";
+    //     passwordField.style.border = "none";
+    // });
+
+    // document.getElementById("userRank").addEventListener("change", function () {
+    //     const selectedRank = this.value;
+    //     filterCustomersByRank(selectedRank);
+    // });
+    // Hiển thị thông báo
+
+    function showAlert(words) {
+        Swal.fire({
+            title: 'Thông báo',
+            text: words,
+            icon: 'info',
+            confirmButtonText: 'Đóng'
+        });
+    }
 
     createBtn.addEventListener("click", createCustomer);
 
@@ -106,19 +186,33 @@ document.addEventListener("DOMContentLoaded", function () {
             hoten: document.querySelector(".name").value.trim(),
             sdt: document.querySelector(".phone").value.trim(),
             email: document.querySelector(".email").value.trim(),
-            address: document.querySelector(".address").value.trim(),
         };
 
         if (!data.username || !data.password || !data.hoten || !data.sdt) {
             alert("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
-
-        const result = await sendRequest("createCustomer", data);
-        if (result && result.status === "success") {
-            alert(result.message);
-            window.closeCreate(); // Đóng modal sau khi tạo thành công
-            fetchCustomers();
+        console.log()
+        const tennguoidung = data.username;
+        const checkUsername = await sendRequest("getUserByUsername", {tennguoidung});
+        if (checkUsername && checkUsername.data != null) {
+            showAlert("Tên tài khoản đã tồn tại");
+            return;
+        }
+        else{
+            const email = data.email;
+            const checkEmail = await sendRequest("getUserByEmail", {email});
+            if (checkEmail && checkEmail.data != null) {
+                showAlert("Tên tài khoản đã tồn tại");
+                return;
+            }else{
+                const result = await sendRequest("createUserAndCustomer", data);
+                if (result && result.status === "success") {
+                    alert(result.message);
+                    window.closeCreate(); // Đóng modal sau khi tạo thành công
+                fetchCustomers();
+                }
+             }
         }
     }
 
@@ -194,7 +288,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${row.diemtichluy}</td>
                     <td>${rank}</td>
                     <td><a href="#" onclick="openModal(${row.makh})">Thông tin đơn</a></td>
-                    <td><button onclick="deleteCustomer(${row.makh})">X</button></td>
                 </tr>
             `;
         });

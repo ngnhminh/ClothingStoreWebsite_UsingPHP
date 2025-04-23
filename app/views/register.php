@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
     <title>Đăng kí</title>
 </head>
+
 <body>
     <header>
         <?php require 'header.php'; ?>
     </header>
     <main>
         <div class="signup-container">
-            <div  id="background_image">
+            <div id="background_image">
                 <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/background2.jpg" alt="Lỗi hiển thị">
             </div>
             <div class="signup-box">
@@ -24,7 +26,7 @@
 
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
-                    
+
                     <label for="user">Tài khoản</label>
                     <input type="text" id="user" name="user" required>
 
@@ -38,18 +40,16 @@
                     <input type="password" id="confirm_password" name="confirm_password" required>
 
                     <button type="submit" class="signup-button">Đăng Ký</button>
-                    <button type="button" class="facebook-signup">Đăng ký với Facebook</button>
                 </form>
                 <a href="login.php">Đã có tài khoản? Đăng nhập</a>
             </div>
         </div>
     </main>
-    <footer>
-        <?php require 'footer.php'; ?>
-    </footer>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php require 'footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/register.js"></script>
+    <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/register.js"></script>
 </body>
+
 </html>

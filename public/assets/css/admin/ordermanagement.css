@@ -42,6 +42,11 @@ body {
     gap: 10px;
 }
 
+.left-filter-bar, .right-filter-bar {
+  display: flex;
+  gap: 10px;
+}
+
 .filter-bar button, .filter-bar input {
     padding: 8px 12px;
     border: 1px solid #ccc;
@@ -438,3 +443,11 @@ th, td {
     border-right: none;
 }
 
+.status.red {
+  color: red;
+  font-weight: bold;
+}
+.status.green {
+  color: green;
+  font-weight: bold;
+}

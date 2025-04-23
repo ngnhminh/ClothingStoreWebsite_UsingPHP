@@ -97,6 +97,7 @@
                             <div id="product-type">
                                 <span>Loại:</span>
                                 <select name="product-type" id="product-type-selected">
+                                    <option selected value="">---</option>
                                     <option value="ao" data-type="0">Áo</option>
                                     <option value="quan" data-type="1">Quần</option>
                                     <option value="kinh" data-type="3">Kính</option>

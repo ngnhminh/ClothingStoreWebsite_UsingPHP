@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hóa đơn</title>
-    <link rel="stylesheet" href="/public/assets/css/purchased_order_detail.css">
+    <link rel="stylesheet" href="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/css/purchased_order_detail.css">
     
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
@@ -12,7 +12,7 @@
     <div class="invoice">
         <div class="product-list">
             <div class="product">
-                <img src="/public/assets/images/shirt.png" alt="Product">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/shirt.png" alt="Product">
                 <div class="product-info">
                     <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
                     <p class="product-details">Size: M &nbsp; SL: 2</p>
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="product">
-                <img src="/public/assets/images/shirt.png" alt="Product">
+                <img src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/images/shirt.png" alt="Product">
                 <div class="product-info">
                     <p class="product-name">Distressed Double Knee Denim Pants Brown</p>
                     <p class="product-details">Size: M &nbsp; SL: 2</p>

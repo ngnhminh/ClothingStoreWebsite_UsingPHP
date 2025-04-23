@@ -88,3 +88,15 @@ body {
     height: 16px;
     border-radius: 100%;
 }
+
+#welcome-text{
+    margin-right: 30px;
+}
+
+#user-info{
+    display: inline-block;
+}
+
+#in4-container{
+    cursor: pointer;
+}

@@ -1,21 +1,40 @@
 window.onload = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const authbutton = document.getElementById("auth-buttons");
-    const userinfo = document.getElementById("user-info");
-    const welcomeholder = document.getElementById("welcome-text");
+    let user = JSON.parse(localStorage.getItem("user"));
+    const authButton = document.getElementById("auth-buttons");
+    const userInfo = document.getElementById("user-info");
+    const welcomeText = document.getElementById("welcome-text");
+
+    window.addEventListener('userUpdated', function() {
+        let userUpdated = JSON.parse(localStorage.getItem("user"));
+        console.log("Thông tin người dùng đã được cập nhật:", userUpdated);
+        user = userUpdated; // Cập nhật lại biến user toàn cục với dữ liệu mới
+    });
 
     if (!user) {
-        authbutton.style.display = "block";
-        userinfo.style.display = "none";
+        authButton.style.display = "block";
+        userInfo.style.display = "none";
     } else {
-        authbutton.style.display = "none";
-        userinfo.style.display = "block";
-        welcomeholder.innerText = user.tentaikhoan;
+        authButton.style.display = "none";
+        userInfo.style.display = "block";
+        welcomeText.innerText = user.tentaikhoan;
     }
 };
 
+function goToUserPage() {
+    let user = JSON.parse(localStorage.getItem("user"));
+    window.addEventListener('userUpdated', function() {
+        let userUpdated = JSON.parse(localStorage.getItem("user"));
+        console.log("Thông tin người dùng đã được cập nhật:", userUpdated);
+        user = userUpdated; // Cập nhật lại biến user toàn cục với dữ liệu mới
+    });
+    if (user) {
+        window.location.href = "userpage.php";
+    } else {
+        alert("Vui lòng đăng nhập!");
+    }
+}
 
-function logout(){
+function logout() {
     localStorage.removeItem("user");
-    location.reload();
+    window.location.href = "http://localhost/ClothingStoreWebsite_UsingPHP/app/views/index.php";
 }

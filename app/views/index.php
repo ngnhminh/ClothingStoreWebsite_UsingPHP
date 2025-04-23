@@ -136,6 +136,7 @@ $discountProducts = getProductsByDiscount();
     <?php require 'footer.php'; ?>
 
     <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/index.js"></script>
+    <script src="http://localhost/ClothingStoreWebsite_UsingPHP/public/assets/js/header.js"></script>
 </body>
 
 </html>

@@ -13,6 +13,10 @@ input:focus {
   outline: none;
 }
 
+select {
+  border-radius: 4px;
+}
+
 .customermanagement-container {
     width: 100%;
     background: #ddd;
@@ -108,6 +112,10 @@ table {
   z-index: 9999;
 }
 
+.swal2-container {
+  z-index: 10000 !important;
+}
+
 .create-content {
   background: #fff;
   width: 90%;
@@ -135,11 +143,13 @@ table {
 .modal-content {
   background: #fff;
   width: 90%;
-  max-width: 600px;
+  max-width: 800px;
+  max-height: 800px;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   position: relative;
   animation: fadeInDown 0.3s ease;
+  padding-top: 50px;
 }
 
 @keyframes fadeInDown {
@@ -358,3 +368,76 @@ th, td {
     border-right: none;
 }
 
+.customer-table {
+  max-height: 800px;
+  overflow: hidden;
+  position: relative;
+}
+
+.customer-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.customer-table thead {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.customer-table tbody {
+  display: block;
+  max-height: 540px;
+  overflow-y: auto;
+}
+
+.customer-table thead tr,
+.customer-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.customer-table th,
+.customer-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.scroll-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+.scroll-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scroll-table thead {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.scroll-table th, .scroll-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  min-width: 120px;
+}
+
+.scroll-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.scroll-table thead tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}

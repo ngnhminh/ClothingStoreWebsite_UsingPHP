@@ -173,17 +173,6 @@
     margin-bottom: 5px;
   }
   
-  .product-price {
-    font-weight: bold;
-    color: #28a745;
-  }
-  
-  .price-discount {
-    text-decoration: line-through;
-    color: #999;
-    margin-right: 5px;
-  }
-  
   /* Mã giảm giá, điểm tích lũy */
   .discount-box {
     background: #f9f9f9;
@@ -360,4 +349,29 @@
 
 .checkout-cart::-webkit-scrollbar-thumb:hover {
     background-color: #555;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: gray;
+  margin-right: 5px;
+  font-size: 13px;
+}
+
+.discount {
+  display: inline-block;
+  background-color: green;
+  color: white;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  margin-right: 3px;
+}
+
+.new-price{
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 3px;
 }
