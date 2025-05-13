@@ -46,7 +46,7 @@ $products = getProductsByFilter($order, $maloai_id);
                 <div class="section-content">
                     <div class="content-product-lists">
                         <?php foreach ($products as $product) { ?>
-                            <div class="product-block-container">
+                            <div class="product-block-container" data-masp="<?php echo htmlspecialchars($product['id']); ?>" data-loai="<?php echo htmlspecialchars($product['maloai_id']); ?>">
                                 <div class="product-block">
                                     <div class="product-img">
                                         <div class="product-new">New</div>
@@ -115,7 +115,7 @@ $products = getProductsByFilter($order, $maloai_id);
         });
 
         // Hiệu ứng click vào sản phẩm (nếu có trang chi tiết thì chuyển trang)
-        document.querySelectorAll(".product-card").forEach(card => {
+        document.querySelectorAll(".product-block-container").forEach(card => {
             card.addEventListener("mousedown", function() {
                 card.style.transform = "translateY(2px)";
                 card.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
