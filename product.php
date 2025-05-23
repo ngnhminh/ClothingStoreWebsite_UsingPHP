@@ -1,6 +1,7 @@
 <?php require_once('header.php'); ?>
 
 <?php
+
 if(!isset($_REQUEST['id'])) {
     header('location: index.php');
     exit;
@@ -25,8 +26,6 @@ foreach($result as $row) {
     $p_description = $row['p_description'];
     $p_short_description = $row['p_short_description'];
     $p_feature = $row['p_feature'];
-    $p_condition = $row['p_condition'];
-    $p_return_policy = $row['p_return_policy'];
     $p_total_view = $row['p_total_view'];
     $p_is_featured = $row['p_is_featured'];
     $p_is_active = $row['p_is_active'];
@@ -126,7 +125,7 @@ if(isset($_POST['form_add_to_cart'])) {
 		$current_p_qty = $row['p_qty'];
 	}
 	if($_POST['p_qty'] > $current_p_qty):
-		$temp_msg = 'Sorry! There are only '.$current_p_qty.' item(s) in stock';
+		$temp_msg = 'Xin lỗi quý khách ! Sản phẩm trong kho chỉ còn '.$current_p_qty.', Tạm hết hàng xin vui lòng quay lại sau.';
 		?>
 		<script type="text/javascript">alert('<?php echo $temp_msg; ?>');</script>
 		<?php
@@ -179,7 +178,7 @@ if(isset($_POST['form_add_to_cart'])) {
             }
         }
         if($added == 1) {
-           $error_message1 = 'This product is already added to the shopping cart.';
+           $error_message1 = 'Đã thêm sản phẩm này vào giỏ hàng';
         } else {
 
             $i=0;
@@ -459,9 +458,9 @@ if($success_message1 != '') {
                                 <span style="font-size:14px;"><?php echo LANG_VALUE_54; ?></span><br>
                                 <span>
                                     <?php if($p_old_price!=''): ?>
-                                        <del><?php echo LANG_VALUE_1; ?><?php echo $p_old_price; ?></del>
+                                        <del><?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($p_old_price); ?></del>
                                     <?php endif; ?> 
-                                        <?php echo LANG_VALUE_1; ?><?php echo $p_current_price; ?>
+                                        <?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($p_current_price); ?>
                                 </span>
                             </div>
                             <input type="hidden" name="p_current_price" value="<?php echo $p_current_price; ?>">
@@ -475,10 +474,10 @@ if($success_message1 != '') {
                                 <input type="submit" value="<?php echo LANG_VALUE_154; ?>" name="form_add_to_cart">
 							</div>
                             </form>
-							<div class="share">
+							<!-- <div class="share">
                                 <?php echo LANG_VALUE_58; ?> <br>
 								<div class="sharethis-inline-share-buttons"></div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 
@@ -488,8 +487,6 @@ if($success_message1 != '') {
 							<ul class="nav nav-tabs" role="tablist">
 								<li role="presentation" class="active"><a href="#description" aria-controls="description" role="tab" data-toggle="tab"><?php echo LANG_VALUE_59; ?></a></li>
 								<li role="presentation"><a href="#feature" aria-controls="feature" role="tab" data-toggle="tab"><?php echo LANG_VALUE_60; ?></a></li>
-                                <li role="presentation"><a href="#condition" aria-controls="condition" role="tab" data-toggle="tab"><?php echo LANG_VALUE_61; ?></a></li>
-                                <li role="presentation"><a href="#return_policy" aria-controls="return_policy" role="tab" data-toggle="tab"><?php echo LANG_VALUE_62; ?></a></li>
                                <!-- <li role="presentation"><a href="#review" aria-controls="review" role="tab" data-toggle="tab"><?php echo LANG_VALUE_63; ?></a></li> -->
 							</ul>
 
@@ -513,28 +510,6 @@ if($success_message1 != '') {
                                             echo LANG_VALUE_71;
                                         } else {
                                             echo $p_feature;
-                                        }
-                                        ?>
-                                    </p>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="condition" style="margin-top: -30px;">
-                                    <p>
-                                        <?php
-                                        if($p_condition == '') {
-                                            echo LANG_VALUE_72;
-                                        } else {
-                                            echo $p_condition;
-                                        }
-                                        ?>
-                                    </p>
-                                </div>
-                                <div role="tabpanel" class="tab-pane" id="return_policy" style="margin-top: -30px;">
-                                    <p>
-                                        <?php
-                                        if($p_return_policy == '') {
-                                            echo LANG_VALUE_73;
-                                        } else {
-                                            echo $p_return_policy;
                                         }
                                         ?>
                                     </p>
@@ -681,10 +656,10 @@ if($success_message1 != '') {
                             <div class="text">
                                 <h3><a href="product.php?id=<?php echo $row['p_id']; ?>"><?php echo $row['p_name']; ?></a></h3>
                                 <h4>
-                                    <?php echo LANG_VALUE_1; ?><?php echo $row['p_current_price']; ?> 
+                                    <?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($row['p_current_price']); ?> 
                                     <?php if($row['p_old_price'] != ''): ?>
                                     <del>
-                                        <?php echo LANG_VALUE_1; ?><?php echo $row['p_old_price']; ?>
+                                        <?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($row['p_old_price']); ?>
                                     </del>
                                     <?php endif; ?>
                                 </h4>

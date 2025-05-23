@@ -395,7 +395,7 @@ foreach ($result as $row) {
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);		
 							foreach ($result as $row) {
 								$about_title = $row['about_title'];
-								$faq_title = $row['faq_title'];
+								// $faq_title = $row['faq_title'];
 								$blog_title = $row['blog_title'];
 								$contact_title = $row['contact_title'];
 								$pgallery_title = $row['pgallery_title'];
@@ -404,7 +404,7 @@ foreach ($result as $row) {
 							?>
 
 							<li><a href="about.php"><?php echo $about_title; ?></a></li>
-							<li><a href="faq.php"><?php echo $faq_title; ?></a></li>
+							<!-- <li><a href="faq.php"><?php echo $faq_title; ?></a></li> -->
 
 							<li><a href="contact.php"><?php echo $contact_title; ?></a></li>
 						</ul>

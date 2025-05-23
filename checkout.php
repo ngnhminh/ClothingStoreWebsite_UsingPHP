@@ -122,20 +122,20 @@ if(!isset($_SESSION['cart_p_id'])) {
                             <td><?php echo $arr_cart_p_name[$i]; ?></td>
                             <td><?php echo $arr_cart_size_name[$i]; ?></td>
                             <td><?php echo $arr_cart_color_name[$i]; ?></td>
-                            <td><?php echo LANG_VALUE_1; ?><?php echo $arr_cart_p_current_price[$i]; ?></td>
+                            <td><?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($arr_cart_p_current_price[$i]); ?></td>
                             <td><?php echo $arr_cart_p_qty[$i]; ?></td>
                             <td class="text-right">
                                 <?php
                                 $row_total_price = $arr_cart_p_current_price[$i]*$arr_cart_p_qty[$i];
                                 $table_total_price = $table_total_price + $row_total_price;
                                 ?>
-                                <?php echo LANG_VALUE_1; ?><?php echo $row_total_price; ?>
+                                <?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($row_total_price); ?>
                             </td>
                         </tr>
                         <?php endfor; ?>           
                         <tr>
                             <th colspan="7" class="total-text"><?php echo LANG_VALUE_81; ?></th>
-                            <th class="total-amount"><?php echo LANG_VALUE_1; ?><?php echo $table_total_price; ?></th>
+                            <th class="total-amount"><?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($table_total_price); ?></th>
                         </tr>
                         <?php
                         $statement = $pdo->prepare("SELECT * FROM tbl_shipping_cost WHERE country_id=?");
@@ -165,7 +165,7 @@ if(!isset($_SESSION['cart_p_id'])) {
                                 <?php
                                 $final_total = $table_total_price+$shipping_cost;
                                 ?>
-                                <?php echo LANG_VALUE_1; ?><?php echo $final_total; ?>
+                                <?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($final_total); ?>
                             </th>
                         </tr>
                     </table> 
@@ -173,118 +173,130 @@ if(!isset($_SESSION['cart_p_id'])) {
 
                 
 
-                <div class="billing-address">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h3 class="special"><?php echo LANG_VALUE_162; ?></h3>
-                            <table class="table table-responsive table-bordered bill-address">
-                                <tr>
-                                    <td><?php echo LANG_VALUE_102; ?></td>
-                                    <td><?php echo $_SESSION['customer']['cust_name']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td><?php echo LANG_VALUE_104; ?></td>
-                                    <td><?php echo $_SESSION['customer']['cust_phone']; ?></td>
-                                </tr>
-                                <tr>
-                                    <td><?php echo LANG_VALUE_106; ?></td>
-                                    <td>
-                                        <?php
-                                        $statement = $pdo->prepare("SELECT * FROM tbl_country WHERE country_id=?");
-                                        $statement->execute(array($_SESSION['customer']['cust_country']));
-                                        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-                                        foreach ($result as $row) {
-                                            echo $row['country_name'];
-                                        }
-                                        ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><?php echo LANG_VALUE_105; ?></td>
-                                    <td>
-                                        <?php echo nl2br($_SESSION['customer']['cust_address']); ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><?php echo LANG_VALUE_107; ?></td>
-                                    <td><?php echo $_SESSION['customer']['cust_city']; ?></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>                    
-                </div>
+                <form action="<?php echo BASE_URL; ?>payment/bank/init.php" method="post" id="checkoutForm">
 
-                <div class="cart-buttons">
-                    <ul>
-                        <li><a href="cart.php" class="btn btn-primary"><?php echo LANG_VALUE_21; ?></a></li>
-                    </ul>
-                </div>
-
-				<div class="clear"></div>
-                <h3 class="special"><?php echo LANG_VALUE_33; ?></h3>
-                <div class="row">
-                    
-                    	<?php
-		                $checkout_access = 1;
-		                if(
-		                    ($_SESSION['customer']['cust_name']=='') ||
-		                    ($_SESSION['customer']['cust_phone']=='') ||
-		                    ($_SESSION['customer']['cust_country']=='') ||
-		                    ($_SESSION['customer']['cust_address']=='') ||
-		                    ($_SESSION['customer']['cust_city']=='')
-		                ) {
-		                    $checkout_access = 0;
-		                }
-		                ?>
-		                <?php if($checkout_access == 0): ?>
-		                	<div class="col-md-12">
-				                <div style="color:red;font-size:22px;margin-bottom:50px;">
-			                        You must have to fill up all the billing and shipping information from your dashboard panel in order to checkout the order. Please fill up the information going to <a href="customer-billing-shipping-update.php" style="color:red;text-decoration:underline;">this link</a>.
-			                    </div>
-	                    	</div>
-	                	<?php else: ?>
-		                	<div class="col-md-4">
-
-	                            <form action="<?php echo BASE_URL; ?>payment/bank/init.php" method="post" id="checkoutForm">
-                                    <div class="row">
-                                        <div class="col-md-12 form-group">
-                                            <label for=""><?php echo LANG_VALUE_34; ?> *</label>
-                                            <select name="payment_method" class="form-control" id="paymentMethodSelect" required>
-                                                <option value="">Chọn phương thức</option>
-                                                <option value="Tiền mặt">Thanh toán tiền mặt</option>
-                                                <option value="Chuyển khoản">Chuyển khoản ngân hàng</option>
-                                            </select>
-                                        </div>
-
-                                        <input type="hidden" name="amount" value="<?php echo $final_total; ?>">
-
-                                        <div class="col-md-12 form-group">
-                                            <input type="submit" class="btn btn-primary" value="<?php echo LANG_VALUE_46; ?>" id="submitButton" name="form_checkout" style="display: none;">
-                                        </div>
+                    <div class="billing-address">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 class="special"><?php echo LANG_VALUE_162; ?></h3>
+                                <!-- Checkbox chọn tự nhập địa chỉ -->
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="use_different_address" name="use_different_address" value="1">
+                                        Tôi muốn nhập địa chỉ khác
+                                    </label>
+                                </div>
+                                <!-- Form nhập địa chỉ mới (ẩn ban đầu) -->
+                                <div id="different_address_form" style="display:none; margin-top:15px;">
+                                    <div class="form-group">
+                                        <label for="new_cust_name">Họ và tên:</label>
+                                        <input type="text" name="new_cust_name" id="new_cust_name" class="form-control" placeholder="Nhập họ và tên">
                                     </div>
-                                </form>
+                                    <div class="form-group">
+                                        <label for="new_cust_phone">Số điện thoại:</label>
+                                        <input type="text" name="new_cust_phone" id="new_cust_phone" class="form-control" placeholder="Nhập số điện thoại">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new_cust_province">Tỉnh:</label>
+                                        <select name="new_cust_province" id="new_cust_province" class="form-control">
+                                            <?php
+                                            $stmt = $pdo->query("SELECT * FROM tbl_country ORDER BY country_name ASC");
+                                            foreach ($stmt as $row) {
+                                                echo '<option value="' . $row['country_id'] . '">' . htmlspecialchars($row['country_name']) . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new_cust_address">Địa chỉ:</label>
+                                        <textarea name="new_cust_address" id="new_cust_address" class="form-control" rows="3" placeholder="Nhập địa chỉ"></textarea>
+                                    </div>
+                                </div>
 
-                                <script>
-                                    const select = document.getElementById('paymentMethodSelect');
-                                    const submitBtn = document.getElementById('submitButton');
+                                <!-- Hiển thị địa chỉ hiện tại nếu không chọn nhập mới -->
+                                <table class="table table-responsive table-bordered bill-address" id="current_address_table">
+                                    <tr>
+                                        <td><?php echo LANG_VALUE_102; ?></td>
+                                        <td><?php echo htmlspecialchars($_SESSION['customer']['cust_name']); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo LANG_VALUE_104; ?></td>
+                                        <td><?php echo htmlspecialchars($_SESSION['customer']['cust_phone']); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo LANG_VALUE_106; ?></td>
+                                        <td>
+                                            <?php
+                                            $statement = $pdo->prepare("SELECT * FROM tbl_country WHERE country_id=?");
+                                            $statement->execute(array($_SESSION['customer']['cust_country']));
+                                            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                            foreach ($result as $row) {
+                                                echo htmlspecialchars($row['country_name']);
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo LANG_VALUE_105; ?></td>
+                                        <td><?php echo nl2br(htmlspecialchars($_SESSION['customer']['cust_address'])); ?></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
-                                    select.addEventListener('change', function () {
-                                        if (this.value !== '') {
-                                            submitBtn.style.display = 'block';
-                                        } else {
-                                            submitBtn.style.display = 'none';
-                                        }
-                                    });
-                                </script>
+                    <div class="cart-buttons mt-4">
+                        <ul>
+                            <li><a href="cart.php" class="btn btn-primary"><?php echo LANG_VALUE_21; ?></a></li>
+                        </ul>
+                    </div>
 
-		                    </div>
-		                <?php endif; ?>
-                        
-                </div>
-                
+                    <h3 class="special mt-5"><?php echo LANG_VALUE_33; ?></h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="payment_method"><?php echo LANG_VALUE_34; ?> *</label>
+                                <select name="payment_method" class="form-control" id="paymentMethodSelect" required>
+                                    <option value="">Chọn phương thức</option>
+                                    <option value="Tiền mặt">Thanh toán tiền mặt</option>
+                                    <option value="Chuyển khoản">Chuyển khoản ngân hàng</option>
+                                </select>
+                            </div>
 
+                            <input type="hidden" name="amount" value="<?php echo $final_total; ?>">
+
+                            <div class="form-group mt-2">
+                                <input type="submit" class="btn btn-primary" value="<?php echo LANG_VALUE_46; ?>" id="submitButton" name="form_checkout" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <script>
+                    document.getElementById('use_different_address').addEventListener('change', function() {
+                        var form = document.getElementById('different_address_form');
+                        var currentAddress = document.getElementById('current_address_table');
+                        if(this.checked) {
+                            form.style.display = 'block';
+                            currentAddress.style.display = 'none';
+                        } else {
+                            form.style.display = 'none';
+                            currentAddress.style.display = 'table';
+                        }
+                    });
+
+                    const selectselect = document.getElementById('paymentMethodSelect');
+                    const submitBtnsubmitButton = document.getElementById('submitButton');
+
+                    selectselect.addEventListener('change', function () {
+                        if (this.value !== '') {
+                            submitBtnsubmitButton.style.display = 'block';
+                        } else {
+                            submitBtnsubmitButton.style.display = 'none';
+                        }
+                    });
+                </script>
                 <?php endif; ?>
-
             </div>
         </div>
     </div>

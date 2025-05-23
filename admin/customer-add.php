@@ -176,7 +176,7 @@ if (isset($_POST['form1'])) {
                             <label class="col-sm-2 control-label">Thành phố *</label>
                             <div class="col-sm-6">
                                 <select name="cust_country" class="form-control select2">
-                                    <option value="">Select country</option>
+                                    <option value="">Chọn tỉnh thành</option>
                                     <?php
                                     $stmt = $pdo->prepare("SELECT * FROM tbl_country ORDER BY country_name ASC");
                                     $stmt->execute();

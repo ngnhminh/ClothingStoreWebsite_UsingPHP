@@ -4,7 +4,6 @@
 	}
 ?>
 
-//Thông báo
 <?php if (isset($_GET['message'])): ?>
     <div class="alert alert-success">
         <?php 
@@ -34,14 +33,14 @@
 							<tr>
 								<th width="30">SL</th>
 								<th>Photo</th>
-								<th width="200">Product Name</th>
-								<th width="60">Old Price</th>
-								<th width="60">Current Price</th>
-								<th width="60">Quantity</th>
+								<th width="200">Tên sản phẩm</th>
+								<th width="60">Giá cũ</th>
+								<th width="60">Giá hiện tại</th>
+								<th width="60">Số lượng</th>
 								<th>Is Featured?</th>
-								<th>Is Active?</th>
+								<th>Trạng thái kích hoạt</th>
 								<th>Category</th>
-								<th width="80">Action</th>
+								<th width="80">Hành động</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -136,15 +135,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                <h4 class="modal-title" id="myModalLabel">Xác nhận xóa</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure want to delete this item?</p>
-                <p style="color:red;">Be careful! This product will be deleted from the order table, payment table, size table, color table and rating table also.</p>
+                <p>Bạn có chắc chắn muốn xóa sản phẩm này không ?</p>
+                <p style="color:red;">Cẩn thận sản phẩm này sẽ bị xóa khỏi CSDL</p>
+				<!-- Be careful! This product will be deleted from the order table, payment table, size table, color table and rating table also. -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger btn-ok">Delete</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                <a class="btn btn-danger btn-ok">Xóa</a>
             </div>
         </div>
     </div>

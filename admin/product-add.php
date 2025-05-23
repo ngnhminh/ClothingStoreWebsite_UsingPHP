@@ -96,48 +96,7 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
-
-        // Lấy auto_increment của bảng tbl_product
-        $statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product'");
-        $statement->execute();
-        $result = $statement->fetchAll();
-        foreach($result as $row) {
-            $ai_id = $row['Auto_increment'];
-        }
-
-        // Xử lý ảnh phụ
-        $final_name1 = [];
-        if( isset($_FILES['photo']["name"]) && isset($_FILES['photo']["tmp_name"]) )
-        {
-            $photo = array_values(array_filter($_FILES['photo']["name"]));
-            $photo_temp = array_values(array_filter($_FILES['photo']["tmp_name"]));
-
-            $statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product_photo'");
-            $statement->execute();
-            $result = $statement->fetchAll();
-            foreach($result as $row) {
-                $next_id1 = $row['Auto_increment'];
-            }
-            $z = $next_id1;
-
-            $m=0;
-            for($i=0; $i<count($photo); $i++)
-            {
-                $my_ext1 = strtolower(pathinfo($photo[$i], PATHINFO_EXTENSION));
-                if(in_array($my_ext1, $allowed_ext)) {
-                    $final_name1[$m] = $z.'.'.$my_ext1;
-                    move_uploaded_file($photo_temp[$i], "../assets/uploads/product_photos/".$final_name1[$m]);
-                    $m++;
-                    $z++;
-                }
-            }
-        }
-
-        // Lưu ảnh đại diện
-        $final_name = 'product-featured-'.$ai_id.'.'.$ext;
-        move_uploaded_file($path_tmp, '../assets/uploads/'.$final_name);
-
-        // Thêm sản phẩm chính
+        // Thêm sản phẩm trước, tạm thời lưu tên ảnh đại diện rỗng (hoặc giá trị tạm)
         $statement = $pdo->prepare("INSERT INTO tbl_product (
                                         p_name,
                                         p_old_price,
@@ -157,7 +116,7 @@ if(isset($_POST['form1'])) {
             getPost('p_old_price'),
             getPost('p_current_price'),
             getPost('p_qty'),
-            $final_name,
+            '',  // Để trống ảnh đại diện trước, sẽ update sau
             getPost('p_description'),
             getPost('p_short_description'),
             getPost('p_feature'),
@@ -170,11 +129,50 @@ if(isset($_POST['form1'])) {
         // Lấy ID vừa thêm
         $last_id = $pdo->lastInsertId();
 
-        // Thêm ảnh phụ
-        if(!empty($final_name1)) {
-            for($i=0; $i<count($final_name1); $i++) {
-                $statement = $pdo->prepare("INSERT INTO tbl_product_photo (photo,p_id) VALUES (?,?)");
-                $statement->execute(array($final_name1[$i], $last_id));
+        // Lưu ảnh đại diện với tên dựa trên $last_id
+        $final_name = 'product-featured-'.$last_id.'.'.$ext;
+        move_uploaded_file($path_tmp, '../assets/uploads/'.$final_name);
+
+        // Cập nhật lại tên ảnh đại diện vào sản phẩm vừa thêm
+        $statement = $pdo->prepare("UPDATE tbl_product SET p_featured_photo=? WHERE p_id=?");
+        $statement->execute(array($final_name, $last_id));
+
+        // Xử lý ảnh phụ như trước, dùng $last_id
+        $final_name1 = [];
+        if( isset($_FILES['photo']["name"]) && isset($_FILES['photo']["tmp_name"]) )
+        {
+            $photo = array_values(array_filter($_FILES['photo']["name"]));
+            $photo_temp = array_values(array_filter($_FILES['photo']["tmp_name"]));
+
+            // Lấy auto_increment bảng tbl_product_photo để đặt tên file ảnh phụ
+            $statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_product_photo'");
+            $statement->execute();
+            $result = $statement->fetchAll();
+            foreach($result as $row) {
+                $next_id1 = $row['Auto_increment'];
+            }
+            $z = $next_id1;
+
+            $m=0;
+            $timestamp = time();
+            for($i=0; $i<count($photo); $i++) {
+                $my_ext1 = strtolower(pathinfo($photo[$i], PATHINFO_EXTENSION));
+                if(in_array($my_ext1, $allowed_ext)) {
+                    $uniqueName = $last_id . '-photo-' . $z . '-' . $timestamp . '.' . $my_ext1;
+
+                    while(file_exists('../assets/uploads/product_photos/' . $uniqueName)) {
+                        $uniqueName = $last_id . '-photo-' . $z . '-' . $timestamp . '-' . rand(1000,9999) . '.' . $my_ext1;
+                    }
+
+                    move_uploaded_file($photo_temp[$i], "../assets/uploads/product_photos/" . $uniqueName);
+
+                    $final_name1[$m] = $uniqueName;
+                    $statement = $pdo->prepare("INSERT INTO tbl_product_photo (photo,p_id) VALUES (?,?)");
+                    $statement->execute(array($uniqueName, $last_id));
+
+                    $m++;
+                    $z++;
+                }
             }
         }
 
@@ -197,6 +195,7 @@ if(isset($_POST['form1'])) {
         $success_message = 'Product is added successfully.';
         unset($_SESSION['csrf_token']);
     }
+
 }
 ?>
 
@@ -463,7 +462,7 @@ if(isset($_POST['form1'])) {
 									<option value="1">Yes</option>
 								</select> 
 							</div>
-						</div>
+						</div>  
 
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label">Is Active?</label>

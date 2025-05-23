@@ -1,6 +1,9 @@
 <?php
 require_once('header.php');
-session_start();
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // ✅ Nếu đã đăng nhập, chuyển hướng về trang chủ
 if(isset($_SESSION['customer'])) {
@@ -8,7 +11,7 @@ if(isset($_SESSION['customer'])) {
     exit;
 }
 ?>
-//fetching row banner login
+
 <?php
 $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
 $statement->execute();
@@ -17,7 +20,7 @@ foreach ($result as $row) {
     $banner_login = $row['banner_login'];
 }
 ?>
-//login form
+
 <?php
 if(isset($_POST['form1'])) {
         
@@ -95,7 +98,7 @@ if(isset($_POST['form1'])) {
                                     <label for=""></label>
                                     <input type="submit" class="btn btn-primary" value="<?php echo LANG_VALUE_4; ?>" name="form1">
                                 </div>
-                                <a href="forget-password.php" style="color:#e4144d;"><?php echo LANG_VALUE_97; ?></a>
+                                <!-- <a href="forget-password.php" style="color:#e4144d;"><?php echo LANG_VALUE_97; ?></a> -->
                             </div>
                         </div>                        
                     </form>

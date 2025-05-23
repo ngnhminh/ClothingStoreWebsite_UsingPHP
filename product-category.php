@@ -1,6 +1,12 @@
 <?php require_once('header.php'); ?>
 
 <?php
+if ($_REQUEST['type'] == 'advanced-search') {
+    // Cho phép hiển thị form mà không cần kiểm tra id trong tbl_category
+    $title = 'Kết quả tìm kiếm';
+    $final_ecat_ids = []; // Mặc định không giới hạn danh mục
+}
+
 $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
@@ -131,94 +137,68 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['type']) ) {
 
                 <h3><?php echo LANG_VALUE_51; ?> "<?php echo $title; ?>"</h3>
 
-                <!-- Form Tìm kiếm nâng cao -->
-                <form method="get" class="form-inline" style="margin-bottom: 20px;">
-                    <input type="hidden" name="type" value="<?php echo htmlspecialchars($_REQUEST['type']); ?>">
-                    <input type="hidden" name="id" value="<?php echo htmlspecialchars($_REQUEST['id']); ?>">
-
-                    <div class="form-group">
-                        <label for="search_text">Tên sản phẩm:</label>
-                        <input type="text" id="search_text" name="search_text" class="form-control" style="margin-left:5px;" 
-                            value="<?php echo isset($_GET['search_text']) ? htmlspecialchars($_GET['search_text']) : ''; ?>">
-                    </div>
-
-                    <div class="form-group" style="margin-left:15px;">
-                        <label for="category_filter">Phân loại:</label>
-                        <select id="category_filter" name="category_filter" class="form-control" style="margin-left:5px;">
-                            <option value="">Tất cả</option>
-                            <?php
-                            $stmt_cat = $pdo->prepare("SELECT ecat_id, ecat_name FROM tbl_end_category ORDER BY ecat_name ASC");
-                            $stmt_cat->execute();
-                            $categories = $stmt_cat->fetchAll(PDO::FETCH_ASSOC);
-                            $selected_cat = isset($_GET['category_filter']) ? $_GET['category_filter'] : '';
-                            foreach($categories as $cat) {
-                                $selected = ($selected_cat == $cat['ecat_id']) ? 'selected' : '';
-                                echo '<option value="'.htmlspecialchars($cat['ecat_id']).'" '.$selected.'>'.htmlspecialchars($cat['ecat_name']).'</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group" style="margin-left:15px;">
-                        <label for="price_min">Giá từ:</label>
-                        <input type="number" min="0" step="1000" id="price_min" name="price_min" class="form-control" style="margin-left:5px; width: 100px;" 
-                            value="<?php echo isset($_GET['price_min']) ? (int)$_GET['price_min'] : ''; ?>">
-                    </div>
-
-                    <div class="form-group" style="margin-left:15px;">
-                        <label for="price_max">Đến:</label>
-                        <input type="number" min="0" step="1000" id="price_max" name="price_max" class="form-control" style="margin-left:5px; width: 100px;" 
-                            value="<?php echo isset($_GET['price_max']) ? (int)$_GET['price_max'] : ''; ?>">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" style="margin-left:15px;">Tìm kiếm</button>
-                </form>
-
                 <div class="product product-cat">
                     <div class="row">
                         <?php
-                        // Xây dựng truy vấn tìm kiếm kết hợp điều kiện
                         $where_clauses = [];
                         $params = [];
 
-                        // Lọc phân loại dựa trên category chính (final_ecat_ids)
-                        if(!empty($final_ecat_ids)) {
-                            $placeholders = implode(',', array_fill(0, count($final_ecat_ids), '?'));
-                            $where_clauses[] = "ecat_id IN ($placeholders)";
-                            $params = array_merge($params, $final_ecat_ids);
-                        }
+                        $current_tcat_id = $_GET['id'] ?? 0; // id của top-category trên trang
 
-                        // Lọc theo tên sản phẩm
-                        if(!empty($_GET['search_text'])) {
-                            $where_clauses[] = "p_name LIKE ?";
+                        // Lọc tên sản phẩm
+                        if (!empty($_GET['search_text'])) {
+                            $where_clauses[] = "p.p_name LIKE ?";
                             $params[] = '%' . $_GET['search_text'] . '%';
                         }
 
-                        // Lọc theo phân loại chọn trong form (override phân loại nếu có)
-                        if(!empty($_GET['category_filter'])) {
-                            $where_clauses[] = "ecat_id = ?";
-                            $params[] = $_GET['category_filter'];
+                        // Lọc theo danh mục con (end-category) nếu có
+                        if (!empty($_GET['ecat_id'])) {
+                            $where_clauses[] = "p.ecat_id = ?";
+                            $params[] = $_GET['ecat_id'];
+                        }
+                        // Lọc theo mid-category nếu có, và mid_category phải thuộc top_category hiện tại
+                        elseif (!empty($_GET['mcat_id'])) {
+                            // Kiểm tra mid_category có thuộc top_category hiện tại không
+                            $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM tbl_mid_category WHERE mcat_id = ? AND tcat_id = ?");
+                            $stmt_check->execute([$_GET['mcat_id'], $current_tcat_id]);
+                            if ($stmt_check->fetchColumn() > 0) {
+                                $where_clauses[] = "p.ecat_id IN (SELECT ecat_id FROM tbl_end_category WHERE mcat_id = ?)";
+                                $params[] = $_GET['mcat_id'];
+                            } else {
+                                // mid_category không thuộc top_category hiện tại => lọc không có sản phẩm nào
+                                $where_clauses[] = "1=0";
+                            }
+                        }
+                        // Lọc theo top-category
+                        else {
+                            // Lấy tất cả danh mục con thuộc các mid_category của top_category hiện tại
+                            $where_clauses[] = "p.ecat_id IN (
+                                SELECT ecat_id FROM tbl_end_category WHERE mcat_id IN (
+                                    SELECT mcat_id FROM tbl_mid_category WHERE tcat_id = ?
+                                )
+                            )";
+                            $params[] = $current_tcat_id;
                         }
 
-                        // Lọc theo khoảng giá
-                        if(!empty($_GET['price_min'])) {
-                            $where_clauses[] = "p_current_price >= ?";
+                        // Khoảng giá
+                        if (!empty($_GET['price_min'])) {
+                            $where_clauses[] = "CAST(p.p_current_price AS UNSIGNED) >= ?";
                             $params[] = (int)$_GET['price_min'];
                         }
-                        if(!empty($_GET['price_max'])) {
-                            $where_clauses[] = "p_current_price <= ?";
+                        if (!empty($_GET['price_max'])) {
+                            $where_clauses[] = "CAST(p.p_current_price AS UNSIGNED) <= ?";
                             $params[] = (int)$_GET['price_max'];
                         }
 
                         // Luôn lọc sản phẩm active
-                        $where_clauses[] = "p_is_active = 1";
+                        $where_clauses[] = "p.p_is_active = 1";
 
                         $where_sql = '';
-                        if(count($where_clauses) > 0) {
+                        if (count($where_clauses) > 0) {
                             $where_sql = ' WHERE ' . implode(' AND ', $where_clauses);
                         }
 
-                        $sql = "SELECT * FROM tbl_product $where_sql ORDER BY p_id DESC";
+                        $sql = "SELECT p.* FROM tbl_product p $where_sql ORDER BY p.p_id DESC";
                         $statement = $pdo->prepare($sql);
                         $statement->execute($params);
                         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -237,10 +217,10 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['type']) ) {
                                         <div class="text">
                                             <h3><a href="product.php?id=<?php echo $row['p_id']; ?>"><?php echo $row['p_name']; ?></a></h3>
                                             <h4>
-                                                <?php echo LANG_VALUE_1; ?><?php echo $row['p_current_price']; ?> 
+                                                <?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($row['p_current_price']); ?> 
                                                 <?php if($row['p_old_price'] != ''): ?>
                                                 <del>
-                                                    <?php echo LANG_VALUE_1; ?><?php echo $row['p_old_price']; ?>
+                                                    <?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($row['p_old_price']); ?>
                                                 </del>
                                                 <?php endif; ?>
                                             </h4>

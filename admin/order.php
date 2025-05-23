@@ -4,6 +4,13 @@
 $error_message = '';
 $success_message = '';
 
+function formatMoneyVND($amount) {
+    $cleanAmount = preg_replace('/[^0-9.]/', '', $amount);
+    $num = floatval($cleanAmount);
+    return number_format($num, 0, ',', '.') . '₫';
+}
+
+
 if(isset($_POST['form1'])) {
     $valid = 1;
     if(empty($_POST['subject_text'])) {
@@ -116,7 +123,7 @@ if($success_message != '') {
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Orders</h1>
+		<h1>Quản lý đơn hàng</h1>
 	</div>
 </section>
 
@@ -155,16 +162,17 @@ if($success_message != '') {
             <input type="date" name="date_to" id="date_to" class="form-control" style="margin-right:15px;" value="<?php echo isset($_GET['date_to']) ? htmlspecialchars($_GET['date_to']) : ''; ?>">
 
             <!-- Địa điểm giao hàng (thành phố) -->
-            <label for="city" style="margin-right:5px;">Thành phố:</label>
+            <label for="city" style="margin-right:5px;">Tỉnh:</label>
             <select name="city" class="form-control select2" style="width: 200px;">
-                <option value="">Chọn thành phố</option>
+                <option value="">Chọn Tỉnh</option>
                 <?php
                 $statement = $pdo->prepare("SELECT * FROM tbl_country ORDER BY country_name ASC");
                 $statement->execute();
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
                 foreach ($result as $row) {
                     ?>
-                    <option value="<?php echo htmlspecialchars($row['country_name']); ?>" <?php if(isset($_GET['city']) && $_GET['city'] == $row['country_name']) echo 'selected'; ?>>
+                    <option value="<?php echo htmlspecialchars($row['country_id']); ?>" 
+                        <?php if(isset($_GET['city']) && $_GET['city'] == $row['country_id']) echo 'selected'; ?>>
                         <?php echo htmlspecialchars($row['country_name']); ?>
                     </option>
                     <?php
@@ -224,8 +232,8 @@ if($success_message != '') {
 
                 // Lọc theo thành phố (tbl_customer)
                 if (!empty($_GET['city'])) {
-                    $where_clauses[] = "EXISTS (SELECT 1 FROM tbl_customer c WHERE c.cust_id = tbl_payment.customer_id AND c.cust_country LIKE ?)";
-                    $params[] = '%' . $_GET['city'] . '%';
+                    $where_clauses[] = "EXISTS (SELECT 1 FROM tbl_customer c WHERE c.cust_id = tbl_payment.customer_id AND tbl_payment.shipping_province = ?)";
+                    $params[] = $_GET['city'];  // đây là id, nên so sánh bằng =
                 }
 
                 $where_sql = '';
@@ -241,7 +249,15 @@ if($success_message != '') {
             	foreach ($result as $row) {
             		$i++;
             		?>
-					<tr class="<?php if($row['payment_status']=='Pending'){echo 'bg-r';}else{echo 'bg-g';} ?>">
+					<tr class="<?php 
+                        if($row['payment_status'] == 'Pending') {
+                            echo 'bg-y';
+                        } elseif($row['payment_status'] == 'Cancelled') {
+                            echo 'bg-r';
+                        } else {
+                            echo 'bg-g';
+                        }
+                    ?>">
 	                    <td><?php echo $i; ?></td>
 	                    <td>
                             <b>Id:</b> <?php echo $row['customer_id']; ?><br>
@@ -255,7 +271,19 @@ if($success_message != '') {
                             ?>
                             <p>
                                 <b>Địa chỉ:</b><br> <?php echo isset($customer_info['cust_address']) ? nl2br(htmlspecialchars($customer_info['cust_address'])) : 'N/A'; ?><br>
-                                <b>Thành phố:</b><br> <?php echo isset($customer_info['cust_country']) ? nl2br(htmlspecialchars($customer_info['cust_country'])) : 'N/A'; ?><br>
+                                <b>Tỉnh:</b>
+                                <?php
+                                    $province_name = 'N/A';
+                                    if (!empty($customer_info['cust_country'])) {
+                                        $stmt = $pdo->prepare("SELECT country_name FROM tbl_country WHERE country_id = ?");
+                                        $stmt->execute([$customer_info['cust_country']]);
+                                        $prov = $stmt->fetch(PDO::FETCH_ASSOC);
+                                        if ($prov) {
+                                            $province_name = htmlspecialchars($prov['country_name']);
+                                        }
+                                    }
+                                    echo $province_name;
+                                ?>
                             </p>
                             
                             <b>SĐT:</b><br> <?php echo isset($customer_info['cust_phone']) ? htmlspecialchars($customer_info['cust_phone']) : 'N/A'; ?><br><br>
@@ -307,31 +335,56 @@ if($success_message != '') {
                                 echo '<br>(<b>Size:</b> '.$row1['size'];
                                 echo ', <b>Màu:</b> '.$row1['color'].')';
                                 echo '<br>(<b>Số lượng:</b> '.$row1['quantity'];
-                                echo ', <b>Giá sản phẩm:</b> '.$row1['unit_price'].')';
+                                echo ', <b>Giá sản phẩm:</b> ' . formatMoneyVND($row1['unit_price']) . ')';
                                 echo '<br><br>';
                            }
                            ?>
                         </td>
                         <td>
-                        	<b>Phương thức thanh toán:</b> <span style="color:red;"><b><?php echo $row['payment_method']; ?></b></span><br>
-                            <b>Mã đơn hàng Id:</b> <?php echo $row['payment_id']; ?><br>
-                            <b>Ngày đặt:</b> <?php echo $row['payment_date']; ?><br>
-
+                            <p>
+                                <b>Phương thức thanh toán:</b> <span style="color:red;"><b><?php echo $row['payment_method']; ?></b></span><br>
+                                <b>Mã đơn hàng Id:</b> <?php echo $row['payment_id']; ?><br>
+                                <b>Ngày đặt:</b> <?php echo $row['payment_date']; ?><br>
+                            </p>
+                            <p>
+                                <b>Tên người nhận:</b> <?php echo $row['shipping_name']; ?><br>
+                                <b>SĐT:</b> <?php echo $row['shipping_phone']; ?><br>
+                                <b>Địa chỉ nhận:</b> <?php echo $row['shipping_address']; ?><br>
+                                <b>Tỉnh:</b>
+                                <?php
+                                    $province_name = 'N/A';
+                                    if (!empty($row['shipping_province'])) {
+                                        $stmt = $pdo->prepare("SELECT country_name FROM tbl_country WHERE country_id = ?");
+                                        $stmt->execute([$row['shipping_province']]);
+                                        $prov = $stmt->fetch(PDO::FETCH_ASSOC);
+                                        if ($prov) {
+                                            $province_name = htmlspecialchars($prov['country_name']);
+                                        }
+                                    }
+                                    echo $province_name;
+                                ?>
+                            </p>
                             <?php if(!empty($row['txnid'])): ?>
                                 <b>Transaction Id:</b> <?php echo $row['txnid']; ?><br>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo $row['paid_amount']; ?></td>
+                        <td><?php echo formatMoneyVND($row['paid_amount']); ?></td>
                         <td>
                             <?php echo $row['payment_status']; ?>
                             <br><br>
-                            <?php
-                                if($row['payment_status']=='Pending'){
-                                    ?>
-                                    <a href="order-change-status.php?id=<?php echo $row['id']; ?>&task=Completed" class="btn btn-warning btn-xs" style="width:100%;margin-bottom:4px;">Make Completed</a>
-                                    <?php
-                                }
-                            ?>
+                            <?php if($row['payment_status'] == 'Pending'): ?>
+                                <a href="order-change-status.php?id=<?php echo $row['id']; ?>&task=Completed" 
+                                class="btn btn-warning btn-xs" 
+                                style="width:100%; margin-bottom:8px; display:block;">
+                                Xác nhận
+                                </a>
+                                <a href="order-change-status.php?id=<?php echo $row['id']; ?>&task=Cancelled" 
+                                class="btn btn-danger btn-xs" 
+                                style="width:100%; display:block;" 
+                                onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?');">
+                                Hủy
+                                </a>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <?php echo $row['shipping_status']; ?>
@@ -340,14 +393,14 @@ if($success_message != '') {
                             if($row['payment_status']=='Completed') {
                                 if($row['shipping_status']=='Pending'){
                                     ?>
-                                    <a href="shipping-change-status.php?id=<?php echo $row['id']; ?>&task=Completed" class="btn btn-warning btn-xs" style="width:100%;margin-bottom:4px;">Make Completed</a>
+                                    <a href="shipping-change-status.php?id=<?php echo $row['id']; ?>&task=Completed" class="btn btn-warning btn-xs" style="width:100%;margin-bottom:4px;">Xác nhận</a>
                                     <?php
                                 }
                             }
                             ?>
                         </td>
 	                    <td>
-                            <a href="#" class="btn btn-danger btn-xs" data-href="order-delete.php?id=<?php echo $row['id']; ?>" data-toggle="modal" data-target="#confirm-delete" style="width:100%;">Delete</a>
+                            <a href="#" class="btn btn-danger btn-xs" data-href="order-delete.php?id=<?php echo $row['id']; ?>" data-toggle="modal" data-target="#confirm-delete" style="width:100%;">Xóa</a>
 	                    </td>
 	                </tr>
             		<?php
