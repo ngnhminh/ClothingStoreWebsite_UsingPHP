@@ -366,7 +366,10 @@ foreach ($result as $row) {
 										$result1 = $statement1->fetchAll(PDO::FETCH_ASSOC);
 										foreach ($result1 as $row1) {
 											?>
-											<li><a href="product-category.php?id=<?php echo $row1['mcat_id']; ?>&type=mid-category"><?php echo $row1['mcat_name']; ?></a>
+											<li>
+												<a href="product-category.php?type=top-category&id=<?php echo $row['tcat_id']; ?>&mcat_id=<?php echo $row1['mcat_id']; ?>">
+													<?php echo $row1['mcat_name']; ?>
+												</a>
 												<ul>
 													<?php
 													$statement2 = $pdo->prepare("SELECT * FROM tbl_end_category WHERE mcat_id=?");
@@ -374,7 +377,11 @@ foreach ($result as $row) {
 													$result2 = $statement2->fetchAll(PDO::FETCH_ASSOC);
 													foreach ($result2 as $row2) {
 														?>
-														<li><a href="product-category.php?id=<?php echo $row2['ecat_id']; ?>&type=end-category"><?php echo $row2['ecat_name']; ?></a></li>
+														<li>
+															<a href="product-category.php?type=top-category&id=<?php echo $row['tcat_id']; ?>&mcat_id=<?php echo $row1['mcat_id']; ?>&ecat_id=<?php echo $row2['ecat_id']; ?>">
+																<?php echo $row2['ecat_name']; ?>
+															</a>
+														</li>
 														<?php
 													}
 													?>

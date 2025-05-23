@@ -1,7 +1,9 @@
 <?php
 require_once('header.php');
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Khởi tạo biến thông báo
 $error_message = '';
@@ -214,10 +216,10 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
 <section class="content-header">
     <div class="content-header-left">
-        <h1>Edit Product</h1>
+        <h1>Sửa sản phẩm</h1>
     </div>
     <div class="content-header-right">
-        <a href="product.php" class="btn btn-primary btn-sm">View All</a>
+        <a href="product.php" class="btn btn-primary btn-sm">Xem tất cả</a>
     </div>
 </section>
 
@@ -303,7 +305,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Product Name -->
                         <div class="form-group">
-                            <label for="p_name" class="col-sm-3 control-label">Product Name <span>*</span></label>
+                            <label for="p_name" class="col-sm-3 control-label">Tên sản phẩm <span>*</span></label>
                             <div class="col-sm-4">
                                 <input id="p_name" type="text" name="p_name" class="form-control" value="<?php echo e($product['p_name']); ?>">
                             </div>
@@ -311,7 +313,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Old Price -->
                         <div class="form-group">
-                            <label for="p_old_price" class="col-sm-3 control-label">Old Price<br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+                            <label for="p_old_price" class="col-sm-3 control-label">Giá cũ<br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
                             <div class="col-sm-4">
                                 <input id="p_old_price" type="text" name="p_old_price" class="form-control" value="<?php echo e($product['p_old_price']); ?>">
                             </div>
@@ -319,7 +321,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Current Price -->
                         <div class="form-group">
-                            <label for="p_current_price" class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+                            <label for="p_current_price" class="col-sm-3 control-label">Giá mới <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
                             <div class="col-sm-4">
                                 <input id="p_current_price" type="text" name="p_current_price" class="form-control" value="<?php echo e($product['p_current_price']); ?>">
                             </div>
@@ -327,7 +329,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Quantity -->
                         <div class="form-group">
-                            <label for="p_qty" class="col-sm-3 control-label">Quantity <span>*</span></label>
+                            <label for="p_qty" class="col-sm-3 control-label">Số lương <span>*</span></label>
                             <div class="col-sm-4">
                                 <input id="p_qty" type="text" name="p_qty" class="form-control" value="<?php echo e($product['p_qty']); ?>">
                             </div>
@@ -335,7 +337,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Size -->
                         <div class="form-group">
-                            <label for="size" class="col-sm-3 control-label">Select Size</label>
+                            <label for="size" class="col-sm-3 control-label">Chọn Size</label>
                             <div class="col-sm-4">
                                 <select id="size" name="size[]" class="form-control select2" multiple="multiple">
                                     <?php
@@ -352,7 +354,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Color -->
                         <div class="form-group">
-                            <label for="color" class="col-sm-3 control-label">Select Color</label>
+                            <label for="color" class="col-sm-3 control-label">Chọn Color</label>
                             <div class="col-sm-4">
                                 <select id="color" name="color[]" class="form-control select2" multiple="multiple">
                                     <?php
@@ -421,7 +423,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Description -->
                         <div class="form-group">
-                            <label for="p_description" class="col-sm-3 control-label">Description</label>
+                            <label for="p_description" class="col-sm-3 control-label">Mô tả</label>
                             <div class="col-sm-8">
                                 <textarea id="p_description" name="p_description" class="form-control" cols="30" rows="10"><?php echo e($product['p_description']); ?></textarea>
                             </div>
@@ -469,7 +471,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
                         <div class="form-group">
                             <label class="col-sm-3 control-label"></label>
                             <div class="col-sm-6">
-                                <button type="submit" class="btn btn-success pull-left" name="form1">Update</button>
+                                <button type="submit" class="btn btn-success pull-left" name="form1">Cập nhật</button>
                             </div>
                         </div>
 

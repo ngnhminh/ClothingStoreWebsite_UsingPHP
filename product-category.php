@@ -140,6 +140,11 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['type']) ) {
                 <div class="product product-cat">
                     <div class="row">
                         <?php
+                        $limit = 6; // số sản phẩm trên 1 trang
+                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+                        if($page < 1) $page = 1;
+                        $offset = ($page - 1) * $limit;
+
                         $where_clauses = [];
                         $params = [];
 
@@ -198,7 +203,19 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['type']) ) {
                             $where_sql = ' WHERE ' . implode(' AND ', $where_clauses);
                         }
 
-                        $sql = "SELECT p.* FROM tbl_product p $where_sql ORDER BY p.p_id DESC";
+                        // Đếm tổng sản phẩm
+                        $count_sql = "SELECT COUNT(*) FROM tbl_product p $where_sql";
+                        $statement = $pdo->prepare($count_sql);
+                        $statement->execute($params);
+                        $total_products = $statement->fetchColumn();
+                        $total_pages = ceil($total_products / $limit);
+
+                        // Thêm limit và offset vào params
+                        $params_for_execute = $params;
+                        $params_for_execute[] = (int)$limit;
+                        $params_for_execute[] = (int)$offset;
+
+                        $sql = "SELECT p.* FROM tbl_product p $where_sql ORDER BY p.p_id DESC LIMIT $limit OFFSET $offset";
                         $statement = $pdo->prepare($sql);
                         $statement->execute($params);
                         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -307,6 +324,53 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['type']) ) {
                                 </div>
                                 <?php
                             }
+                        }
+                        
+                        // Hàm xây dựng URL phân trang giữ nguyên các tham số GET hiện tại nhưng thay page
+                        function buildPageUrl($pageNum) {
+                            // Lấy mảng các tham số GET hiện tại
+                            $params = $_GET;
+                            $params['page'] = $pageNum;
+
+                            // Tạo query string
+                            return 'product-category.php?' . http_build_query($params);
+                        }
+                        ?>
+                    </div>
+                    <div class="pagination-wrapper">
+                        <?php 
+                                                // --- Hiển thị phân trang ---
+                        if ($total_pages > 1) {
+                            echo '<nav aria-label="Page navigation example">';
+                            echo '<ul class="pagination justify-content-center mt-4">';
+
+                            // Nút Previous
+                            if ($page > 1) {
+                                $prev_page = $page - 1;
+                                echo '<li class="page-item"><a class="page-link" href="' . buildPageUrl($prev_page) . '">&laquo; Previous</a></li>';
+                            } else {
+                                echo '<li class="page-item disabled"><span class="page-link">&laquo; Previous</span></li>';
+                            }
+
+                            // Hiển thị số trang (giới hạn hiển thị nếu muốn)
+                            for ($p = 1; $p <= $total_pages; $p++) {
+                                if ($p == $page) {
+                                    echo '<li class="page-item active"><span class="page-link">' . $p . '</span></li>';
+                                } else {
+                                    echo '<li class="page-item"><a class="page-link" href="' . buildPageUrl($p) . '">' . $p . '</a></li>';
+                                }
+                            }
+
+                            // Nút Next
+                            if ($page < $total_pages) {
+                                $next_page = $page + 1;
+                                echo '<li class="page-item"><a class="page-link" href="' . buildPageUrl($next_page) . '">Next &raquo;</a></li>';
+                            } else {
+                                echo '<li class="page-item disabled"><span class="page-link">Next &raquo;</span></li>';
+                            }
+
+                            echo '</ul>';
+                            echo '</nav>';
                         }
                         ?>
                     </div>

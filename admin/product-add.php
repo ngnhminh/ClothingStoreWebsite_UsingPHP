@@ -287,9 +287,7 @@ if(isset($_POST['form1'])) {
             <?php endif; ?>
 
             <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>" />
-
                 <div class="box box-info">
                     <div class="box-body">
 

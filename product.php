@@ -295,16 +295,16 @@ if($success_message1 != '') {
 		<div class="row">
 			<div class="col-md-12">
                 <div class="breadcrumb mb_30">
-                    <ul>
-                        <li><a href="<?php echo BASE_URL; ?>">Home</a></li>
-                        <li>></li>
-                        <li><a href="<?php echo BASE_URL.'product-category.php?id='.$tcat_id.'&type=top-category' ?>"><?php echo $tcat_name; ?></a></li>
-                        <li>></li>
-                        <li><a href="<?php echo BASE_URL.'product-category.php?id='.$mcat_id.'&type=mid-category' ?>"><?php echo $mcat_name; ?></a></li>
-                        <li>></li>
-                        <li><a href="<?php echo BASE_URL.'product-category.php?id='.$ecat_id.'&type=end-category' ?>"><?php echo $ecat_name; ?></a></li>
-                        <li>></li>
-                        <li><?php echo $p_name; ?></li>
+                    <ul class="breadcrumb-list" style="list-style:none; padding:0; display:flex; flex-wrap: wrap; gap: 5px; font-size: 14px;">
+                        <li><a href="<?php echo BASE_URL; ?>" style="text-decoration:none; color:#555;">Home</a></li>
+                        <li>/</li>
+                        <li><a href="<?php echo BASE_URL.'product-category.php?type=top-category&id='.$tcat_id; ?>" style="text-decoration:none; color:#555;"><?php echo htmlspecialchars($tcat_name); ?></a></li>
+                        <li>/</li>
+                        <li><a href="<?php echo BASE_URL.'product-category.php?type=top-category&id='.$tcat_id.'&mcat_id='.$mcat_id; ?>" style="text-decoration:none; color:#555;"><?php echo htmlspecialchars($mcat_name); ?></a></li>
+                        <li>/</li>
+                        <li><a href="<?php echo BASE_URL.'product-category.php?type=top-category&id='.$tcat_id.'&mcat_id='.$mcat_id.'ecat_id='.$ecat_id; ?>" style="text-decoration:none; color:#555;"><?php echo htmlspecialchars($ecat_name); ?></a></li>
+                        <li>/</li>
+                        <li style="color:#FF6B00; font-weight:700;"><?php echo htmlspecialchars($p_name); ?></li>
                     </ul>
                 </div>
 
