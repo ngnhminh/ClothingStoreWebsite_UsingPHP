@@ -68,7 +68,7 @@ if ($from_date && $to_date) {
 	<div class="row">
 		<!-- Biểu đồ tổng quan -->
 		<div class="col-md-12">
-			<canvas id="dashboardChart" style="width:100%; height:400px;"></canvas>
+			<!-- <canvas id="dashboardChart" style="width:100%; height:400px;"></canvas> -->
 		</div>
 	</div>
 
@@ -156,20 +156,20 @@ if ($from_date && $to_date) {
       <div class="modal-body" id="orderDetailContent">
         <!-- Nội dung sẽ được load ajax -->
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
 
 <!-- Thêm Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-const ctx = document.getElementById('dashboardChart').getContext('2d');
+// const ctx = document.getElementById('dashboardChart').getContext('2d');
 
 const labels = ['Top Categories', 'Mid Categories', 'End Categories', 'Products', 'Completed Orders', 'Completed Shipping', 'Pending Orders', 'Pending Shipping (Order Completed)'];
 const data = [
@@ -183,30 +183,30 @@ const data = [
 	<?php echo $total_order_complete_shipping_pending; ?>
 ];
 
-const dashboardChart = new Chart(ctx, {
-	type: 'bar',
-	data: {
-		labels: labels,
-		datasets: [{
-			label: 'Thống kê tổng quan',
-			data: data,
-			backgroundColor: [
-				'#007bff', '#28a745', '#ffc107', '#dc3545',
-				'#17a2b8', '#6f42c1', '#fd7e14', '#20c997'
-			],
-		}]
-	},
-	options: {
-		scales: {
-			y: {
-				beginAtZero: true,
-				ticks: {
-					stepSize: 1
-				}
-			}
-		}
-	}
-});
+// const dashboardChart = new Chart(ctx, {
+// 	type: 'bar',
+// 	data: {
+// 		labels: labels,
+// 		datasets: [{
+// 			label: 'Thống kê tổng quan',
+// 			data: data,
+// 			backgroundColor: [
+// 				'#007bff', '#28a745', '#ffc107', '#dc3545',
+// 				'#17a2b8', '#6f42c1', '#fd7e14', '#20c997'
+// 			],
+// 		}]
+// 	},
+// 	options: {
+// 		scales: {
+// 			y: {
+// 				beginAtZero: true,
+// 				ticks: {
+// 					stepSize: 1
+// 				}
+// 			}
+// 		}
+// 	}
+// });
 
 // Xử lý ajax load chi tiết đơn hàng khi click
 $(document).ready(function() {
@@ -231,5 +231,6 @@ $(document).ready(function() {
     });
 });
 </script>
+
 
 <?php require_once('footer.php'); ?>

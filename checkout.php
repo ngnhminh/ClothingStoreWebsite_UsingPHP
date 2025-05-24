@@ -157,7 +157,7 @@ if(!isset($_SESSION['cart_p_id'])) {
                         ?>
                         <tr>
                             <td colspan="7" class="total-text"><?php echo LANG_VALUE_84; ?></td>
-                            <td class="total-amount"><?php echo LANG_VALUE_1; ?><?php echo $shipping_cost; ?></td>
+                            <td class="total-amount"><?php echo LANG_VALUE_1; ?><?php echo formatMoneyVND($shipping_cost); ?></td>
                         </tr>
                         <tr>
                             <th colspan="7" class="total-text"><?php echo LANG_VALUE_82; ?></th>
@@ -293,6 +293,45 @@ if(!isset($_SESSION['cart_p_id'])) {
                             submitBtnsubmitButton.style.display = 'block';
                         } else {
                             submitBtnsubmitButton.style.display = 'none';
+                        }
+                    });
+
+                    document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+                        const useDifferent = document.getElementById('use_different_address').checked;
+                        if(useDifferent) {
+                            const name = document.getElementById('new_cust_name').value.trim();
+                            const phone = document.getElementById('new_cust_phone').value.trim();
+                            const province = document.getElementById('new_cust_province').value;
+                            const address = document.getElementById('new_cust_address').value.trim();
+
+                            let errorMessages = [];
+
+                            if(name === '') {
+                                errorMessages.push('Vui lòng nhập họ và tên.');
+                            }
+
+                            if(phone === '') {
+                                errorMessages.push('Vui lòng nhập số điện thoại.');
+                            } else {
+                                const phoneRegex = /^[0-9]{9,15}$/;
+                                if(!phoneRegex.test(phone)) {
+                                    errorMessages.push('Số điện thoại không hợp lệ (chỉ gồm số, từ 9-15 ký tự).');
+                                }
+                            }
+
+                            if(province === '') {
+                                errorMessages.push('Vui lòng chọn tỉnh.');
+                            }
+
+                            if(address === '') {
+                                errorMessages.push('Vui lòng nhập địa chỉ.');
+                            }
+
+                            if(errorMessages.length > 0) {
+                                event.preventDefault();
+                                alert(errorMessages.join('\n'));
+                                return false;
+                            }
                         }
                     });
                 </script>

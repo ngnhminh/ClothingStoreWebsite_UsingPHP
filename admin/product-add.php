@@ -29,32 +29,32 @@ if(isset($_POST['form1'])) {
 
     if(empty(getPost('tcat_id'))) {
         $valid = 0;
-        $error_message .= "You must have to select a top level category<br>";
+        $error_message .= "Bạn phải chọn danh mục chính.<br>";
     }
 
     if(empty(getPost('mcat_id'))) {
         $valid = 0;
-        $error_message .= "You must have to select a mid level category<br>";
+        $error_message .= "Bạn phải chọn danh mục phụ.<br>";
     }
 
     if(empty(getPost('ecat_id'))) {
         $valid = 0;
-        $error_message .= "You must have to select an end level category<br>";
+        $error_message .= "Bạn phải chọn danh mục con<br>";
     }
 
     if(empty(getPost('p_name'))) {
         $valid = 0;
-        $error_message .= "Product name can not be empty<br>";
+        $error_message .= "Không được để trống tên.<br>";
     }
 
     if(empty(getPost('p_current_price'))) {
         $valid = 0;
-        $error_message .= "Current Price can not be empty<br>";
+        $error_message .= "Không được để trống giá tiền.<br>";
     }
 
     if(empty(getPost('p_qty'))) {
         $valid = 0;
-        $error_message .= "Quantity can not be empty<br>";
+        $error_message .= "Số lượng không được để trống.<br>";
     }
 
     $path = isset($_FILES['p_featured_photo']['name']) ? $_FILES['p_featured_photo']['name'] : '';
@@ -65,15 +65,15 @@ if(isset($_POST['form1'])) {
         $allowed_ext = ['jpg','jpeg','png','gif'];
         if(!in_array($ext, $allowed_ext)) {
             $valid = 0;
-            $error_message .= 'You must upload jpg, jpeg, gif or png file<br>';
+            $error_message .= 'Hình ảnh chính phải là jpg, jpeg, gif hoặc png file.<br>';
         }
         if($_FILES['p_featured_photo']['size'] > MAX_FILE_SIZE) {
             $valid = 0;
-            $error_message .= 'Featured photo must be less than 2MB<br>';
+            $error_message .= 'Ảnh chính phải nhỏ hơn 2MB<br>';
         }
     } else {
         $valid = 0;
-        $error_message .= 'You must select a featured photo<br>';
+        $error_message .= 'Bạn chưa chọn ảnh chính<br>';
     }
 
     // Kiểm tra ảnh phụ nếu có
@@ -84,12 +84,12 @@ if(isset($_POST['form1'])) {
             $ext_photo = strtolower(pathinfo($name, PATHINFO_EXTENSION));
             if(!in_array($ext_photo, $allowed_ext)) {
                 $valid = 0;
-                $error_message .= "Other photos must be jpg, jpeg, png or gif<br>";
+                $error_message .= "Hình ảnh phụ phải là jpg, jpeg, png hoặc gif<br>";
                 break;
             }
             if($size > MAX_FILE_SIZE) {
                 $valid = 0;
-                $error_message .= "Each other photo must be less than 2MB<br>";
+                $error_message .= "Hình ảnh phụ phải nhỏ hơn 2MB<br>";
                 break;
             }
         }
@@ -122,7 +122,8 @@ if(isset($_POST['form1'])) {
             getPost('p_feature'),
             0,
             getPost('p_is_featured'),
-            getPost('p_is_active'),
+            // getPost('p_is_active'),
+            0,
             getPost('ecat_id')
         ));
 
@@ -201,10 +202,10 @@ if(isset($_POST['form1'])) {
 
 <section class="content-header">
     <div class="content-header-left">
-        <h1>Add Product</h1>
+        <h1>Thêm sản phẩm</h1>
     </div>
     <div class="content-header-right">
-        <a href="product.php" class="btn btn-primary btn-sm">View All</a>
+        <a href="product.php" class="btn btn-primary btn-sm">Xem tất cả</a>
     </div>
 </section>
 
@@ -240,13 +241,15 @@ if(isset($_POST['form1'])) {
             previewFeaturedPhoto(this);
         });
 
-        // Preview ảnh phụ
+        // Preview ảnh phụ - sử dụng event delegation
         $(document).on('change', 'input[name="photo[]"]', function(){
             previewOtherPhoto(this);
         });
 
-        // Thêm dòng ảnh phụ
-        $('#btnAddNew').click(function(){
+        // Thêm dòng ảnh phụ - unbind trước khi bind để tránh duplicate
+        $('#btnAddNew').off('click').on('click', function(e){
+            e.preventDefault(); // Ngăn form submit
+            
             var newRow = `<tr>
                 <td>
                     <div class="upload-btn">
@@ -259,12 +262,20 @@ if(isset($_POST['form1'])) {
                     <a href="javascript:void(0)" class="Delete btn btn-danger btn-xs">X</a>
                 </td>
             </tr>`;
+            
             $('#ProductTable tbody').append(newRow);
+            
+            // Debug: in ra số lượng dòng hiện tại
+            console.log('Số dòng hiện tại: ' + $('#ProductTable tbody tr').length);
         });
 
-        // Xóa dòng ảnh phụ
-        $(document).on('click', '.Delete', function(){
+        // Xóa dòng ảnh phụ - sử dụng event delegation
+        $(document).on('click', '.Delete', function(e){
+            e.preventDefault();
             $(this).closest('tr').remove();
+            
+            // Debug: in ra số lượng dòng sau khi xóa
+            console.log('Số dòng sau khi xóa: ' + $('#ProductTable tbody tr').length);
         });
     });
 </script>
@@ -292,10 +303,10 @@ if(isset($_POST['form1'])) {
                     <div class="box-body">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Top Level Category Name <span>*</span></label>
+                            <label class="col-sm-3 control-label">Tên danh mục chính <span>*</span></label>
                             <div class="col-sm-4">
                                 <select name="tcat_id" class="form-control select2 top-cat" required>
-                                    <option value="">Select Top Level Category</option>
+                                    <option value="">Chọn danh mục chính</option>
                                     <?php
                                     $statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
                                     $statement->execute();
@@ -310,55 +321,55 @@ if(isset($_POST['form1'])) {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Mid Level Category Name <span>*</span></label>
+                            <label class="col-sm-3 control-label">Tên danh mục phụ <span>*</span></label>
                             <div class="col-sm-4">
                                 <select name="mcat_id" class="form-control select2 mid-cat" required>
-                                    <option value="">Select Mid Level Category</option>
+                                    <option value="">Chọn danh mục phụ</option>
                                     <!-- Tốt nhất bạn dùng AJAX để load danh mục con theo danh mục cha -->
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">End Level Category Name <span>*</span></label>
+                            <label class="col-sm-3 control-label">Tên danh mục con <span>*</span></label>
                             <div class="col-sm-4">
                                 <select name="ecat_id" class="form-control select2 end-cat" required>
-                                    <option value="">Select End Level Category</option>
+                                    <option value="">Chọn danh mục con</option>
                                     <!-- Tốt nhất bạn dùng AJAX để load danh mục con theo danh mục cha -->
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Product Name <span>*</span></label>
+                            <label class="col-sm-3 control-label">Tên sản phẩm <span>*</span></label>
                             <div class="col-sm-4">
                                 <input type="text" name="p_name" class="form-control" required value="<?php echo htmlspecialchars(getPost('p_name')); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Old Price <br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+                            <label class="col-sm-3 control-label">Giá cũ <br><span style="font-size:10px;font-weight:normal;">(In VND)</span></label>
                             <div class="col-sm-4">
                                 <input type="text" name="p_old_price" class="form-control" value="<?php echo htmlspecialchars(getPost('p_old_price')); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Current Price <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+                            <label class="col-sm-3 control-label">Giá hiện tại <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In VND)</span></label>
                             <div class="col-sm-4">
                                 <input type="text" name="p_current_price" class="form-control" required value="<?php echo htmlspecialchars(getPost('p_current_price')); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Quantity <span>*</span></label>
+                            <label class="col-sm-3 control-label">Số lượng <span>*</span></label>
                             <div class="col-sm-4">
                                 <input type="number" name="p_qty" class="form-control" required min="0" value="<?php echo htmlspecialchars(getPost('p_qty')); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Select Size</label>
+                            <label class="col-sm-3 control-label">Chọn Size</label>
                             <div class="col-sm-4">
                                 <select name="size[]" class="form-control select2" multiple="multiple">
                                     <?php
@@ -378,7 +389,7 @@ if(isset($_POST['form1'])) {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Select Color</label>
+                            <label class="col-sm-3 control-label">Chọn màu</label>
                             <div class="col-sm-4">
                                 <select name="color[]" class="form-control select2" multiple="multiple">
                                     <?php
@@ -398,7 +409,7 @@ if(isset($_POST['form1'])) {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Featured Photo <span>*</span></label>
+                            <label class="col-sm-3 control-label">Hình ảnh chính<span>*</span></label>
                             <div class="col-sm-4" style="padding-top:4px;">
                                 <input type="file" name="p_featured_photo" required>
                                 <br>
@@ -407,7 +418,7 @@ if(isset($_POST['form1'])) {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Other Photos</label>
+                            <label class="col-sm-3 control-label">Hình ảnh phụ</label>
                             <div class="col-sm-4" style="padding-top:4px;">
                                 <table id="ProductTable" style="width:100%;">
                                     <tbody>
@@ -432,7 +443,7 @@ if(isset($_POST['form1'])) {
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Description</label>
+                            <label class="col-sm-3 control-label">Mô tả</label>
                             <div class="col-sm-8">
                                 <textarea name="p_description" class="form-control" cols="30" rows="10" id="editor1"><?php echo htmlspecialchars(getPost('p_description')); ?></textarea>
                             </div>
@@ -462,7 +473,7 @@ if(isset($_POST['form1'])) {
 							</div>
 						</div>  
 
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<label for="" class="col-sm-3 control-label">Is Active?</label>
 							<div class="col-sm-8">
 								<select name="p_is_active" class="form-control" style="width:auto;">
@@ -470,7 +481,7 @@ if(isset($_POST['form1'])) {
 									<option value="1">No</option>
 								</select> 
 							</div>
-						</div>
+						</div> -->
 						
 						<div class="form-group">
 							<label for="" class="col-sm-3 control-label"></label>

@@ -194,7 +194,7 @@ if($success_message != '') {
                     <th>Thông tin đơn hàng</th>
                     <th>Tổng tiền phải chả</th>
                     <th>Xác nhận</th>
-                    <th>Shipping Status</th>
+                    <th>Trạng thái vận chuyển</th>
 			        <th>Hành động</th>
 			    </tr>
 			</thead>

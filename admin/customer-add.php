@@ -17,44 +17,39 @@ if (isset($_POST['form1'])) {
     // Validate inputs
     if(empty($_POST['cust_name'])) {
         $valid = 0;
-        $error_message .= 'Name can not be empty<br>';
+        $error_message .= 'Tên không được để trống<br>';
     }
 
     if(empty($_POST['cust_email'])) {
         $valid = 0;
-        $error_message .= 'Email can not be empty<br>';
+        $error_message .= 'Email không được để trống<br>';
     } else {
         if (filter_var($_POST['cust_email'], FILTER_VALIDATE_EMAIL) === false) {
             $valid = 0;
-            $error_message .= 'Invalid email format<br>';
+            $error_message .= 'Email không đúng định dạng<br>';
         } else {
             $statement = $pdo->prepare("SELECT * FROM tbl_customer WHERE cust_email=?");
             $statement->execute(array($_POST['cust_email']));
             if($statement->rowCount() > 0) {
                 $valid = 0;
-                $error_message .= 'Email already exists<br>';
+                $error_message .= 'Email đã tồn tại<br>';
             }
         }
     }
 
     if(empty($_POST['cust_phone'])) {
         $valid = 0;
-        $error_message .= 'Phone can not be empty<br>';
+        $error_message .= 'Số điện thoại không được để trống<br>';
     }
 
     if(empty($_POST['cust_address'])) {
         $valid = 0;
-        $error_message .= 'Address can not be empty<br>';
+        $error_message .= 'Địa chỉ không được để trống<br>';
     }
 
     if(empty($_POST['cust_country'])) {
         $valid = 0;
-        $error_message .= 'Country must be selected<br>';
-    }
-
-    if(empty($_POST['cust_city'])) {
-        $valid = 0;
-        $error_message .= 'City can not be empty<br>';
+        $error_message .= 'Phải chọn tỉnh thành<br>';
     }
 
     if( empty($_POST['cust_password']) || empty($_POST['cust_re_password']) ) {
@@ -62,7 +57,7 @@ if (isset($_POST['form1'])) {
         $error_message .= 'Password and Confirm Password can not be empty<br>';
     } elseif($_POST['cust_password'] != $_POST['cust_re_password']) {
         $valid = 0;
-        $error_message .= 'Passwords do not match<br>';
+        $error_message .= 'Mật khẩu không khớp<br>';
     }
 
     if($valid == 1) {
@@ -95,19 +90,19 @@ if (isset($_POST['form1'])) {
             $token,
             $cust_datetime,
             $cust_timestamp,
-            0
+            1
         ));
 
         // Send confirmation email
-        $to = $_POST['cust_email'];
-        $subject = 'Confirm your registration';
-        $verify_link = BASE_URL.'verify.php?email='.$to.'&token='.$token;
-        $message = 'Please verify your account by clicking <a href="'.$verify_link.'">here</a>.';
-        $headers = "Content-type:text/html;charset=UTF-8\r\n";
-        $headers .= "From: noreply@" . BASE_URL . "\r\n";
-        mail($to, $subject, $message, $headers);
+        // $to = $_POST['cust_email'];
+        // $subject = 'Confirm your registration';
+        // $verify_link = BASE_URL.'verify.php?email='.$to.'&token='.$token;
+        // $message = 'Please verify your account by clicking <a href="'.$verify_link.'">here</a>.';
+        // $headers = "Content-type:text/html;charset=UTF-8\r\n";
+        // $headers .= "From: noreply@" . BASE_URL . "\r\n";
+        // mail($to, $subject, $message, $headers);
 
-        $success_message = 'Registration successful. Please check your email to verify your account.';
+        $success_message = 'Đăng kí thành công.';
 
         // Clear POST data
         unset($_POST);

@@ -46,22 +46,22 @@ if (isset($_POST['form1'])) {
 
     // Validate dữ liệu
     if (empty($_POST['tcat_id'])) {
-        $error_message .= "You must select a top level category.<br>";
+        $error_message .= "Bạn phải chọn danh mục chính.<br>";
     }
     if (empty($_POST['mcat_id'])) {
-        $error_message .= "You must select a mid level category.<br>";
+        $error_message .= "Bạn phải chọn danh mục phụ.<br>";
     }
     if (empty($_POST['ecat_id'])) {
-        $error_message .= "You must select an end level category.<br>";
+        $error_message .= "Bạn phải chọn danh mục con.<br>";
     }
     if (empty($_POST['p_name'])) {
-        $error_message .= "Product name cannot be empty.<br>";
+        $error_message .= "Không được để trống tên.<br>";
     }
     if (empty($_POST['p_current_price']) || !is_numeric($_POST['p_current_price'])) {
-        $error_message .= "Current Price must be a number and cannot be empty.<br>";
+        $error_message .= "Không được để trống giá tiền.<br>";
     }
     if (empty($_POST['p_qty']) || !ctype_digit($_POST['p_qty'])) {
-        $error_message .= "Quantity must be an integer and cannot be empty.<br>";
+        $error_message .= "Số lượng không được để trống.<br>";
     }
 
     // Validate file ảnh đại diện nếu upload
@@ -70,7 +70,7 @@ if (isset($_POST['form1'])) {
         $file_ext = strtolower(pathinfo($_FILES['p_featured_photo']['name'], PATHINFO_EXTENSION));
 
         if (!in_array($file_ext, $allowed_ext)) {
-            $error_message .= "You must upload a file of type jpg, jpeg, png, or gif for the featured photo.<br>";
+            $error_message .= "Hình ảnh chính phải là jpg, jpeg, gif hoặc png file.<br>";
         }
 
         // Kiểm tra lỗi upload
@@ -181,7 +181,7 @@ if (isset($_POST['form1'])) {
                 }
             }
 
-            $success_message = "Product is updated successfully.";
+            $success_message = "Sản phẩm được cập nhật thành công.";
             // Cập nhật lại thông tin sản phẩm mới để hiển thị
             $statement = $pdo->prepare("SELECT * FROM tbl_product WHERE p_id=?");
             $statement->execute([$product_id]);
@@ -313,7 +313,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Old Price -->
                         <div class="form-group">
-                            <label for="p_old_price" class="col-sm-3 control-label">Giá cũ<br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+                            <label for="p_old_price" class="col-sm-3 control-label">Giá cũ<br><span style="font-size:10px;font-weight:normal;">(In VND)</span></label>
                             <div class="col-sm-4">
                                 <input id="p_old_price" type="text" name="p_old_price" class="form-control" value="<?php echo e($product['p_old_price']); ?>">
                             </div>
@@ -321,7 +321,7 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
                         <!-- Current Price -->
                         <div class="form-group">
-                            <label for="p_current_price" class="col-sm-3 control-label">Giá mới <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In USD)</span></label>
+                            <label for="p_current_price" class="col-sm-3 control-label">Giá mới <span>*</span><br><span style="font-size:10px;font-weight:normal;">(In VND)</span></label>
                             <div class="col-sm-4">
                                 <input id="p_current_price" type="text" name="p_current_price" class="form-control" value="<?php echo e($product['p_current_price']); ?>">
                             </div>
@@ -485,31 +485,65 @@ $color_id_arr = $statement->fetchAll(PDO::FETCH_COLUMN);
 
 </section>
 
+<!-- Thêm jQuery nếu chưa có -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-// JavaScript/jQuery để thêm dòng upload ảnh phụ mới khi bấm nút "Add Item"
-document.getElementById('btnAddNew').addEventListener('click', function() {
-    var tbody = document.querySelector('#ProductTable tbody');
-    var tr = document.createElement('tr');
-    var td1 = document.createElement('td');
-    var inputFile = document.createElement('input');
-    inputFile.type = 'file';
-    inputFile.name = 'photo[]';
-    inputFile.accept = '.jpg,.jpeg,.png,.gif';
-    td1.appendChild(inputFile);
-    var td2 = document.createElement('td');
-    td2.style.width = '28px';
-    var btnRemove = document.createElement('button');
-    btnRemove.type = 'button';
-    btnRemove.className = 'btn btn-danger btn-xs';
-    btnRemove.textContent = 'X';
-    btnRemove.onclick = function() {
-        tbody.removeChild(tr);
-    };
-    td2.appendChild(btnRemove);
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    tbody.appendChild(tr);
+$(document).ready(function() {
+    // Thêm dòng upload ảnh phụ mới - sử dụng jQuery cho nhất quán
+    $('#btnAddNew').off('click').on('click', function(e) {
+        e.preventDefault(); // Ngăn form submit
+        
+        var newRow = `<tr>
+            <td>
+                <div class="upload-btn">
+                    <input type="file" name="photo[]" accept=".jpg,.jpeg,.png,.gif" style="margin-bottom:5px;">
+                    <br>
+                    <img src="#" class="other-photo-preview" style="width:150px; display:none; margin-top:5px;" alt="Preview Other Photo" />
+                </div>
+            </td>
+            <td style="width:28px;">
+                <button type="button" class="btn btn-danger btn-xs remove-photo">X</button>
+            </td>
+        </tr>`;
+        
+        $('#ProductTable tbody').append(newRow);
+        
+        // Debug: in ra số lượng dòng hiện tại (bao gồm cả ảnh cũ và ảnh mới)
+        console.log('Tổng số dòng hiện tại: ' + $('#ProductTable tbody tr').length);
+        
+        // Đếm chỉ dòng mới thêm (có input file)
+        var newPhotoRows = $('#ProductTable tbody tr').filter(function() {
+            return $(this).find('input[type="file"]').length > 0;
+        }).length;
+        console.log('Số dòng upload mới: ' + newPhotoRows);
+    });
+
+    // Xóa dòng ảnh mới (chỉ áp dụng cho dòng có nút remove-photo)
+    $(document).on('click', '.remove-photo', function(e) {
+        e.preventDefault();
+        $(this).closest('tr').remove();
+        
+        console.log('Số dòng sau khi xóa: ' + $('#ProductTable tbody tr').length);
+    });
+
+    // Preview ảnh mới khi chọn file
+    $(document).on('change', 'input[name="photo[]"]', function() {
+        previewOtherPhoto(this);
+    });
 });
+
+// Hàm preview ảnh
+function previewOtherPhoto(input) {
+    if(input.files && input.files[0]){
+        var reader = new FileReader();
+        var previewImg = $(input).closest('td').find('.other-photo-preview');
+        reader.onload = function(e) {
+            previewImg.attr('src', e.target.result).show();
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 </script>
 
 <?php require_once('footer.php'); ?>

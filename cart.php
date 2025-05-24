@@ -60,7 +60,7 @@ if(isset($_POST['form1'])) {
     <?php if($allow_update == 0): ?>
     	<script>alert('<?php echo $error_message; ?>');</script>
 	<?php else: ?>
-		<script>alert('All Items Quantity Update is Successful!');</script>
+		<script>alert('Cập nhật số lượng các sản phẩm thành công');</script>
 	<?php endif; ?>
     <?php
 
@@ -80,7 +80,7 @@ if(isset($_POST['form1'])) {
 			<div class="col-md-12">
 
                 <?php if(!isset($_SESSION['cart_p_id'])): ?>
-                    <?php echo 'Cart is empty'; ?>
+                    <?php echo 'Giỏ hàng trống'; ?>
                 <?php else: ?>
                 <form action="" method="post">
                     <?php $csrf->echoInputField(); ?>
